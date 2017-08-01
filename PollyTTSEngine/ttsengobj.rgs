@@ -1,0 +1,25 @@
+HKCR
+{
+	PollyTTSEngine.PollyTTSEngine.1 = s 'PollyTTSEngine Class'
+	{
+		CLSID = s '{698312A0-4B71-46AE-867F-FF45D9835EE9}'
+	}
+	PollyTTSEngine.PollyTTSEngine = s 'PollyTTSEngine Class'
+	{
+		CLSID = s '{698312A0-4B71-46AE-867F-FF45D9835EE9}'
+		CurVer = s 'PollyTTSEngine.PollyTTSEngine.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {698312A0-4B71-46AE-867F-FF45D9835EE9} = s 'PollyTTSEngine Class'
+		{
+			ProgID = s 'PollyTTSEngine.PollyTTSEngine.1'
+			VersionIndependentProgID = s 'PollyTTSEngine.PollyTTSEngine'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Both'
+			}
+			'TypeLib' = s '{0A9DD0D1-D5DB-4070-A5A6-6106BF3B14A1}'
+		}
+	}
+}

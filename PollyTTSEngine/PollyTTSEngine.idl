@@ -1,0 +1,54 @@
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
+//
+// Copyright © Microsoft Corporation. All rights reserved
+
+/*****************************************************************************
+* SampleTtsEngine.idl *
+*------------*
+*   Description:
+*       This idl file is for the sample SAPI5 Text To Speech Engine.
+*
+*****************************************************************************/
+//--- Import base idl
+import "oaidl.idl";
+import "ocidl.idl";
+import "sapiddk.idl";
+
+//=== Forward References ======================================================
+
+//=== Constants ===============================================================
+
+//=== Interface definitions ===================================================
+typedef struct VOICEITEM
+{
+    LPCWSTR pText;
+    ULONG   ulTextLen;
+    ULONG   ulNumAudioBytes;
+    BYTE*   pAudio;
+} VOICEITEM;
+
+
+//=== CoClass definitions =====================================================
+[
+	uuid(0A9DD0D1-D5DB-4070-A5A6-6106BF3B14A1),
+	version(1.0),
+	helpstring("Amazon Polly TTS Engine 1.0 Type Library")
+]
+library POLLYTTSENGLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(698312A0-4B71-46AE-867F-FF45D9835EE9),
+		helpstring("AmazonPollyTTSEngine Class")
+	]
+	coclass PollyTTSEngine
+	{
+		[default] interface ISpTTSEngine;
+        interface ISpObjectWithToken;
+	};
+};
