@@ -16,6 +16,7 @@
 //--- Additional includes
 #include "stdafx.h"
 #include "TtsEngObj.h"
+#include "tchar.h"
 #include "LogUtils.h"
 #include <aws/core/utils/StringUtils.h>
 #include <aws/core/Aws.h>
@@ -241,6 +242,13 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 	speech_request.SetTextType(Aws::Polly::Model::TextType::text);
 	speech_request.SetSampleRate("16000");
 	auto speech = p.SynthesizeSpeech(speech_request);
+	if (!speech.IsSuccess())
+	{
+		std::stringstream error;
+		error << "Unable to generate voice audio: " << speech.GetError().GetMessageW();
+		MessageBoxA(NULL, error.str().c_str(), "AWS Error", 0);
+		return -1;
+	}
 	auto &r = speech.GetResult();
 
 	auto& stream = r.GetAudioStream();
