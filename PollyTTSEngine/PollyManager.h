@@ -2,5 +2,5 @@
 class PollyManager
 {
 public:
-	void GenerateSpeech();
+	void GenerateSpeech(const wchar_t* text) const;
 };

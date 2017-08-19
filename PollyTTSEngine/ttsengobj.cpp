@@ -232,31 +232,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
     SPLISTPOS ListPos = ItemList.GetHeadPosition();
 	CSentItem& Item = ItemList.GetNext(ListPos);
 	Aws::Polly::Model::DescribeVoicesRequest request;
-	Aws::Polly::Model::SynthesizeSpeechRequest speech_request;
-	PollyClient p;
-	Aws::String text = StringUtils::FromWString(Item.pItem);
-	log.Debug("%s: Asking Polly for '%s'", __FUNCTION__, text.c_str());
-	speech_request.SetOutputFormat(Aws::Polly::Model::OutputFormat::pcm);
-	speech_request.SetVoiceId(VoiceId::Brian);
-	speech_request.SetText(text);
-	speech_request.SetTextType(Aws::Polly::Model::TextType::text);
-	speech_request.SetSampleRate("16000");
-	auto speech = p.SynthesizeSpeech(speech_request);
-	if (!speech.IsSuccess())
-	{
-		std::stringstream error;
-		error << "Unable to generate voice audio: " << speech.GetError().GetMessageW();
-		MessageBoxA(NULL, error.str().c_str(), "AWS Error", 0);
-		return -1;
-	}
-	auto &r = speech.GetResult();
-
-	auto& stream = r.GetAudioStream();
-	std::streamsize amountRead(0);
-	unsigned char buffer[1000000];
-	stream.read((char*)buffer, 1000000);
-	auto read = stream.gcount();
-	hr = pOutputSite->Write(buffer, read, NULL);
+//	hr = pOutputSite->Write(buffer, read, NULL);
 
 	ListPos = ItemList.GetHeadPosition();
 	Item = ItemList.GetNext(ListPos);
@@ -325,7 +301,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 				stream.read((char*)buffer, 100000);
 				auto read = stream.gcount(); */
 //				hr = pOutputSite->Write(buffer, read, NULL);
-				m_ullAudioOff += read;
+// FIX THIS				m_ullAudioOff += read;
 
                 //--- Update the audio offset
 /*				m_ullAudioOff += read; 
