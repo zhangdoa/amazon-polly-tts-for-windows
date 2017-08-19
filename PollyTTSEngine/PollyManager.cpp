@@ -10,11 +10,12 @@
 #include <Windows.h>
 #endif
 
-void PollyManager::GenerateSpeech(const wchar_t* text) const
+PollySpeechResponse PollyManager::GenerateSpeech(const wchar_t* text)
 {
 	Aws::Polly::PollyClient p;
 	LogUtils log;
 	Aws::Polly::Model::SynthesizeSpeechRequest speech_request;
+	PollySpeechResponse response;
 	Aws::String speech_text = Aws::Utils::StringUtils::FromWString(text);
 	log.Debug("%s: Asking Polly for '%s'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(Aws::Polly::Model::OutputFormat::pcm);
@@ -27,13 +28,13 @@ void PollyManager::GenerateSpeech(const wchar_t* text) const
 	{
 		std::stringstream error;
 		error << "Unable to generate voice audio: " << speech.GetError().GetMessageW();
-		MessageBoxA(NULL, error.str().c_str(), "AWS Error", 0);
+		response.ErrorMessage = error.str();
+		return response;
 	}
 	auto &r = speech.GetResult();
 
 	auto& stream = r.GetAudioStream();
-	std::streamsize amountRead(0);
-	unsigned char buffer[1000000];
-	stream.read((char*)buffer, 1000000);
-	auto read = stream.gcount();
+	stream.read(reinterpret_cast<char*>(response.AudioData), 1000000);
+	response.Length = stream.gcount();
+	return response;
 }

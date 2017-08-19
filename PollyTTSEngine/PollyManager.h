@@ -1,6 +1,7 @@
 #pragma once
+#include "PollySpeechResponse.h"
 class PollyManager
 {
 public:
-	void GenerateSpeech(const wchar_t* text) const;
+	static PollySpeechResponse GenerateSpeech(const wchar_t* text);
 };

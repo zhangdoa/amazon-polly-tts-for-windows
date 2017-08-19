@@ -34,6 +34,7 @@
 #include <aws/polly/model/DescribeVoicesResult.h>
 #include <aws/text-to-speech/TextToSpeechManager.h>
 #include <aws/polly/Polly_EXPORTS.h>
+#include "PollyManager.h"
 #include <iostream>
 //--- Local
 using namespace Aws::Polly;
@@ -129,7 +130,10 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                                 ISpTTSEngineSite* pOutputSite )
 {
 	
+	LogUtils log;
+	log.Debug("%s\n", __FUNCTION__);
 	static const char* ALLOCATION_TAG = "PollyTTS::Windows";
+	log.Debug("Initializing AWS\n");
 	Aws::SDKOptions options;
 	Aws::InitAPI(options);
 	HRESULT hr = S_OK;
@@ -147,6 +151,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         m_pNextChar   = m_pCurrFrag->pTextStart;
         m_pEndChar    = m_pNextChar + m_pCurrFrag->ulTextLen;
         m_ullAudioOff = 0;
+		log.Debug("Initializing fragment: NextChar: %ul, EndChar: %ul, AudioOffset: %u\n", m_pNextChar, m_pEndChar, m_ullAudioOff);
 
         //--- Parse
         //    We've supplied a simple word/sentence breaker just to show one
@@ -154,12 +159,14 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         //    things like abreviations and expansion of numbers and dates.
         CItemList ItemList;
 
-        while( SUCCEEDED( hr ) && !(pOutputSite->GetActions() & SPVES_ABORT) )
+		log.Debug("Starting work processing\n");
+		while( SUCCEEDED( hr ) && !(pOutputSite->GetActions() & SPVES_ABORT) )
         {
             //--- Do skip?
             if( pOutputSite->GetActions() & SPVES_SKIP )
             {
-                long lSkipCnt;
+				log.Debug("ACTION: SKIP\n");
+				long lSkipCnt;
                 SPVSKIPTYPE eType;
                 hr = pOutputSite->GetSkipInfo( &eType, &lSkipCnt );
                 if( SUCCEEDED( hr ) )
@@ -173,7 +180,8 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             //--- Build the text item list
             if( SUCCEEDED( hr ) && (hr = GetNextSentence( ItemList )) != S_OK )
             {
-                break;                
+				log.Debug("ERROR Getting the next sentence from ItemList\n");
+				break;
             }
 
             //--- We aren't going to do any part of speech determination,
@@ -185,7 +193,8 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 
             if( !(pOutputSite->GetActions() & SPVES_ABORT) )
             {
-                //--- Fire begin sentence event
+				log.Debug("Firing being sentence event, ItemList length = %i\n", ItemList.GetCount());
+				//--- Fire begin sentence event
                 CSentItem& FirstItem = ItemList.GetHead();
                 CSentItem& LastItem  = ItemList.GetTail();
                 CSpEvent Event;
@@ -196,7 +205,10 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                 Event.wParam               = (WPARAM)LastItem.ulItemSrcOffset +
                                                      LastItem.ulItemSrcLen -
                                                      FirstItem.ulItemSrcOffset;
-                 hr = pOutputSite->AddEvents( &Event, 1 );
+				log.Debug("Adding SPEI_SENTENCE_BOUNDARY: AudioStreamOffset: %u, lparam: %ul, wparam: %ul\n",
+					Event.ullAudioStreamOffset, Event.lParam, Event.wParam);
+				log.Debug("First item: %s, Last Item: %s", FirstItem.pItem, LastItem.pItem);
+				hr = pOutputSite->AddEvents( &Event, 1 );
 
                 //--- Output
                 if( SUCCEEDED( hr ) )
@@ -282,26 +294,11 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
                 //pOutputSite->AddEvents( &Event, 1 );
 
                 //--- Queue the audio data
-/*				Aws::Polly::Model::DescribeVoicesRequest request;
-				Aws::Polly::Model::SynthesizeSpeechRequest speech_request;
-				PollyClient p;
-				Aws::String text = StringUtils::FromWString(Item.pItem);
-				text = text.substr(0, Item.ulItemSrcLen);
-				log.Debug("%s: Asking Polly for '%s'", __FUNCTION__, text);
-				speech_request.SetOutputFormat(Aws::Polly::Model::OutputFormat::pcm);
-				speech_request.SetVoiceId(VoiceId::Ivy);
-				speech_request.SetText(text);
-				speech_request.SetTextType(Aws::Polly::Model::TextType::text);
-				auto speech = p.SynthesizeSpeech(speech_request);
-				auto &r = speech.GetResult();
-				
-				auto& stream = r.GetAudioStream();
-				std::streamsize amountRead(0);
-				unsigned char buffer[100000];
-				stream.read((char*)buffer, 100000);
-				auto read = stream.gcount(); */
-//				hr = pOutputSite->Write(buffer, read, NULL);
-// FIX THIS				m_ullAudioOff += read;
+				PollyManager pm;
+				auto resp = pm.GenerateSpeech(Item.pItem);
+
+				hr = pOutputSite->Write(resp.AudioData, resp.Length, NULL);
+				m_ullAudioOff += resp.Length;
 
                 //--- Update the audio offset
 /*				m_ullAudioOff += read; 
@@ -412,14 +409,18 @@ STDMETHODIMP CTTSEngObj::GetOutputFormat( const GUID * pTargetFormatId, const WA
 HRESULT CTTSEngObj::GetNextSentence( CItemList& ItemList )
 {
     HRESULT hr = S_OK;
+	LogUtils log;
 
-    //--- Clear the destination
+	log.Debug("%s\n", __FUNCTION__);
+	log.Debug("Clearing the item list\n");
+	//--- Clear the destination
     ItemList.RemoveAll();
 
     //--- Is there any work to do
     if( m_pCurrFrag == NULL )
     {
-        hr = S_FALSE;
+		log.Debug("CurrFrag is null, nothing to do");
+		hr = S_FALSE;
     }
     else
     {
