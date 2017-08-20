@@ -43,9 +43,9 @@ int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
                     SPCAT_VOICES, 
                     argv[3], 
                     &CLSID_PollyTTSEngine, 
-                    L"Amazon Polly Brian - British English", 
+                    L"Amazon Polly Joanna - British English", 
                     0x409, 
-                    L"Amazon Polly Brian - British English", 
+                    L"Amazon Polly Joanna - British English", 
                     &cpToken,
                     &cpDataKeyAttribs);
 

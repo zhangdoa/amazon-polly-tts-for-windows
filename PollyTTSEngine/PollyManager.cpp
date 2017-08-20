@@ -22,7 +22,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	Aws::String speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	log.Debug("%s: Asking Polly for '%s'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(Aws::Polly::Model::OutputFormat::pcm);
-	speech_request.SetVoiceId(Aws::Polly::Model::VoiceId::Brian);
+	speech_request.SetVoiceId(Aws::Polly::Model::VoiceId::Joanna);
 	speech_request.SetText(speech_text);
 	speech_request.SetTextType(Aws::Polly::Model::TextType::text);
 	speech_request.SetSampleRate("16000");

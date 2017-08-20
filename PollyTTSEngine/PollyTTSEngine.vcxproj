@@ -93,7 +93,7 @@
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>./lib/release;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <CodeAnalysisRuleSet>CppCoreCheckRules.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableCppCoreCheck>true</EnableCppCoreCheck>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -154,6 +154,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX64</TargetMachine>
+      <StackReserveSize>
+      </StackReserveSize>
+      <StackCommitSize>
+      </StackCommitSize>
+      <LargeAddressAware>
+      </LargeAddressAware>
+      <HeapReserveSize>
+      </HeapReserveSize>
     </Link>
     <PostBuildEvent>
       <Message>Performing Registration</Message>
@@ -201,7 +209,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>C:\Users\troylars\dev\github\aws-sdk-cpp\aws-cpp-sdk-transfer\include;C:\Users\troylars\dev\github\aws-sdk-cpp\aws-cpp-sdk-text-to-speech\include;C:\Users\troylars\dev\github\aws-sdk-cpp\aws-cpp-sdk-polly\include;C:\Users\troylars\dev\github\aws-sdk-cpp\aws-cpp-sdk-core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <EnablePREfast>true</EnablePREfast>
+      <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -214,7 +222,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX64</TargetMachine>
-      <StackReserveSize>160000000</StackReserveSize>
+      <StackReserveSize>
+      </StackReserveSize>
     </Link>
     <PostBuildEvent>
       <Message>Performing Registration</Message>
