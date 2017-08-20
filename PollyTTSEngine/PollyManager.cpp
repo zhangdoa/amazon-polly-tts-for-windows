@@ -4,19 +4,22 @@
 #include <aws/polly/PollyClient.h>
 #include <aws/polly/model/OutputFormat.h>
 #include <aws/polly/model/TextType.h>
-#include <aws/polly/model/SynthesizeSpeechRequest.h>
 #include <aws/core/utils/Outcome.h>
+#include <aws/polly/model/SynthesizeSpeechRequest.h>
+#include "TtsEngObj.h"
+
 #ifdef _WIN32
 #include <Windows.h>
 #endif
+#define MAX_SIZE 600000
 
-PollySpeechResponse PollyManager::GenerateSpeech(const wchar_t* text)
+PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 {
+	PollySpeechResponse response;
 	Aws::Polly::PollyClient p;
 	LogUtils log;
 	Aws::Polly::Model::SynthesizeSpeechRequest speech_request;
-	PollySpeechResponse response;
-	Aws::String speech_text = Aws::Utils::StringUtils::FromWString(text);
+	Aws::String speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	log.Debug("%s: Asking Polly for '%s'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(Aws::Polly::Model::OutputFormat::pcm);
 	speech_request.SetVoiceId(Aws::Polly::Model::VoiceId::Brian);
@@ -34,7 +37,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(const wchar_t* text)
 	auto &r = speech.GetResult();
 
 	auto& stream = r.GetAudioStream();
-	stream.read(reinterpret_cast<char*>(response.AudioData), 1000000);
+	stream.read(reinterpret_cast<char*>(&response.AudioData[0]), MAX_SIZE);
 	response.Length = stream.gcount();
 	return response;
 }

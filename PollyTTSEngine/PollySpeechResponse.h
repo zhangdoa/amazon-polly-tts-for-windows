@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
+#include <vector>
 
 class PollySpeechResponse
 {
 public:
 	std::streamsize Length;
-	unsigned char AudioData[1000000];
+	std::vector<unsigned char> AudioData = std::vector<unsigned char>(1000000);
 	std::string ErrorMessage;
 };

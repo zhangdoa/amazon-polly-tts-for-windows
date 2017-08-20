@@ -1,7 +1,9 @@
 #pragma once
 #include "PollySpeechResponse.h"
+class CSentItem;
+
 class PollyManager
 {
 public:
-	static PollySpeechResponse GenerateSpeech(const wchar_t* text);
+	static PollySpeechResponse GenerateSpeech(CSentItem& item);
 };

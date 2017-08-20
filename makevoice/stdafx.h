@@ -24,7 +24,6 @@
 #include <atlbase.h>
 #include <stdio.h>
 #include <SPHelper.h>
-#include "PollyTTSEngine.h"
 
 // TODO: reference additional headers your program requires here
 

@@ -18,27 +18,13 @@
 #include "TtsEngObj.h"
 #include "tchar.h"
 #include "LogUtils.h"
-#include <aws/core/utils/StringUtils.h>
 #include <aws/core/Aws.h>
-#include <aws/core/http/HttpRequest.h>
-#include <aws/core/http/HttpResponse.h>
 #include <aws/polly/PollyClient.h>
-#include <aws/polly/PollyRequest.h>
-#include <aws/polly/PollyErrors.h>
-#include <aws/core/utils/Outcome.h>
 #include <aws/polly/model/DescribeVoicesRequest.h>
-#include <aws/polly/model/VoiceId.h>
-#include <aws/polly/model/DescribeVoicesResult.h>
-#include <aws/polly/model/SynthesizeSpeechRequest.h>
-#include <aws/polly/model/SynthesizeSpeechResult.h>
-#include <aws/polly/model/DescribeVoicesResult.h>
-#include <aws/text-to-speech/TextToSpeechManager.h>
-#include <aws/polly/Polly_EXPORTS.h>
 #include "PollyManager.h"
-#include <iostream>
 //--- Local
 using namespace Aws::Polly;
-using namespace Aws::Polly::Model;
+using namespace Model;
 using namespace Aws::Utils;
 
 /*****************************************************************************
@@ -248,6 +234,11 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 
 	ListPos = ItemList.GetHeadPosition();
 	Item = ItemList.GetNext(ListPos);
+	PollyManager pm;
+	auto resp = pm.GenerateSpeech(Item);
+
+	hr = pOutputSite->Write(reinterpret_cast<char*>(&resp.AudioData[0]), resp.Length, NULL);
+
     while( ListPos && !(pOutputSite->GetActions() & SPVES_ABORT) )
     {
         CSentItem& Item = ItemList.GetNext( ListPos );
@@ -294,10 +285,6 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
                 //pOutputSite->AddEvents( &Event, 1 );
 
                 //--- Queue the audio data
-				PollyManager pm;
-				auto resp = pm.GenerateSpeech(Item.pItem);
-
-				hr = pOutputSite->Write(resp.AudioData, resp.Length, NULL);
 				m_ullAudioOff += resp.Length;
 
                 //--- Update the audio offset
