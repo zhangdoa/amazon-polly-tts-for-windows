@@ -61,6 +61,11 @@ namespace Aws
             bool DoSendRequest(void* httpRequest) const override;
             bool DoReadData(void* hHttpRequest, char* body, uint64_t size, uint64_t& read) const override;
             void* GetClientModule() const override;
+
+            bool m_usingProxy;
+            bool m_verifySSL;
+            Aws::WString m_proxyUserName;
+            Aws::WString m_proxyPassword;
         };
 
     } // namespace Http
