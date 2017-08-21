@@ -1,4 +1,7 @@
 #pragma once
+#include <string.h>
+#include <string>
+
 class SpeechMark
 {
 public:
@@ -7,7 +10,8 @@ public:
 	int TimeInMs;
 	int StartByte;
 	int EndByte;
-	int StartInBytes;
-	int LengthInBytes;
+	int StartInMs;
+	long LengthInBytes;
+	std::string Text;
 };
 

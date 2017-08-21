@@ -229,18 +229,19 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
     //--- Lookup words in our voice
     SPLISTPOS ListPos = ItemList.GetHeadPosition();
 	CSentItem& Item = ItemList.GetNext(ListPos);
-	Aws::Polly::Model::DescribeVoicesRequest request;
-//	hr = pOutputSite->Write(buffer, read, NULL);
+	DescribeVoicesRequest request;
 
 	ListPos = ItemList.GetHeadPosition();
-	Item = ItemList.GetNext(ListPos);
 	PollyManager pm;
 	auto resp = pm.GenerateSpeech(Item);
-
-	hr = pOutputSite->Write(reinterpret_cast<char*>(&resp.AudioData[0]), resp.Length, NULL);
-
-    while( ListPos && !(pOutputSite->GetActions() & SPVES_ABORT) )
+	PollySpeechMarksResponse generateSpeechMarksResp = pm.GenerateSpeechMarks(Item, resp.Length);
+	
+//	hr = pOutputSite->Write(reinterpret_cast<char*>(&resp.AudioData[0]), resp.Length, NULL);
+	auto i = generateSpeechMarksResp.SpeechMarks.begin();
+	auto wordOffset = 0;
+    while(ListPos && i != generateSpeechMarksResp.SpeechMarks.end() && !(pOutputSite->GetActions() & SPVES_ABORT) )
     {
+		SpeechMark sm = *i;
         CSentItem& Item = ItemList.GetNext( ListPos );
 		log.Debug("%s: Current item is: '%ls'\n", __FUNCTION__, Item.pItem);
 
@@ -250,51 +251,30 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
           //--- Speak some text ---------------------------------------
           case SPVA_Speak:
           {
-
 			log.Debug("%s: Action = Speak\n", __FUNCTION__);
-            //--- We don't say anything for punctuation or control characters
-            //    in this sample. 
             if( iswalpha( Item.pItem[0] ) || iswdigit( Item.pItem[0] ) )
             {
-                //--- Lookup the word, if we can't find it just use the first one
-/*                for( WordIndex = 0; WordIndex < m_ulNumWords; ++WordIndex )
-                {
-                    if( ( m_pWordList[WordIndex].ulTextLen == Item.ulItemLen ) &&
-                        ( !_wcsnicmp( m_pWordList[WordIndex].pText, Item.pItem, Item.ulItemLen )) )
-                    {
-                        break;
-                    }
-                }
-                if( WordIndex == m_ulNumWords )
-                {
-                    WordIndex = 0;
-                } */
-
 				log.Debug("%s: Queuing WORD_BOUNDARY event: '%ls', ullAudioStreamOffset = %i, lparam=%i, wparam=%i\n", __FUNCTION__,
 					Item.pItem,
-					m_ullAudioOff,
+					wordOffset,
 					Item.ulItemSrcOffset,
 					Item.ulItemSrcLen);
 				//--- Queue the event
                 CSpEvent Event;
                 Event.eEventId             = SPEI_WORD_BOUNDARY;
                 Event.elParamType          = SPET_LPARAM_IS_UNDEFINED;
-                Event.ullAudioStreamOffset = m_ullAudioOff;
-                Event.lParam               = Item.ulItemSrcOffset;
-                Event.wParam               = Item.ulItemSrcLen;
-                //pOutputSite->AddEvents( &Event, 1 );
+                Event.ullAudioStreamOffset = wordOffset;
+				Event.lParam = sm.StartByte;
+                Event.wParam               = sm.Text.length();
+                pOutputSite->AddEvents( &Event, 1 );
 
-                //--- Queue the audio data
-				m_ullAudioOff += resp.Length;
-
-                //--- Update the audio offset
-/*				m_ullAudioOff += read; 
-				hr = pOutputSite->Write(m_pWordList[WordIndex].pAudio,
-				m_pWordList[WordIndex].ulNumAudioBytes,
-				NULL );
-				m_ullAudioOff += m_pWordList[WordIndex].ulNumAudioBytes; */
-
-            }
+				std::vector<unsigned char> word = std::vector<unsigned char>(&resp.AudioData[wordOffset], &resp.AudioData[wordOffset + sm.LengthInBytes]);
+				hr = pOutputSite->Write(reinterpret_cast<char*>(&word[0]),
+									    sm.LengthInBytes, NULL);
+				++i;
+				m_ullAudioOff += sm.LengthInBytes;
+				wordOffset += sm.LengthInBytes;
+			}
           }
           break;
 
