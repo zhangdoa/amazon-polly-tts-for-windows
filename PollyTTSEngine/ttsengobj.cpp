@@ -139,6 +139,11 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         m_ullAudioOff = 0;
 		log.Debug("Initializing fragment: NextChar: %ul, EndChar: %ul, AudioOffset: %u\n", m_pNextChar, m_pEndChar, m_ullAudioOff);
 
+		if (wcsstr(m_pCurrFrag->pTextStart, L"<speak>"))
+		{
+			MessageBox(NULL, L"SSML is currently not supported with Polly TTS", L"Notice", NULL);
+			return S_NOTSUPPORTED;
+		}
         //--- Parse
         //    We've supplied a simple word/sentence breaker just to show one
         //    way of walking the fragment list. It obviously doesn't deal with
