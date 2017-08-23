@@ -269,7 +269,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
                 Event.eEventId             = SPEI_WORD_BOUNDARY;
                 Event.elParamType          = SPET_LPARAM_IS_UNDEFINED;
                 Event.ullAudioStreamOffset = wordOffset;
-				Event.lParam = sm.StartByte;
+				Event.lParam               = Item.ulItemSrcOffset,
                 Event.wParam               = sm.Text.length();
                 pOutputSite->AddEvents( &Event, 1 );
 
