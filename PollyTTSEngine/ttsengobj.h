@@ -23,6 +23,8 @@
 #include <spddkhlp.h>
 #endif
 
+#undef max
+
 #ifndef SPCollec_h
 #include <spcollec.h>
 #endif
