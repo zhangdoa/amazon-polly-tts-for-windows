@@ -13,6 +13,7 @@
 ******************************************************************************/
 #ifndef TtsEngObj_h
 #define TtsEngObj_h
+#define NOMINMAX
 
 //--- Additional includes
 #ifndef __PollyTTSEngine_h__
@@ -22,8 +23,6 @@
 #ifndef SPDDKHLP_h
 #include <spddkhlp.h>
 #endif
-
-#undef max
 
 #ifndef SPCollec_h
 #include <spcollec.h>
