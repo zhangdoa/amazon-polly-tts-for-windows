@@ -24,6 +24,7 @@
 #include <spddkhlp.h>
 #endif
 
+#include <minmax.h>
 #ifndef SPCollec_h
 #include <spcollec.h>
 #endif
