@@ -41,11 +41,11 @@ int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
             CComPtr<ISpDataKey> cpDataKeyAttribs;
             hr = SpCreateNewTokenEx(
                     SPCAT_VOICES, 
-                    argv[3], 
+                    L"PollyJoanna", 
                     &CLSID_PollyTTSEngine, 
-                    L"Amazon Polly Joanna - British English", 
+                    L"Amazon Polly Joanna - English", 
                     0x409, 
-                    L"Amazon Polly Joanna - British English", 
+                    L"Amazon Polly Joanna - English", 
                     &cpToken,
                     &cpDataKeyAttribs);
 
@@ -53,10 +53,10 @@ int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
             //    voice data file we just created.
             if (SUCCEEDED(hr))
             {
-                hr = cpDataKeyAttribs->SetStringValue(L"Gender", L"Male");
+                hr = cpDataKeyAttribs->SetStringValue(L"Gender", L"Female");
                 if (SUCCEEDED(hr))
                 {
-                    hr = cpDataKeyAttribs->SetStringValue(L"Name", L"AmazonPollyTTSVoice");
+                    hr = cpDataKeyAttribs->SetStringValue(L"Name", L"PollyJoanna");
                 }
                 if (SUCCEEDED(hr))
                 {
@@ -66,12 +66,93 @@ int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
                 {
                     hr = cpDataKeyAttribs->SetStringValue(L"Age", L"Adult");
                 }
-                if (SUCCEEDED(hr))
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"VoiceName", L"Joanna");
+				}
+				if (SUCCEEDED(hr))
                 {
-                    hr = cpDataKeyAttribs->SetStringValue(L"Vendor", L"Microsoft");
+                    hr = cpDataKeyAttribs->SetStringValue(L"Vendor", L"AWS");
                 }
             }
-        }
+
+			hr = SpCreateNewTokenEx(
+				SPCAT_VOICES,
+				L"PollyBrian",
+				&CLSID_PollyTTSEngine,
+				L"Amazon Polly Brian Test - British English",
+				0x409,
+				L"Amazon Polly Brian Test - British English",
+				&cpToken,
+				&cpDataKeyAttribs);
+
+			//--- Set additional attributes for searching and the path to the
+			//    voice data file we just created.
+			if (SUCCEEDED(hr))
+			{
+				hr = cpDataKeyAttribs->SetStringValue(L"Gender", L"Male");
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Name", L"PollyBrian");
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Language", L"409");
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Age", L"Adult");
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"VoiceName", L"Brian");
+				}
+
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Vendor", L"AWS");
+				}
+			}
+			hr = SpCreateNewTokenEx(
+				SPCAT_VOICES,
+				L"PollyRussell",
+				&CLSID_PollyTTSEngine,
+				L"Amazon Polly Russell - British English",
+				0x409,
+				L"Amazon Polly Russell - British English",
+				&cpToken,
+				&cpDataKeyAttribs);
+
+			//--- Set additional attributes for searching and the path to the
+			//    voice data file we just created.
+			if (SUCCEEDED(hr))
+			{
+				hr = cpDataKeyAttribs->SetStringValue(L"Gender", L"Male");
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Name", L"PollyRussell");
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Language", L"409");
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Age", L"Adult");
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"VoiceName", L"Russell");
+				}
+
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Vendor", L"AWS");
+				}
+			}
+		}
+
+
 
         ::CoUninitialize();
     }

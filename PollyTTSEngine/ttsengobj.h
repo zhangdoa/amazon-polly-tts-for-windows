@@ -28,6 +28,7 @@
 #endif
 
 #include "resource.h"
+#include <string>
 
 //=== Constants ====================================================
 
@@ -110,6 +111,8 @@ class ATL_NO_VTABLE CTTSEngObj :
     CComPtr<ISpObjectToken> m_cpToken;
     HANDLE                  m_hVoiceData;
     void*                   m_pVoiceData;
+	LPWSTR      			m_pPollyVoice;
+
     //--- Voice (word/audio data) list
     //  Note: You will probably have something more sophisticated here
     //        we are just trying to keep it simple for the example.

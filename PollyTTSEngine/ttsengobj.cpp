@@ -115,13 +115,16 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                                 const SPVTEXTFRAG* pTextFragList,
                                 ISpTTSEngineSite* pOutputSite )
 {
-	
 	LogUtils log;
+	CComPtr<ISpDataKey> attributesKey;
+	m_cpToken->OpenKey(L"Attributes", &attributesKey);
+	attributesKey->GetStringValue(L"VoiceName", &m_pPollyVoice);
 	log.Debug("%s\n", __FUNCTION__);
 	static const char* ALLOCATION_TAG = "PollyTTS::Windows";
 	log.Debug("Initializing AWS\n");
 	Aws::SDKOptions options;
-	Aws::InitAPI(options);
+
+	InitAPI(options);
 	HRESULT hr = S_OK;
 
 	//--- Check args
@@ -237,7 +240,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 	DescribeVoicesRequest request;
 
 	ListPos = ItemList.GetHeadPosition();
-	PollyManager pm;
+	PollyManager pm = PollyManager(m_pPollyVoice);
 	auto resp = pm.GenerateSpeech(Item);
 	PollySpeechMarksResponse generateSpeechMarksResp = pm.GenerateSpeechMarks(Item, resp.Length);
 	

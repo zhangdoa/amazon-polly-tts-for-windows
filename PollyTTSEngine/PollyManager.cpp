@@ -9,24 +9,38 @@
 #include "TtsEngObj.h"
 #include "PollySpeechMarksResponse.h"
 #include "rapidjson/document.h"
+#include <unordered_map>
 
 #ifdef _WIN32
 #include <Windows.h>
 #endif
 #define MAX_SIZE 600000
+using namespace Aws::Polly::Model;
+
+void PollyManager::SetVoice (LPWSTR voiceName)
+{
+	m_sVoiceName = voiceName;
+	auto voiceId = vm.find(voiceName);
+	m_vVoiceId = voiceId->second ;
+}
+
+PollyManager::PollyManager(LPWSTR voiceName)
+{
+	SetVoice(voiceName);
+}
 
 PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 {
 	PollySpeechResponse response;
 	Aws::Polly::PollyClient p;
 	LogUtils log;
-	Aws::Polly::Model::SynthesizeSpeechRequest speech_request;
-	Aws::String speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
+	SynthesizeSpeechRequest speech_request;
+	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	log.Debug("%s: Asking Polly for '%s'", __FUNCTION__, speech_text.c_str());
-	speech_request.SetOutputFormat(Aws::Polly::Model::OutputFormat::pcm);
-	speech_request.SetVoiceId(Aws::Polly::Model::VoiceId::Joanna);
+	speech_request.SetOutputFormat(OutputFormat::pcm);
+	speech_request.SetVoiceId(m_vVoiceId);
 	speech_request.SetText(speech_text);
-	speech_request.SetTextType(Aws::Polly::Model::TextType::text);
+	speech_request.SetTextType(TextType::text);
 	speech_request.SetSampleRate("16000");
 	auto speech = p.SynthesizeSpeech(speech_request);
 	if (!speech.IsSuccess())
@@ -47,16 +61,16 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std::streamsize streamSize)
 {
 	LogUtils log;
-	Aws::Polly::Model::SynthesizeSpeechRequest speechMarksRequest;
+	SynthesizeSpeechRequest speechMarksRequest;
 	PollySpeechMarksResponse response;
 	Aws::Polly::PollyClient p;
 	auto text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	log.Debug("%s: Asking Polly for '%s'", __FUNCTION__, text.c_str());
-	speechMarksRequest.SetOutputFormat(Aws::Polly::Model::OutputFormat::json);
-	speechMarksRequest.SetVoiceId(Aws::Polly::Model::VoiceId::Joanna);
+	speechMarksRequest.SetOutputFormat(OutputFormat::json);
+	speechMarksRequest.SetVoiceId(m_vVoiceId);
 	speechMarksRequest.SetText(text);
-	speechMarksRequest.AddSpeechMarkTypes(Aws::Polly::Model::SpeechMarkType::word);
-	speechMarksRequest.SetTextType(Aws::Polly::Model::TextType::text);
+	speechMarksRequest.AddSpeechMarkTypes(SpeechMarkType::word);
+	speechMarksRequest.SetTextType(TextType::text);
 	speechMarksRequest.SetSampleRate("16000");
 	auto speech_marks = p.SynthesizeSpeech(speechMarksRequest);
 	if (!speech_marks.IsSuccess())
@@ -72,7 +86,7 @@ PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std:
 	std::vector<SpeechMark> speechMarks;
 	auto firstWord = true;
 	long bytesProcessed = 0;
-	while (std::getline(m_stream, json_str)) {
+	while (getline(m_stream, json_str)) {
 		SpeechMark sm;
 		rapidjson::Document d;
 		d.Parse(json_str.c_str());
