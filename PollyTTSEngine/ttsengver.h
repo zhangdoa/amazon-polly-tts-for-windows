@@ -17,6 +17,7 @@
  *                                                                          *
  ****************************************************************************/
 
+#define NOMINMAX
 #ifndef VER_H
 /* ver.h defines constants needed by the VS_VERSION_INFO structure */
 //#include <winver.h>

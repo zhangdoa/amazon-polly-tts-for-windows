@@ -11,6 +11,7 @@
 #include "rapidjson/document.h"
 #include <unordered_map>
 
+#define NOMINMAX
 #ifdef _WIN32
 #include <Windows.h>
 #endif
