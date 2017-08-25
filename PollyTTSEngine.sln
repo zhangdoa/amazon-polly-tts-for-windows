@@ -1,9 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+VisualStudioVersion = 15.0.26730.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MakeVoice", "makevoice\MakeVoice.vcxproj", "{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InstallVoices", "makevoice\MakeVoice.vcxproj", "{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{214761EA-9911-4031-AC43-92CC12536E17} = {214761EA-9911-4031-AC43-92CC12536E17}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PollyWindowsTTS", "PollyTTSEngine\PollyTTSEngine.vcxproj", "{214761EA-9911-4031-AC43-92CC12536E17}"
 EndProject
@@ -34,5 +37,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A7FD2A6A-999B-4292-9070-0890441F51AE}
 	EndGlobalSection
 EndGlobal
