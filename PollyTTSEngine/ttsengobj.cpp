@@ -38,6 +38,9 @@ HRESULT CTTSEngObj::FinalConstruct()
 {
 	Logger = spdlog::basic_logger_mt("basic_logger", "polly-tts.log");
 	spdlog::set_pattern("[%H:%M:%S %z] %v");
+	spdlog::set_async_mode(10, spdlog::async_overflow_policy::block_retry,
+		nullptr,
+		std::chrono::seconds(2));
 #ifdef DEBUG
 	spdlog::set_level(spdlog::level::debug); //Set global log level to info
 #endif
@@ -72,12 +75,14 @@ void CTTSEngObj::FinalRelease()
 STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 {
 	Logger->info("SetObjectToken");
-	HRESULT hr = SpGenericSetObjectToken(pToken, m_cpToken);
+	HRESULT hr;
+	Logger->info("Setting object token");
+	hr = SpGenericSetObjectToken(pToken, m_cpToken);
+	Logger->info("SpGenericSetObjectToken Response: {0}" , hr);
 	return hr;
 } /* CTTSEngObj::SetObjectToken */
 
 //
-//=== ISpTTSEngine Implementation ============================================
 //
 
 /*****************************************************************************
