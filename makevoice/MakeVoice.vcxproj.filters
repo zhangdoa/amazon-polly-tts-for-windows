@@ -17,9 +17,15 @@
     <ClCompile Include="InstallVoices.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VoiceForSapi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VoiceForSapi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
