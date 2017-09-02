@@ -127,12 +127,13 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                                 const SPVTEXTFRAG* pTextFragList,
                                 ISpTTSEngineSite* pOutputSite )
 {
+	Logger->debug("Speak");
 	CComPtr<ISpDataKey> attributesKey;
+	Logger->debug("Reading attributes key to get the voice");
 	m_cpToken->OpenKey(L"Attributes", &attributesKey);
 	attributesKey->GetStringValue(L"VoiceName", &m_pPollyVoice);
-	Logger->debug(__FUNCTION__);
-	static const char* ALLOCATION_TAG = "PollyTTS::Windows";
-	Logger->debug(	"Initializing AWS\n");
+	Logger->debug("Read Polly voice\n");
+	Logger->debug("Initializing AWS\n");
 	Aws::SDKOptions options;
 #ifdef DEBUG
 	options.loggingOptions.logLevel = Logging::LogLevel::Debug;
