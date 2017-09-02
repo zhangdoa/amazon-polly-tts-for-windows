@@ -12,141 +12,117 @@
 *
 ******************************************************************************/
 #include "stdafx.h"
-#include <PollyTTSEngine_i.c>
+#include <iostream>
+#include <PollyTTSEngine.c>
 #include <direct.h>
 #include "PollyTTSEngine.h"
+#include <aws/core/Aws.h>
+#include <aws/core/utils/Outcome.h>
+#include <aws/polly/model/DescribeVoicesRequest.h>
+#include <aws/polly/PollyClient.h>
+#include "VoiceForSapi.h"
+
+
+using namespace Aws::Polly;
+
+typedef Aws::Vector<VoiceForSAPI> voice_vec_t;
+voice_vec_t ListAvailableVoices(void);
 
 int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
 {
-    static const DWORD dwVersion = { 1 };
-    ULONG ulNumWords = 0;
-    HRESULT hr = S_OK;
+	HRESULT hr = S_OK;
+	std::cout << "Installing Amazon Polly Voices!" << std::endl;
 
-    ::CoInitialize( NULL );
+	Aws::SDKOptions options;
+	Aws::InitAPI(options);
 
-    //--- Register the new voice file
-    //    The section below shows how to programatically create a token for
-    //    the new voice and set its attributes.
-    if( SUCCEEDED( hr ) )
-    {
-        CComPtr<ISpObjectToken> cpToken;
-        CComPtr<ISpDataKey> cpDataKeyAttribs;
-        hr = SpCreateNewTokenEx(
-                SPCAT_VOICES, 
-                L"PollyJoanna", 
-                &CLSID_PollyTTSEngine, 
-                L"Amazon Polly Joanna - English", 
-                0x409, 
-                L"Amazon Polly Joanna - English", 
-                &cpToken,
-                &cpDataKeyAttribs);
+	::CoInitialize(NULL);
 
-        //--- Set additional attributes for searching and the path to the
-        //    voice data file we just created.
-        if (SUCCEEDED(hr))
-        {
-            hr = cpDataKeyAttribs->SetStringValue(L"Gender", L"Female");
-            if (SUCCEEDED(hr))
-            {
-                hr = cpDataKeyAttribs->SetStringValue(L"Name", L"PollyJoanna");
-            }
-            if (SUCCEEDED(hr))
-            {
-                hr = cpDataKeyAttribs->SetStringValue(L"Language", L"409");
-            }
-            if (SUCCEEDED(hr))
-            {
-                hr = cpDataKeyAttribs->SetStringValue(L"Age", L"Adult");
-            }
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"VoiceName", L"Joanna");
-			}
-			if (SUCCEEDED(hr))
-            {
-                hr = cpDataKeyAttribs->SetStringValue(L"Vendor", L"AWS");
-            }
-        }
+	//--- Register the new voice file
+	//    The section below shows how to programatically create a token for
+	//    the new voice and set its attributes.
 
-		hr = SpCreateNewTokenEx(
-			SPCAT_VOICES,
-			L"PollyBrian",
-			&CLSID_PollyTTSEngine,
-			L"Amazon Polly Brian Test - British English",
-			0x409,
-			L"Amazon Polly Brian Test - British English",
-			&cpToken,
-			&cpDataKeyAttribs);
 
-		//--- Set additional attributes for searching and the path to the
-		//    voice data file we just created.
-		if (SUCCEEDED(hr))
+	if (SUCCEEDED(hr))
+	{
+		//for (auto& voice : ListAvailableVoices())
+
+		voice_vec_t all_voices = ListAvailableVoices();
+
+		//for (int i = 0; i < 1; i++)
+		for (int i = 0; i < all_voices.size(); i++)
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Gender", L"Male");
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"Name", L"PollyBrian");
-			}
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"Language", L"409");
-			}
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"Age", L"Adult");
-			}
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"VoiceName", L"Brian");
-			}
+			VoiceForSAPI voiceForSapi = all_voices[i];
 
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"Vendor", L"AWS");
-			}
-		}
-		hr = SpCreateNewTokenEx(
-			SPCAT_VOICES,
-			L"PollyRussell",
-			&CLSID_PollyTTSEngine,
-			L"Amazon Polly Russell - British English",
-			0x409,
-			L"Amazon Polly Russell - British English",
-			&cpToken,
-			&cpDataKeyAttribs);
+			std::wcout << i + 1 << ":" << voiceForSapi.tokenKeyName << " - ";
+			std::wcout << voiceForSapi.langIndependentName << std::endl;
 
-		//--- Set additional attributes for searching and the path to the
-		//    voice data file we just created.
-		if (SUCCEEDED(hr))
-		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Gender", L"Male");
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"Name", L"PollyRussell");
-			}
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"Language", L"409");
-			}
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"Age", L"Adult");
-			}
-			if (SUCCEEDED(hr))
-			{
-				hr = cpDataKeyAttribs->SetStringValue(L"VoiceName", L"Russell");
-			}
+			CComPtr<ISpObjectToken> cpToken;
+			CComPtr<ISpDataKey> cpDataKeyAttribs;
 
+			hr = SpCreateNewTokenEx(
+				SPCAT_VOICES,
+				voiceForSapi.tokenKeyName,
+				&CLSID_PollyTTSEngine,
+				voiceForSapi.langDependentName,
+				voiceForSapi.langid,
+				voiceForSapi.langIndependentName,
+				&cpToken,
+				&cpDataKeyAttribs);
+
+			//--- Set additional attributes for searching and the path to the
+			//    voice data file we just created.
 			if (SUCCEEDED(hr))
 			{
-				hr = cpDataKeyAttribs->SetStringValue(L"Vendor", L"AWS");
+				hr = cpDataKeyAttribs->SetStringValue(L"Gender", voiceForSapi.gender);
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Name", voiceForSapi.name);
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"VoiceId", voiceForSapi.voiceId);
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Language", voiceForSapi.languageText);
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Age", voiceForSapi.age);
+				}
+				if (SUCCEEDED(hr))
+				{
+					hr = cpDataKeyAttribs->SetStringValue(L"Vendor", voiceForSapi.vendor);
+				}
 			}
 		}
 	}
 
-
-
-    ::CoUninitialize();
-    return FAILED( hr );
+	::CoUninitialize();
+	Aws::ShutdownAPI(options);
+	return FAILED(hr);
 }
 
+voice_vec_t ListAvailableVoices()
+{
+	voice_vec_t polly_voices;
+	Aws::Polly::PollyClient pc;
+
+	DescribeVoicesRequest describeVoices;
+
+	auto voicesOutcome = pc.DescribeVoices(describeVoices);
+	if (voicesOutcome.IsSuccess())
+	{
+		for (auto& voice : voicesOutcome.GetResult().GetVoices())
+		{
+			VoiceForSAPI v4sp(voice);
+			polly_voices.push_back(v4sp);
+		}
+	}
+	else
+	{
+		std::cout << "Error while getting voices" << std::endl;
+	}
+	return polly_voices;
+}
