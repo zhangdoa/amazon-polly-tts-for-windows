@@ -85,6 +85,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     /*--- Constructors/Destructors ---*/
     HRESULT FinalConstruct();
     void FinalRelease();
+	TCHAR* GetPath();
 
   /*=== Interfaces ====*/
   public:

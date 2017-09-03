@@ -28,6 +28,14 @@ using namespace Aws::Polly;
 using namespace Model;
 using namespace Aws::Utils;
 
+TCHAR* CTTSEngObj::GetPath()
+{
+	TCHAR buf[MAX_PATH];
+
+	GetTempPath(MAX_PATH, buf);
+	return buf;
+}
+
 /*****************************************************************************
 * CTTSEngObj::FinalConstruct *
 *----------------------------*
@@ -36,7 +44,10 @@ using namespace Aws::Utils;
 *****************************************************************************/
 HRESULT CTTSEngObj::FinalConstruct()
 {
-	Logger = spdlog::basic_logger_mt("basic_logger", "polly-tts.log");
+	auto temp_folder = GetPath();
+	char logPath[MAX_PATH];
+	sprintf_s(logPath, MAX_PATH, "%lspolly-tts.log", temp_folder);
+	Logger = spdlog::basic_logger_mt("basic_logger", logPath);
 	spdlog::set_pattern("[%H:%M:%S %z] %v");
 	spdlog::set_async_mode(10, spdlog::async_overflow_policy::block_retry,
 		nullptr,
@@ -127,9 +138,9 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                                 const SPVTEXTFRAG* pTextFragList,
                                 ISpTTSEngineSite* pOutputSite )
 {
-	Logger->debug("Speak");
+	Logger->debug("Speak\n");
 	CComPtr<ISpDataKey> attributesKey;
-	Logger->debug("Reading attributes key to get the voice");
+	Logger->debug("Reading attributes key to get the voice\n");
 	m_cpToken->OpenKey(L"Attributes", &attributesKey);
 	attributesKey->GetStringValue(L"VoiceName", &m_pPollyVoice);
 	Logger->debug("Read Polly voice\n");
