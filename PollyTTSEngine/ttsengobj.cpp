@@ -386,7 +386,8 @@ STDMETHODIMP CTTSEngObj::GetOutputFormat( const GUID * pTargetFormatId, const WA
 
     hr = SpConvertStreamFormatEnum(SPSF_16kHz16BitMono, pDesiredFormatId, ppCoMemDesiredWaveFormatEx);
 
-    return hr;
+	m_logger->debug("End Speak");
+	return hr;
 } /* CTTSEngObj::GetVoiceFormat */
 
 //
