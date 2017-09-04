@@ -31,6 +31,7 @@
 
 #include "resource.h"
 #include <string>
+#include "spdlog/spdlog.h"
 
 //=== Constants ====================================================
 
@@ -84,6 +85,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     /*--- Constructors/Destructors ---*/
     HRESULT FinalConstruct();
     void FinalRelease();
+	TCHAR* GetPath();
 
   /*=== Interfaces ====*/
   public:
@@ -99,7 +101,7 @@ class ATL_NO_VTABLE CTTSEngObj :
                       const SPVTEXTFRAG* pTextFragList, ISpTTSEngineSite* pOutputSite );
     STDMETHOD(GetOutputFormat)( const GUID * pTargetFormatId, const WAVEFORMATEX * pTargetWaveFormatEx,
                                 GUID * pDesiredFormatId, WAVEFORMATEX ** ppCoMemDesiredWaveFormatEx );
-
+	std::shared_ptr<spdlog::logger> Logger;
 
   private:
     /*--- Non interface methods ---*/
