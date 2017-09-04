@@ -13,7 +13,7 @@
 ******************************************************************************/
 #include "stdafx.h"
 #include <iostream>
-#include <PollyTTSEngine.c>
+#include <PollyTTSEngine_i.c>
 #include <direct.h>
 #include "PollyTTSEngine.h"
 #include <aws/core/Aws.h>
