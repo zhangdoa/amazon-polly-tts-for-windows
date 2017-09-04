@@ -118,7 +118,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 	LogUtils log;
 	CComPtr<ISpDataKey> attributesKey;
 	m_cpToken->OpenKey(L"Attributes", &attributesKey);
-	attributesKey->GetStringValue(L"VoiceName", &m_pPollyVoice);
+	attributesKey->GetStringValue(L"VoiceId", &m_pPollyVoice);
 	log.Debug("%s\n", __FUNCTION__);
 	static const char* ALLOCATION_TAG = "PollyTTS::Windows";
 	log.Debug("Initializing AWS\n");
