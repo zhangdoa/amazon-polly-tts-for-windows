@@ -47,11 +47,16 @@ HRESULT CTTSEngObj::FinalConstruct()
 	auto temp_folder = GetPath();
 	char logPath[MAX_PATH];
 	sprintf_s(logPath, MAX_PATH, "%lspolly-tts.log", temp_folder);
-	Logger = spdlog::basic_logger_mt("basic_logger", logPath);
+	if (!spdlog::get("basic_logger"))
+	{
+		m_logger = spdlog::basic_logger_mt("basic_logger", logPath, true);
+	}
+	else
+	{
+		m_logger = spdlog::get("basic_logger");
+	}
+	
 	spdlog::set_pattern("[%H:%M:%S %z] %v");
-	spdlog::set_async_mode(10, spdlog::async_overflow_policy::block_retry,
-		nullptr,
-		std::chrono::seconds(2));
 #ifdef DEBUG
 	spdlog::set_level(spdlog::level::debug); //Set global log level to info
 #endif
@@ -67,8 +72,6 @@ HRESULT CTTSEngObj::FinalConstruct()
 *****************************************************************************/
 void CTTSEngObj::FinalRelease()
 {
-
-
 } /* CTTSEngObj::FinalRelease */
 
 //
@@ -85,11 +88,11 @@ void CTTSEngObj::FinalRelease()
 *****************************************************************************/
 STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 {
-	Logger->info("SetObjectToken");
+	m_logger->info("SetObjectToken");
 	HRESULT hr;
-	Logger->info("Setting object token");
+	m_logger->info("Setting object token");
 	hr = SpGenericSetObjectToken(pToken, m_cpToken);
-	Logger->info("SpGenericSetObjectToken Response: {0}" , hr);
+	m_logger->info("SpGenericSetObjectToken Response: {0}" , hr);
 	return hr;
 } /* CTTSEngObj::SetObjectToken */
 
@@ -138,13 +141,13 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                                 const SPVTEXTFRAG* pTextFragList,
                                 ISpTTSEngineSite* pOutputSite )
 {
-	Logger->debug("Speak\n");
+	m_logger->debug("Speak\n");
 	CComPtr<ISpDataKey> attributesKey;
-	Logger->debug("Reading attributes key to get the voice\n");
+	m_logger->debug("Reading attributes key to get the voice\n");
 	m_cpToken->OpenKey(L"Attributes", &attributesKey);
 	attributesKey->GetStringValue(L"VoiceId", &m_pPollyVoice);
-	Logger->debug("Read Polly voice\n");
-	Logger->debug("Initializing AWS\n");
+	m_logger->debug("Read Polly voice\n");
+	m_logger->debug("Initializing AWS\n");
 	Aws::SDKOptions options;
 #ifdef DEBUG
 	options.loggingOptions.logLevel = Logging::LogLevel::Debug;
@@ -179,13 +182,13 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         //    things like abreviations and expansion of numbers and dates.
         CItemList ItemList;
 
-		Logger->debug("Starting work processing\n");
+		m_logger->debug("Starting work processing\n");
 		while( SUCCEEDED( hr ) && !(pOutputSite->GetActions() & SPVES_ABORT) )
         {
             //--- Do skip?
             if( pOutputSite->GetActions() & SPVES_SKIP )
             {
-				Logger->debug("ACTION: SKIP\n");
+				m_logger->debug("ACTION: SKIP\n");
 				long lSkipCnt;
                 SPVSKIPTYPE eType;
                 hr = pOutputSite->GetSkipInfo( &eType, &lSkipCnt );
@@ -200,7 +203,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             //--- Build the text item list
             if( SUCCEEDED( hr ) && (hr = GetNextSentence( ItemList )) != S_OK )
             {
-				Logger->debug("ERROR Getting the next sentence from ItemList\n");
+				m_logger->debug("ERROR Getting the next sentence from ItemList\n");
 				break;
             }
 
@@ -240,7 +243,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             hr = S_OK;
         }
     }
-
     return hr;
 } /* CTTSEngObj::Speak */
 
@@ -253,7 +255,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 {
     HRESULT hr = S_OK;
 //    ULONG WordIndex;
-	Logger->debug(__FUNCTION__);
+	m_logger->debug(__FUNCTION__);
 
     //--- Lookup words in our voice
     SPLISTPOS ListPos = ItemList.GetHeadPosition();
@@ -400,15 +402,15 @@ HRESULT CTTSEngObj::GetNextSentence( CItemList& ItemList )
     HRESULT hr = S_OK;
 	LogUtils log;
 
-	Logger->debug(__FUNCTION__);
-	Logger->debug("Clearing the item list\n");
+	m_logger->debug(__FUNCTION__);
+	m_logger->debug("Clearing the item list\n");
 	//--- Clear the destination
     ItemList.RemoveAll();
 
     //--- Is there any work to do
     if( m_pCurrFrag == NULL )
     {
-		Logger->debug("CurrFrag is null, nothing to do");
+		m_logger->debug("CurrFrag is null, nothing to do");
 		hr = S_FALSE;
     }
     else

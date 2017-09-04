@@ -101,7 +101,6 @@ class ATL_NO_VTABLE CTTSEngObj :
                       const SPVTEXTFRAG* pTextFragList, ISpTTSEngineSite* pOutputSite );
     STDMETHOD(GetOutputFormat)( const GUID * pTargetFormatId, const WAVEFORMATEX * pTargetWaveFormatEx,
                                 GUID * pDesiredFormatId, WAVEFORMATEX ** ppCoMemDesiredWaveFormatEx );
-	std::shared_ptr<spdlog::logger> Logger;
 
   private:
     /*--- Non interface methods ---*/
@@ -116,6 +115,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     HANDLE                  m_hVoiceData;
     void*                   m_pVoiceData;
 	LPWSTR      			m_pPollyVoice;
+	std::shared_ptr<spdlog::logger> m_logger;
 
     //--- Voice (word/audio data) list
     //  Note: You will probably have something more sophisticated here
