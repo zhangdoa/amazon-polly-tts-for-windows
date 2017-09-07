@@ -8,7 +8,7 @@ class VoiceForSAPI
 	std::pair<int, const wchar_t*> GetVoiceHexValue(LanguageCode code);
 	static wchar_t* AWSStringToWchar(Aws::String);
 public:
-	const WCHAR * tokenKeyName;
+	WCHAR * tokenKeyName;
 	const WCHAR * langIndependentName;
 	const WCHAR * langDependentName;
 	WORD langid; 
