@@ -78,6 +78,7 @@
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(SolutionDir)PollyTTSEngine\lib\Debug;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <IncludePath>$(SolutionDir)PollyTTSEngine;$(SolutionDir)PollyTTSEngine\include;$(IncludePath)</IncludePath>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
@@ -139,7 +140,7 @@
     </Link>
     <PostBuildEvent>
       <Message>Build and register voice file</Message>
-      <Command>"$(TargetPath)" wordlist.txt SampleVoice.vce SampleTTSVoice</Command>
+      <Command>"$(TargetPath)" install</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
