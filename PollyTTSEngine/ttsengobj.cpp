@@ -22,10 +22,19 @@
 #include <aws/polly/PollyClient.h>
 #include <aws/polly/model/DescribeVoicesRequest.h>
 #include "PollyManager.h"
+#include "spdlog/spdlog.h"
 //--- Local
 using namespace Aws::Polly;
 using namespace Model;
 using namespace Aws::Utils;
+
+TCHAR* CTTSEngObj::GetPath()
+{
+	TCHAR buf[MAX_PATH];
+
+	GetTempPath(MAX_PATH, buf);
+	return buf;
+}
 
 /*****************************************************************************
 * CTTSEngObj::FinalConstruct *
@@ -35,7 +44,23 @@ using namespace Aws::Utils;
 *****************************************************************************/
 HRESULT CTTSEngObj::FinalConstruct()
 {
-    HRESULT hr = S_OK;
+	auto temp_folder = GetPath();
+	char logPath[MAX_PATH];
+	sprintf_s(logPath, MAX_PATH, "%lspolly-tts.log", temp_folder);
+	if (!spdlog::get("basic_logger"))
+	{
+		m_logger = spdlog::basic_logger_mt("basic_logger", logPath, true);
+	}
+	else
+	{
+		m_logger = spdlog::get("basic_logger");
+	}
+	
+	spdlog::set_pattern("[%H:%M:%S %z] %v");
+#ifdef DEBUG
+	spdlog::set_level(spdlog::level::debug); //Set global log level to info
+#endif
+	HRESULT hr = S_OK;
     return hr;
 } /* CTTSEngObj::FinalConstruct */
 
@@ -47,8 +72,6 @@ HRESULT CTTSEngObj::FinalConstruct()
 *****************************************************************************/
 void CTTSEngObj::FinalRelease()
 {
-
-
 } /* CTTSEngObj::FinalRelease */
 
 //
@@ -65,12 +88,15 @@ void CTTSEngObj::FinalRelease()
 *****************************************************************************/
 STDMETHODIMP CTTSEngObj::SetObjectToken(ISpObjectToken * pToken)
 {
-	HRESULT hr = SpGenericSetObjectToken(pToken, m_cpToken);
+	m_logger->info("SetObjectToken");
+	HRESULT hr;
+	m_logger->info("Setting object token");
+	hr = SpGenericSetObjectToken(pToken, m_cpToken);
+	m_logger->info("SpGenericSetObjectToken Response: {0}" , hr);
 	return hr;
 } /* CTTSEngObj::SetObjectToken */
 
 //
-//=== ISpTTSEngine Implementation ============================================
 //
 
 /*****************************************************************************
@@ -115,15 +141,19 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                                 const SPVTEXTFRAG* pTextFragList,
                                 ISpTTSEngineSite* pOutputSite )
 {
-	LogUtils log;
+	m_logger->debug("Speak\n");
 	CComPtr<ISpDataKey> attributesKey;
+	m_logger->debug("Reading attributes key to get the voice\n");
 	m_cpToken->OpenKey(L"Attributes", &attributesKey);
 	attributesKey->GetStringValue(L"VoiceId", &m_pPollyVoice);
-	log.Debug("%s\n", __FUNCTION__);
-	static const char* ALLOCATION_TAG = "PollyTTS::Windows";
-	log.Debug("Initializing AWS\n");
+	m_logger->debug("Read Polly voice\n");
+	m_logger->debug("Initializing AWS\n");
 	Aws::SDKOptions options;
-
+#ifdef DEBUG
+	options.loggingOptions.logLevel = Logging::LogLevel::Debug;
+#else
+	options.loggingOptions.logLevel = Logging::LogLevel::Warning;
+#endif
 	InitAPI(options);
 	HRESULT hr = S_OK;
 
@@ -140,7 +170,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         m_pNextChar   = m_pCurrFrag->pTextStart;
         m_pEndChar    = m_pNextChar + m_pCurrFrag->ulTextLen;
         m_ullAudioOff = 0;
-		log.Debug("Initializing fragment: NextChar: %ul, EndChar: %ul, AudioOffset: %u\n", m_pNextChar, m_pEndChar, m_ullAudioOff);
 
 		if (wcsstr(m_pCurrFrag->pTextStart, L"<speak>"))
 		{
@@ -153,13 +182,13 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         //    things like abreviations and expansion of numbers and dates.
         CItemList ItemList;
 
-		log.Debug("Starting work processing\n");
+		m_logger->debug("Starting work processing\n");
 		while( SUCCEEDED( hr ) && !(pOutputSite->GetActions() & SPVES_ABORT) )
         {
             //--- Do skip?
             if( pOutputSite->GetActions() & SPVES_SKIP )
             {
-				log.Debug("ACTION: SKIP\n");
+				m_logger->debug("ACTION: SKIP\n");
 				long lSkipCnt;
                 SPVSKIPTYPE eType;
                 hr = pOutputSite->GetSkipInfo( &eType, &lSkipCnt );
@@ -174,7 +203,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             //--- Build the text item list
             if( SUCCEEDED( hr ) && (hr = GetNextSentence( ItemList )) != S_OK )
             {
-				log.Debug("ERROR Getting the next sentence from ItemList\n");
+				m_logger->debug("ERROR Getting the next sentence from ItemList\n");
 				break;
             }
 
@@ -187,7 +216,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 
             if( !(pOutputSite->GetActions() & SPVES_ABORT) )
             {
-				log.Debug("Firing being sentence event, ItemList length = %i\n", ItemList.GetCount());
 				//--- Fire begin sentence event
                 CSentItem& FirstItem = ItemList.GetHead();
                 CSentItem& LastItem  = ItemList.GetTail();
@@ -199,9 +227,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                 Event.wParam               = (WPARAM)LastItem.ulItemSrcOffset +
                                                      LastItem.ulItemSrcLen -
                                                      FirstItem.ulItemSrcOffset;
-				log.Debug("Adding SPEI_SENTENCE_BOUNDARY: AudioStreamOffset: %u, lparam: %ul, wparam: %ul\n",
-					Event.ullAudioStreamOffset, Event.lParam, Event.wParam);
-				log.Debug("First item: %s, Last Item: %s", FirstItem.pItem, LastItem.pItem);
 				hr = pOutputSite->AddEvents( &Event, 1 );
 
                 //--- Output
@@ -218,7 +243,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
             hr = S_OK;
         }
     }
-
     return hr;
 } /* CTTSEngObj::Speak */
 
@@ -231,8 +255,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 {
     HRESULT hr = S_OK;
 //    ULONG WordIndex;
-	LogUtils log;
-	log.Debug("%s\n", __FUNCTION__);
+	m_logger->debug(__FUNCTION__);
 
     //--- Lookup words in our voice
     SPLISTPOS ListPos = ItemList.GetHeadPosition();
@@ -251,7 +274,6 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
     {
 		SpeechMark sm = *i;
         CSentItem& Item = ItemList.GetNext( ListPos );
-		log.Debug("%s: Current item is: '%ls'\n", __FUNCTION__, Item.pItem);
 
         //--- Process sentence items
 		switch( Item.pXmlState->eAction )
@@ -259,14 +281,8 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
           //--- Speak some text ---------------------------------------
           case SPVA_Speak:
           {
-			log.Debug("%s: Action = Speak\n", __FUNCTION__);
             if( iswalpha( Item.pItem[0] ) || iswdigit( Item.pItem[0] ) )
             {
-				log.Debug("%s: Queuing WORD_BOUNDARY event: '%ls', ullAudioStreamOffset = %i, lparam=%i, wparam=%i\n", __FUNCTION__,
-					Item.pItem,
-					wordOffset,
-					Item.ulItemSrcOffset,
-					Item.ulItemSrcLen);
 				//--- Queue the event
                 CSpEvent Event;
                 Event.eEventId             = SPEI_WORD_BOUNDARY;
@@ -370,7 +386,8 @@ STDMETHODIMP CTTSEngObj::GetOutputFormat( const GUID * pTargetFormatId, const WA
 
     hr = SpConvertStreamFormatEnum(SPSF_16kHz16BitMono, pDesiredFormatId, ppCoMemDesiredWaveFormatEx);
 
-    return hr;
+	m_logger->debug("End Speak");
+	return hr;
 } /* CTTSEngObj::GetVoiceFormat */
 
 //
@@ -386,15 +403,15 @@ HRESULT CTTSEngObj::GetNextSentence( CItemList& ItemList )
     HRESULT hr = S_OK;
 	LogUtils log;
 
-	log.Debug("%s\n", __FUNCTION__);
-	log.Debug("Clearing the item list\n");
+	m_logger->debug(__FUNCTION__);
+	m_logger->debug("Clearing the item list\n");
 	//--- Clear the destination
     ItemList.RemoveAll();
 
     //--- Is there any work to do
     if( m_pCurrFrag == NULL )
     {
-		log.Debug("CurrFrag is null, nothing to do");
+		m_logger->debug("CurrFrag is null, nothing to do");
 		hr = S_FALSE;
     }
     else

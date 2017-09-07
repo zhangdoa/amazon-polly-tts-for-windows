@@ -31,6 +31,7 @@
 
 #include "resource.h"
 #include <string>
+#include "spdlog/spdlog.h"
 
 //=== Constants ====================================================
 
@@ -84,6 +85,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     /*--- Constructors/Destructors ---*/
     HRESULT FinalConstruct();
     void FinalRelease();
+	TCHAR* GetPath();
 
   /*=== Interfaces ====*/
   public:
@@ -100,7 +102,6 @@ class ATL_NO_VTABLE CTTSEngObj :
     STDMETHOD(GetOutputFormat)( const GUID * pTargetFormatId, const WAVEFORMATEX * pTargetWaveFormatEx,
                                 GUID * pDesiredFormatId, WAVEFORMATEX ** ppCoMemDesiredWaveFormatEx );
 
-
   private:
     /*--- Non interface methods ---*/
     HRESULT MapFile(const WCHAR * pszTokenValName, HANDLE * phMapping, void ** ppvData );
@@ -114,6 +115,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     HANDLE                  m_hVoiceData;
     void*                   m_pVoiceData;
 	LPWSTR      			m_pPollyVoice;
+	std::shared_ptr<spdlog::logger> m_logger;
 
     //--- Voice (word/audio data) list
     //  Note: You will probably have something more sophisticated here
