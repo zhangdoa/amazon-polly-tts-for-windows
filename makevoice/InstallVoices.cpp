@@ -3,12 +3,11 @@
 // THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
 // PARTICULAR PURPOSE.
 //
-// Copyright © Microsoft Corporation. All rights reserved
 
 /******************************************************************************
 * InstallVoices.cpp *
 *-------------*
-*   This application assembles a simple voice font for the sample TTS engine.
+*   Install Amazon Polly Voices
 *
 ******************************************************************************/
 #include "stdafx.h"
