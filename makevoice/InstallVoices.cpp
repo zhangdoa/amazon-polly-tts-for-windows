@@ -101,7 +101,6 @@ voice_map_t SelectedVoicesMap(std::wstring voiceList)
 	Aws::InitAPI(options);
 	Aws::Polly::PollyClient pc;
 	voice_map_t pollyVoices;
-	boolean iCanAdd(false);
 	boolean isSelected(false);
 	boolean isAllSelected(voiceList.size() < 1);
 	DescribeVoicesRequest describeVoices;
