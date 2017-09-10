@@ -151,8 +151,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 	Aws::SDKOptions options;
 #ifdef DEBUG
 	options.loggingOptions.logLevel = Logging::LogLevel::Debug;
-#else
-	options.loggingOptions.logLevel = Logging::LogLevel::Warning;
 #endif
 	InitAPI(options);
 	HRESULT hr = S_OK;

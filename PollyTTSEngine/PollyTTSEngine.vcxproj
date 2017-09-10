@@ -210,14 +210,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>C:\Users\troylars\dev\github\aws-sdk-cpp\aws-cpp-sdk-transfer\include;C:\Users\troylars\dev\github\aws-sdk-cpp\aws-cpp-sdk-text-to-speech\include;C:\Users\troylars\dev\github\aws-sdk-cpp\aws-cpp-sdk-polly\include;C:\Users\troylars\dev\github\aws-sdk-cpp\aws-cpp-sdk-core\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>aws-cpp-sdk-polly.lib;aws-cpp-sdk-core.lib;aws-cpp-sdk-text-to-speech.lib;nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>aws-cpp-sdk-text-to-speech.lib;aws-cpp-sdk-core.lib;aws-cpp-sdk-polly.lib;nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>PollyTTSEngine.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>

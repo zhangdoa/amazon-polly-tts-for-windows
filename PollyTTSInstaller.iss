@@ -29,11 +29,11 @@ SolidCompression=yes
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: ".\x64\Debug\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\x64\Debug\aws-cpp-sdk-core.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\x64\Debug\aws-cpp-sdk-polly.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\x64\Debug\aws-cpp-sdk-text-to-speech.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\x64\Debug\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\lib\Release\aws-cpp-sdk-core.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\lib\Release\aws-cpp-sdk-polly.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\lib\Release\aws-cpp-sdk-text-to-speech.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\x64\Release\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\x64\Release\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
 
 [Run]
 Filename: "{app}\InstallVoices.exe"; Parameters: "install"; StatusMsg: "Installing Voices..."
