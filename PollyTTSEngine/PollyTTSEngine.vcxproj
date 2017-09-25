@@ -21,6 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{214761EA-9911-4031-AC43-92CC12536E17}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <RootNamespace>PollyTTSWindows</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
     <ProjectName>PollyWindowsTTS</ProjectName>
   </PropertyGroup>
@@ -213,6 +214,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
+      <OmitDefaultLibName>false</OmitDefaultLibName>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -227,6 +229,8 @@
       <TargetMachine>MachineX64</TargetMachine>
       <StackReserveSize>
       </StackReserveSize>
+      <ShowProgress>LinkVerbose</ShowProgress>
+      <LinkStatus>true</LinkStatus>
     </Link>
     <PostBuildEvent>
       <Message>
