@@ -37,9 +37,17 @@ namespace Model
   {
   public:
     DescribeVoicesRequest();
+    
+    // Service request name is the Operation name which will send this request out,
+    // each operation should has unique request name, so that we can get operation's name from this request.
+    // Note: this is not true for response, multiple operations may have the same response name,
+    // so we can not get operation's name from response.
+    inline virtual const char* GetServiceRequestName() const override { return "DescribeVoices"; }
+
     Aws::String SerializePayload() const override;
 
     void AddQueryStringParameters(Aws::Http::URI& uri) const override;
+
 
     /**
      * <p> The language identification tag (ISO 639 code for the language name-ISO 3166
@@ -75,6 +83,7 @@ namespace Model
      * this optional parameter, all available voices are returned. </p>
      */
     inline DescribeVoicesRequest& WithLanguageCode(LanguageCode&& value) { SetLanguageCode(std::move(value)); return *this;}
+
 
     /**
      * <p>An opaque pagination token returned from the previous
@@ -126,8 +135,10 @@ namespace Model
     inline DescribeVoicesRequest& WithNextToken(const char* value) { SetNextToken(value); return *this;}
 
   private:
+
     LanguageCode m_languageCode;
     bool m_languageCodeHasBeenSet;
+
     Aws::String m_nextToken;
     bool m_nextTokenHasBeenSet;
   };

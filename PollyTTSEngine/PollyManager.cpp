@@ -5,6 +5,7 @@
 #include <aws/polly/model/OutputFormat.h>
 #include <aws/polly/model/TextType.h>
 #include <aws/core/utils/Outcome.h>
+#include <aws/core/utils/StringUtils.h>
 #include <aws/polly/model/SynthesizeSpeechRequest.h>
 #include "TtsEngObj.h"
 #include "PollySpeechMarksResponse.h"

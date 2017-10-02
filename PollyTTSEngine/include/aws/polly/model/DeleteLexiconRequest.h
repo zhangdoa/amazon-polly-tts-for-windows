@@ -32,7 +32,15 @@ namespace Model
   {
   public:
     DeleteLexiconRequest();
+    
+    // Service request name is the Operation name which will send this request out,
+    // each operation should has unique request name, so that we can get operation's name from this request.
+    // Note: this is not true for response, multiple operations may have the same response name,
+    // so we can not get operation's name from response.
+    inline virtual const char* GetServiceRequestName() const override { return "DeleteLexicon"; }
+
     Aws::String SerializePayload() const override;
+
 
     /**
      * <p>The name of the lexicon to delete. Must be an existing lexicon in the
@@ -77,6 +85,7 @@ namespace Model
     inline DeleteLexiconRequest& WithName(const char* value) { SetName(value); return *this;}
 
   private:
+
     Aws::String m_name;
     bool m_nameHasBeenSet;
   };

@@ -207,8 +207,8 @@
       <HeaderFileName>%(Filename).h</HeaderFileName>
     </Midl>
     <ClCompile>
-      <PreprocessorDefinitions>USE_IMPORT_EXPORT;WIN32;NDEBUG;_WINDOWS;_USRDLL;TTSENG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;TTSENG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -220,7 +220,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>aws-cpp-sdk-text-to-speech.lib;aws-cpp-sdk-core.lib;aws-cpp-sdk-polly.lib;nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;userenv.lib;bcrypt.lib;wininet.lib;winhttp.lib;aws-cpp-sdk-text-to-speech.lib;aws-cpp-sdk-core.lib;aws-cpp-sdk-polly.lib;nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>PollyTTSEngine.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>

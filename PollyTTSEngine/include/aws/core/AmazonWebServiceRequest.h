@@ -137,10 +137,8 @@ namespace Aws
          */
         inline virtual bool ShouldComputeContentMd5() const { return false; }
 
-        /**
-         * Return the Auth method's name used for request, defaulted to AuthV4Signer.
-         */
-        inline virtual Aws::String GetAuthSignerName() const { return Aws::Auth::DEFAULT_AUTHV4_SIGNER; }
+        virtual const char* GetServiceRequestName() const = 0;
+
     protected:
         /**
          * Default does nothing. Override this to convert what would otherwise be the payload of the 

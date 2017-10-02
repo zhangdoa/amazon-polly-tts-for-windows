@@ -13,7 +13,7 @@
   * permissions and limitations under the License.
   */
 
-#define USE_AWS_MEMORY_MANAGEMENT
+/* #undef USE_AWS_MEMORY_MANAGEMENT */
 
 #define JSON_USE_EXCEPTION 0
 

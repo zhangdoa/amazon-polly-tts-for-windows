@@ -32,7 +32,15 @@ namespace Model
   {
   public:
     PutLexiconRequest();
+    
+    // Service request name is the Operation name which will send this request out,
+    // each operation should has unique request name, so that we can get operation's name from this request.
+    // Note: this is not true for response, multiple operations may have the same response name,
+    // so we can not get operation's name from response.
+    inline virtual const char* GetServiceRequestName() const override { return "PutLexicon"; }
+
     Aws::String SerializePayload() const override;
+
 
     /**
      * <p>Name of the lexicon. The name must follow the regular express format
@@ -83,6 +91,7 @@ namespace Model
      */
     inline PutLexiconRequest& WithName(const char* value) { SetName(value); return *this;}
 
+
     /**
      * <p>Content of the PLS lexicon as string data.</p>
      */
@@ -119,8 +128,10 @@ namespace Model
     inline PutLexiconRequest& WithContent(const char* value) { SetContent(value); return *this;}
 
   private:
+
     Aws::String m_name;
     bool m_nameHasBeenSet;
+
     Aws::String m_content;
     bool m_contentHasBeenSet;
   };
