@@ -30,7 +30,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: ".\x64\Release\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\PollyTTSEngine\Release\PollyWindowsTTS.tlb"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\x64\Release\PollyWindowsTTS.tlb"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\x64\Release\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
 
 [Run]
