@@ -647,15 +647,6 @@ BOOL CTTSEngObj::AddNextSentItem( CItemList& ItemList )
         //    we are not going to attempt here.
     }
     
-    //--- Substitute underscore for apostrophe
-    for( ULONG i = 0; i < TokenLen; ++i )
-    {
-        if( Item.pItem[i] == L'\'' )
-        {
-            ((WCHAR)Item.pItem[i]) = L'_';
-        }
-    }
-
     //--- Add the main item
     if( TokenLen > 0 )
     {
