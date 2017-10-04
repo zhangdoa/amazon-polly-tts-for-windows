@@ -24,6 +24,7 @@ OutputBaseFilename=setup
 OutputDir=installer
 Compression=lzma
 SolidCompression=yes
+PrivilegesRequired=admin
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -34,7 +35,7 @@ Source: ".\PollyTTSEngine\x64\Release\PollyWindowsTTS.tlb"; DestDir: "{app}"; Fl
 Source: ".\x64\Release\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
 
 [Run]
-Filename: "{app}\InstallVoices.exe"; Parameters: "install"; StatusMsg: "Installing Voices..."
+Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser; Parameters: "install"; StatusMsg: "Installing Voices..."
 
 [UninstallRun]
 Filename: "{app}\InstallVoices.exe"; Parameters: "uninstall"
