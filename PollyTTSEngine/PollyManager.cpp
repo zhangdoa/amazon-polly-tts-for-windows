@@ -107,7 +107,16 @@ PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std:
 	speechMarksRequest.SetVoiceId(m_vVoiceId);
 	speechMarksRequest.SetText(text);
 	speechMarksRequest.AddSpeechMarkTypes(SpeechMarkType::word);
-	speechMarksRequest.SetTextType(TextType::text);
+	if (Aws::Utils::StringUtils::ToLower(text.c_str()).find("<speak>") == 0)
+	{
+		log.Debug("Text type = ssml");
+		speechMarksRequest.SetTextType(TextType::ssml);
+	}
+	else
+	{
+		log.Debug("Text type = text");
+		speechMarksRequest.SetTextType(TextType::text);
+	}
 	speechMarksRequest.SetSampleRate("16000");
 	auto speech_marks = p.SynthesizeSpeech(speechMarksRequest);
 	if (!speech_marks.IsSuccess())

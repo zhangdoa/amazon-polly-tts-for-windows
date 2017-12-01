@@ -44,6 +44,11 @@ BEGIN
     "\0"
 END
 
+3 TEXTINCLUDE 
+BEGIN
+    "1 TYPELIB ""PollyTTSEngine.tlb""\0"
+END
+
 #endif    // APSTUDIO_INVOKED
 
 
@@ -106,3 +111,15 @@ END
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+1 TYPELIB "PollyWindowsTTS.tlb"
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
