@@ -39,14 +39,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <UseOfMfc>Static</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -76,11 +78,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>./lib/debug;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <LinkIncremental>false</LinkIncremental>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <CodeAnalysisRuleSet>NativeRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <Linkage-AWSSDKCPP-Core>static</Linkage-AWSSDKCPP-Core>
+    <Linkage-AWSSDKCPP-Polly>static</Linkage-AWSSDKCPP-Polly>
+    <IncludePath>$(SolutionDir)PollyTTSEngine\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    <Linkage-AWSSDKCPP-Text-To-Speech>static</Linkage-AWSSDKCPP-Text-To-Speech>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
@@ -92,11 +99,16 @@
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <LibraryPath>./lib/release;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <CodeAnalysisRuleSet>CppCoreCheckRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableCppCoreCheck>true</EnableCppCoreCheck>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <Linkage-AWSSDKCPP-Core>static</Linkage-AWSSDKCPP-Core>
+    <Linkage-AWSSDKCPP-Polly>static</Linkage-AWSSDKCPP-Polly>
+    <IncludePath>$(SolutionDir)PollyTTSEngine\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    <Linkage-AWSSDKCPP-Text-To-Speech>static</Linkage-AWSSDKCPP-Text-To-Speech>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -137,21 +149,21 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>USE_IMPORT_EXPORT;WIN32;_DEBUG;_WINDOWS;_USRDLL;TTSENG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TTSENG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
     </ClCompile>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>aws-cpp-sdk-text-to-speech.lib;aws-cpp-sdk-core.lib;aws-cpp-sdk-polly.lib;nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;userenv.lib;bcrypt.lib;wininet.lib;winhttp.lib;nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>PollyTTSEngine.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -164,6 +176,9 @@
       </LargeAddressAware>
       <HeapReserveSize>
       </HeapReserveSize>
+      <ShowProgress>LinkVerbose</ShowProgress>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
     <PostBuildEvent>
       <Message>
@@ -212,7 +227,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnablePREfast>false</EnablePREfast>
       <OmitDefaultLibName>false</OmitDefaultLibName>
     </ClCompile>
@@ -220,7 +235,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>version.lib;userenv.lib;bcrypt.lib;wininet.lib;winhttp.lib;aws-cpp-sdk-text-to-speech.lib;aws-cpp-sdk-core.lib;aws-cpp-sdk-polly.lib;nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>version.lib;userenv.lib;bcrypt.lib;wininet.lib;winhttp.lib;nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>PollyTTSEngine.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -255,6 +270,7 @@
     <ClCompile Include="ttsengobj.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="PollyTTSEngine.def" />
     <None Include="ttsengobj.rgs" />
   </ItemGroup>
@@ -285,5 +301,23 @@
     <ResourceCompile Include="PollyTTSEngine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Polly.redist.1.3.20160610.8\build\native\AWSSDKCPP-Polly.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Polly.redist.1.3.20160610.8\build\native\AWSSDKCPP-Polly.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets" Condition="Exists('..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Polly.redist.1.3.20160610.8\build\native\AWSSDKCPP-Polly.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Polly.redist.1.3.20160610.8\build\native\AWSSDKCPP-Polly.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets'))" />
+  </Target>
 </Project>

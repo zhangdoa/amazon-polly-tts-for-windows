@@ -14,7 +14,6 @@
 #include "PollyTTSEngine_i.c"
 #include "TtsEngObj.h"
 #include <aws/core/Aws.h>
-#include <aws/text-to-speech/TextToSpeechManager.h>
 
 
 

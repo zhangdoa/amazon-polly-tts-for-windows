@@ -42,7 +42,15 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	speech_request.SetOutputFormat(OutputFormat::pcm);
 	speech_request.SetVoiceId(m_vVoiceId);
 	speech_request.SetText(speech_text);
-	speech_request.SetTextType(TextType::text);
+	if (Aws::Utils::StringUtils::ToLower(speech_text.c_str()).find("<speak>")==0)
+	{
+		speech_request.SetTextType(TextType::ssml);
+	}
+	else
+	{
+		speech_request.SetTextType(TextType::text);
+	}
+
 	speech_request.SetSampleRate("16000");
 	auto speech = p.SynthesizeSpeech(speech_request);
 	if (!speech.IsSuccess())
