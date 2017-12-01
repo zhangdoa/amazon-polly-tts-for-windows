@@ -11,6 +11,7 @@ class PollyManager
 public:
 	PollyManager(LPWSTR voiceName);
 	PollySpeechResponse GenerateSpeech(CSentItem& item);
+	std::string ParseXMLOutput(std::string& xmlBuffer);
 	PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std::streamsize streamSize);
 	void SetVoice(LPWSTR voiceName);
 

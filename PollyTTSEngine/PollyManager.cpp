@@ -68,6 +68,33 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	return response;
 }
 
+std::string PollyManager::ParseXMLOutput(std::string &xmlBuffer)
+{
+	bool copy = true;
+	std::string plainString = "";
+	std::stringstream convertStream;
+
+	// remove all xml tags
+	for (int i = 0; i < xmlBuffer.length(); i++)
+	{
+		convertStream << xmlBuffer[i];
+
+		if (convertStream.str().compare("<") == 0) copy = false;
+		else if (convertStream.str().compare(">") == 0)
+		{
+			copy = true;
+			convertStream.str(std::string());
+			continue;
+		}
+
+		if (copy) plainString.append(convertStream.str());
+
+		convertStream.str(std::string());
+	}
+
+	return plainString;
+}
+
 PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std::streamsize streamSize)
 {
 	LogUtils log;
