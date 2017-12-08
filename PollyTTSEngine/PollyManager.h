@@ -3,6 +3,9 @@
 #include "PollySpeechMarksResponse.h"
 #include <aws/polly/model/VoiceId.h>
 #include <unordered_map>
+#include "spdlog/spdlog.h"
+namespace spd = spdlog;
+
 class CSentItem;
 using namespace Aws::Polly::Model;
 
@@ -17,6 +20,7 @@ public:
 
 private:
 	std::wstring m_sVoiceName;
+	std::shared_ptr<spd::logger> m_logger;
 	VoiceId m_vVoiceId;
 	std::unordered_map<std::wstring, VoiceId> vm = {
 		{ L"Amy",		   VoiceId::Amy },

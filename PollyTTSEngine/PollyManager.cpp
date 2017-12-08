@@ -11,16 +11,20 @@
 #include "PollySpeechMarksResponse.h"
 #include "rapidjson/document.h"
 #include <unordered_map>
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/msvc_sink.h"
+namespace spd = spdlog;
 
 #define NOMINMAX
 #ifdef _WIN32
 #include <Windows.h>
 #endif
-#define MAX_SIZE 600000
+#define MAX_SIZE 6000000
 using namespace Aws::Polly::Model;
 
 void PollyManager::SetVoice (LPWSTR voiceName)
 {
+	m_logger->debug("{}: Setting voice to {}", __FUNCTION__, Aws::Utils::StringUtils::FromWString(voiceName));
 	m_sVoiceName = voiceName;
 	auto voiceId = vm.find(voiceName);
 	m_vVoiceId = voiceId->second ;
@@ -28,6 +32,11 @@ void PollyManager::SetVoice (LPWSTR voiceName)
 
 PollyManager::PollyManager(LPWSTR voiceName)
 {
+#ifdef DEBUG
+	m_logger = std::make_shared<spd::logger>("msvc_logger", std::make_shared<spd::sinks::msvc_sink_mt>());
+	m_logger->set_level(spd::level::debug);
+#endif
+
 	SetVoice(voiceName);
 }
 
@@ -38,25 +47,31 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	LogUtils log;
 	SynthesizeSpeechRequest speech_request;
 	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
-	log.Debug("%s: Asking Polly for '%s'", __FUNCTION__, speech_text.c_str());
+	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(OutputFormat::pcm);
 	speech_request.SetVoiceId(m_vVoiceId);
+	char polly_text[10000];
+
+	m_logger->debug("Generating speech: {}", speech_text);
 	speech_request.SetText(speech_text);
-	if (Aws::Utils::StringUtils::ToLower(speech_text.c_str()).find("<speak>")==0)
+	if (Aws::Utils::StringUtils::ToLower(speech_text.c_str()).find("<speak") == 0)
 	{
+		m_logger->debug("Text type = ssml");
 		speech_request.SetTextType(TextType::ssml);
 	}
 	else
 	{
+		m_logger->debug("Text type = text");
 		speech_request.SetTextType(TextType::text);
 	}
 
 	speech_request.SetSampleRate("16000");
 	auto speech = p.SynthesizeSpeech(speech_request);
+	response.IsSuccess = speech.IsSuccess();
 	if (!speech.IsSuccess())
 	{
 		std::stringstream error;
-		error << "Unable to generate voice audio: " << speech.GetError().GetMessageW();
+		error << "Error generating speech: " << speech.GetError().GetMessageW();
 		response.ErrorMessage = error.str();
 		return response;
 	}
@@ -97,24 +112,23 @@ std::string PollyManager::ParseXMLOutput(std::string &xmlBuffer)
 
 PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std::streamsize streamSize)
 {
-	LogUtils log;
 	SynthesizeSpeechRequest speechMarksRequest;
 	PollySpeechMarksResponse response;
 	Aws::Polly::PollyClient p;
 	auto text = Aws::Utils::StringUtils::FromWString(item.pItem);
-	log.Debug("%s: Asking Polly for '%s'", __FUNCTION__, text.c_str());
+	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, text.c_str());
 	speechMarksRequest.SetOutputFormat(OutputFormat::json);
 	speechMarksRequest.SetVoiceId(m_vVoiceId);
 	speechMarksRequest.SetText(text);
 	speechMarksRequest.AddSpeechMarkTypes(SpeechMarkType::word);
-	if (Aws::Utils::StringUtils::ToLower(text.c_str()).find("<speak>") == 0)
+	if (Aws::Utils::StringUtils::ToLower(text.c_str()).find("<speak") == 0)
 	{
-		log.Debug("Text type = ssml");
+		m_logger->debug("Text type = ssml");
 		speechMarksRequest.SetTextType(TextType::ssml);
 	}
 	else
 	{
-		log.Debug("Text type = text");
+		m_logger->debug("Text type = text");
 		speechMarksRequest.SetTextType(TextType::text);
 	}
 	speechMarksRequest.SetSampleRate("16000");
@@ -132,6 +146,7 @@ PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std:
 	std::vector<SpeechMark> speechMarks;
 	auto firstWord = true;
 	long bytesProcessed = 0;
+	m_logger->debug("SpeechMarks response:\n\n{}\n\n", json_str);
 	while (getline(m_stream, json_str)) {
 		SpeechMark sm;
 		rapidjson::Document d;
@@ -152,19 +167,21 @@ PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std:
 			bytesProcessed += currentSm.LengthInBytes;
 			speechMarks[speechMarks.size() - 1] = currentSm;
 		}
+		m_logger->debug("Word: {}, Start: {}, End: {}, Time: {}\n", sm.Text.c_str(), sm.StartInMs,
+			sm.EndByte,
+			sm.TimeInMs);
 		speechMarks.push_back(sm);
-		if (!firstWord)
-		{
-			log.Debug("Word: %s, Start: %i, End: %i, Time: %i\n", displaySpeechMark.Text.c_str(), displaySpeechMark.StartInMs,
-				displaySpeechMark.EndByte,
-				displaySpeechMark.TimeInMs);
-		}
 		firstWord = false;
 	}
 	auto sm = speechMarks[speechMarks.size() - 1];
 	sm.LengthInBytes = streamSize - bytesProcessed;
 	sm.TimeInMs = sm.LengthInBytes / 32;
 	speechMarks[speechMarks.size() - 1] = sm;
+	m_logger->debug("Word: {}, Start: {}, End: {}, Time: {}\n", sm.Text.c_str(), sm.StartInMs,
+		sm.EndByte,
+		sm.TimeInMs);
+	m_logger->debug("Total words generated: {}", speechMarks.size());
+	speechMarks.push_back(sm);
 	response.SpeechMarks = speechMarks;
 	return response;
 }

@@ -176,7 +176,6 @@
       </LargeAddressAware>
       <HeapReserveSize>
       </HeapReserveSize>
-      <ShowProgress>LinkVerbose</ShowProgress>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
@@ -260,6 +259,7 @@
     <ClCompile Include="PollySpeechMarksResponse.cpp" />
     <ClCompile Include="PollySpeechResponse.cpp" />
     <ClCompile Include="PollyTTSEngine.cpp" />
+    <ClCompile Include="SapiToPolly.cpp" />
     <ClCompile Include="SpeechMark.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -267,6 +267,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="ttsengobj.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -292,8 +293,10 @@
     <ClInclude Include="PollySpeechMarksResponse.h" />
     <ClInclude Include="PollySpeechResponse.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SapiToPolly.h" />
     <ClInclude Include="SpeechMark.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="ttsengobj.h" />
     <ClInclude Include="ttsengver.h" />
   </ItemGroup>

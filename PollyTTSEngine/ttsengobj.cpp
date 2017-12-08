@@ -23,10 +23,13 @@
 #include <aws/polly/model/DescribeVoicesRequest.h>
 #include "PollyManager.h"
 #include "spdlog/spdlog.h"
+#include "tinyxml2/tinyxml2.h"
+#include "SapiToPolly.h"
 //--- Local
 using namespace Aws::Polly;
 using namespace Model;
 using namespace Aws::Utils;
+using namespace tinyxml2;
 
 TCHAR* CTTSEngObj::GetPath()
 {
@@ -47,15 +50,11 @@ HRESULT CTTSEngObj::FinalConstruct()
 	auto temp_folder = GetPath();
 	char logPath[MAX_PATH];
 	sprintf_s(logPath, MAX_PATH, "%lspolly-tts.log", temp_folder);
-	if (!spdlog::get("basic_logger"))
-	{
-		m_logger = spdlog::basic_logger_mt("basic_logger", logPath, true);
-	}
-	else
-	{
-		m_logger = spdlog::get("basic_logger");
-	}
-	
+#ifdef DEBUG
+	m_logger = std::make_shared<spdlog::logger>("msvc_logger", std::make_shared<spdlog::sinks::msvc_sink_mt>());
+	m_logger->set_level(spdlog::level::debug);
+#endif
+
 	spdlog::set_pattern("[%H:%M:%S %z] %v");
 #ifdef DEBUG
 	spdlog::set_level(spdlog::level::debug); //Set global log level to info
@@ -141,17 +140,13 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                                 const SPVTEXTFRAG* pTextFragList,
                                 ISpTTSEngineSite* pOutputSite )
 {
-	m_logger->debug("Speak\n");
+	Aws::SDKOptions options;
+	m_logger->debug("Starting Speak\n");
 	CComPtr<ISpDataKey> attributesKey;
 	m_logger->debug("Reading attributes key to get the voice\n");
 	m_cpToken->OpenKey(L"Attributes", &attributesKey);
 	attributesKey->GetStringValue(L"VoiceId", &m_pPollyVoice);
-	m_logger->debug("Read Polly voice\n");
 	m_logger->debug("Initializing AWS\n");
-	Aws::SDKOptions options;
-#ifdef DEBUG
-	options.loggingOptions.logLevel = Logging::LogLevel::Debug;
-#endif
 	InitAPI(options);
 	HRESULT hr = S_OK;
 
@@ -169,15 +164,6 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
         m_pEndChar    = m_pNextChar + m_pCurrFrag->ulTextLen;
         m_ullAudioOff = 0;
 
-		/* if (wcsstr(m_pCurrFrag->pTextStart, L"<speak>"))
-		{
-			MessageBox(NULL, L"SSML is currently not supported with Polly TTS", L"Notice", NULL);
-			return S_NOTSUPPORTED;
-		} */
-        //--- Parse
-        //    We've supplied a simple word/sentence breaker just to show one
-        //    way of walking the fragment list. It obviously doesn't deal with
-        //    things like abreviations and expansion of numbers and dates.
         CItemList ItemList;
 
 		m_logger->debug("Starting work processing\n");
@@ -204,7 +190,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 				m_logger->debug("ERROR Getting the next sentence from ItemList\n");
 				break;
             }
-
+			
             //--- We aren't going to do any part of speech determination,
             //    prosody, or pronunciation determination. If you were, one thing
             //    you will need is access to the SAPI lexicon. You can get that with
@@ -231,6 +217,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
                 if( SUCCEEDED( hr ) )
                 {
                     hr = OutputSentence( ItemList, pOutputSite );
+					return hr;
                 }
             }
         }
@@ -263,15 +250,25 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 	ListPos = ItemList.GetHeadPosition();
 	PollyManager pm = PollyManager(m_pPollyVoice);
 	auto resp = pm.GenerateSpeech(Item);
+	if (!resp.IsSuccess)
+	{
+		std::stringstream message;
+		message << "Error generating speech with text:\n\n" << Aws::Utils::StringUtils::FromWString(Item.pItem) << "\n\nError: " << resp.ErrorMessage;
+		MessageBoxA(NULL, message.str().c_str(), "Error", MB_OK);
+		return FAILED(ERROR_SUCCESS);
+	}
 	PollySpeechMarksResponse generateSpeechMarksResp = pm.GenerateSpeechMarks(Item, resp.Length);
 	
-//	hr = pOutputSite->Write(reinterpret_cast<char*>(&resp.AudioData[0]), resp.Length, NULL);
+	hr = pOutputSite->Write(reinterpret_cast<char*>(&resp.AudioData[0]), resp.Length, NULL);
+	return hr;
 	auto i = generateSpeechMarksResp.SpeechMarks.begin();
 	auto wordOffset = 0;
     while(ListPos && i != generateSpeechMarksResp.SpeechMarks.end() && !(pOutputSite->GetActions() & SPVES_ABORT) )
     {
 		SpeechMark sm = *i;
         CSentItem& Item = ItemList.GetNext( ListPos );
+		m_logger->debug("ListPos={}, current word={}", ListPos, sm.Text);
+
 
         //--- Process sentence items
 		switch( Item.pXmlState->eAction )
@@ -288,11 +285,11 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
                 Event.ullAudioStreamOffset = wordOffset;
 				Event.lParam               = Item.ulItemSrcOffset,
                 Event.wParam               = sm.Text.length();
+				m_logger->debug("Writing word boundary for '{}', offset={}, length={}", sm.Text, Item.ulItemSrcOffset, sm.Text.length());
                 pOutputSite->AddEvents( &Event, 1 );
 
 				std::vector<unsigned char> word = std::vector<unsigned char>(&resp.AudioData[wordOffset], &resp.AudioData[wordOffset + sm.LengthInBytes]);
-				hr = pOutputSite->Write(reinterpret_cast<char*>(&word[0]),
-									    sm.LengthInBytes, NULL);
+				hr = pOutputSite->Write(reinterpret_cast<char*>(&word[0]), sm.LengthInBytes, NULL);
 				++i;
 				m_ullAudioOff += sm.LengthInBytes;
 				wordOffset += sm.LengthInBytes;
@@ -403,7 +400,7 @@ HRESULT CTTSEngObj::GetNextSentence( CItemList& ItemList )
 
 	m_logger->debug(__FUNCTION__);
 	m_logger->debug("Clearing the item list\n");
-	//--- Clear the destination
+	//--- Clear all items in the list
     ItemList.RemoveAll();
 
     //--- Is there any work to do
@@ -421,7 +418,7 @@ HRESULT CTTSEngObj::GetNextSentence( CItemList& ItemList )
         {
             if( m_pCurrFrag->State.eAction == SPVA_Speak )
             {
-                fSentDone = AddNextSentItem( ItemList );
+                fSentDone = AddNextSentenceItem( ItemList );
 
                 //--- Advance fragment?
                 if( m_pNextChar >= m_pEndChar )
@@ -536,23 +533,24 @@ BOOL SearchSet( WCHAR wc, const WCHAR* Set, ULONG Count, ULONG* pIndex )
 }
 
 /*****************************************************************************
-* CTTSEngObj::AddNextSentItem *
+* CTTSEngObj::AddNextSentenceItem *
 *-----------------------------*
 *   Locates the next sentence item in the stream and adds it to the list.
 *   Returns true if the last item added is the end of the sentence.
 ****************************************************************************/
-BOOL CTTSEngObj::AddNextSentItem( CItemList& ItemList )
+BOOL CTTSEngObj::AddNextSentenceItem( CItemList& ItemList )
 {
     //--- Get the token
     ULONG ulIndex;
     CSentItem Item;
     Item.pItem = FindNextToken( m_pNextChar, m_pEndChar, m_pNextChar );
+	m_logger->debug("Next token: {}", (char *)Item.pItem);
 
     //--- This case can occur when we hit the end of a text fragment.
     //    Returning at this point will cause advancement to the next fragment.
     if( Item.pItem == NULL )
     {
-        return false;
+		return false;
     }
 
     const WCHAR* pTrailChar = m_pNextChar-1;
@@ -593,18 +591,24 @@ BOOL CTTSEngObj::AddNextSentItem( CItemList& ItemList )
         BOOL fAddTrailItem = false;
         if( SearchSet( *pTrailChar, EOSItems, sp_countof(EOSItems), &ulIndex ) )
         {
+		m_logger->debug("Next token: {}", (char *)Item.pItem);
             fIsEOS = true;
             fAddTrailItem = true;
         }
         else if( SearchSet( *pTrailChar, TrailItems, sp_countof(TrailItems), &ulIndex ) )
         {
-            fAddTrailItem = true;
+			fAddTrailItem = true;
         }
 
         if( fAddTrailItem )
         {
-            CSentItem TItem;
-            TItem.pItem           = pTrailChar;
+			wchar_t newstr[2];
+			newstr[0] = *pTrailChar;
+			newstr[1] = 0;
+
+			m_logger->debug("Found trailing token: {}", (char)newstr);
+			CSentItem TItem;
+			TItem.pItem			  = newstr;
             TItem.ulItemLen       = 1;
             TItem.pXmlState       = &m_pCurrFrag->State;
             TItem.ulItemSrcLen    = TItem.ulItemLen;
@@ -659,5 +663,5 @@ BOOL CTTSEngObj::AddNextSentItem( CItemList& ItemList )
     }
 
     return fIsEOS;
-} /* CTTSEngObj::AddNextSentItem */
+} /* CTTSEngObj::AddNextSentenceItem */
 

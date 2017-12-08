@@ -32,6 +32,8 @@
 #include "resource.h"
 #include <string>
 #include "spdlog/spdlog.h"
+#include "spdlog/sinks/msvc_sink.h"
+namespace spd = spdlog;
 
 //=== Constants ====================================================
 
@@ -106,7 +108,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     /*--- Non interface methods ---*/
     HRESULT MapFile(const WCHAR * pszTokenValName, HANDLE * phMapping, void ** ppvData );
     HRESULT GetNextSentence( CItemList& ItemList );
-    BOOL    AddNextSentItem( CItemList& ItemList );
+    BOOL    AddNextSentenceItem( CItemList& ItemList );
     HRESULT OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutputSite );
 
   /*=== Member Data ===*/
@@ -116,6 +118,7 @@ class ATL_NO_VTABLE CTTSEngObj :
     void*                   m_pVoiceData;
 	LPWSTR      			m_pPollyVoice;
 	std::shared_ptr<spdlog::logger> m_logger;
+
 
     //--- Voice (word/audio data) list
     //  Note: You will probably have something more sophisticated here

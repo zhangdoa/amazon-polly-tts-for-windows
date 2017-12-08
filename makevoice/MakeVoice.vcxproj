@@ -39,7 +39,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
@@ -94,11 +94,13 @@
     <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)PollyTTSEngine;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)PollyTTSEngine;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
     <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
     <Linkage-AWSSDKCPP-Core>static</Linkage-AWSSDKCPP-Core>
     <Linkage-AWSSDKCPP-Polly>static</Linkage-AWSSDKCPP-Polly>
+    <Linkage-AWSSDKCPP-Text-To-Speech>static</Linkage-AWSSDKCPP-Text-To-Speech>
+    <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -190,7 +192,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>version.lib;userenv.lib;bcrypt.lib;wininet.lib;winhttp.lib;aws-cpp-sdk-text-to-speech.lib;aws-cpp-sdk-core.lib;aws-cpp-sdk-polly.lib;nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>nothrownew.obj;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -227,6 +229,8 @@
     <Import Project="..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets')" />
     <Import Project="..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets')" />
     <Import Project="..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets" Condition="Exists('..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -236,5 +240,7 @@
     <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets'))" />
     <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets'))" />
     <Error Condition="!Exists('..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets'))" />
   </Target>
 </Project>
