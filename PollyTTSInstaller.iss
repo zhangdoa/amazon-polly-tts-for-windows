@@ -5,6 +5,7 @@
 #define MyAppVersion ".1"
 #define MyAppPublisher "Amazon Web Services"
 #define MyAppURL "https://aws.amazon.com/polly"
+#define ReleaseOrDebug "Debug"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -30,9 +31,9 @@ PrivilegesRequired=admin
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: ".\x64\Debug\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\PollyTTSEngine\x64\Debug\PollyWindowsTTS.tlb"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\x64\Debug\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
+Source: ".\x64\{#ReleaseOrDebug}\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\x64\{#ReleaseOrDebug}\PollyWindowsTTS.tlb"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\x64\{#ReleaseOrDebug}\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
 
 [Run]
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser; Parameters: "install"; StatusMsg: "Installing Voices..."
