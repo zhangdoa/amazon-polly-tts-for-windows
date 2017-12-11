@@ -11,6 +11,7 @@
   </metadata>
   <files>
     <file src="..\x64\Debug\*.*" target="installer" />
+    <file src="..\license.txt" target="installer" />
     <file src="..\PollyTTSInstaller.iss" target="installer" />
 </files>
 </package>
