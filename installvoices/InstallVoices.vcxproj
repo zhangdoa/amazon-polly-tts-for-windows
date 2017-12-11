@@ -83,6 +83,7 @@
     <Linkage-AWSSDKCPP-Core>static</Linkage-AWSSDKCPP-Core>
     <Linkage-AWSSDKCPP-Polly>static</Linkage-AWSSDKCPP-Polly>
     <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    <Linkage-AWSSDKCPP-Text-To-Speech>static</Linkage-AWSSDKCPP-Text-To-Speech>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
