@@ -1,4 +1,4 @@
-AppNameAndVersion
+Amazon Polly TTS for Windows
 
 Amazon Software License
 
