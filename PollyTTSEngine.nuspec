@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>AmazonPollyTTS</id>
+    <title>Amazon Polly TTS for Windows</title>
+    <version>1.0.0</version>
+    <authors>AWS</authors>
+    <projectUrl>https://aws.amazon.com/polly/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Amazon Polly TTS for Windows Deployment Package</description>
+  </metadata>
+</package>

@@ -271,6 +271,7 @@
     <ClCompile Include="ttsengobj.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\PollyTTSEngine.nuspec" />
     <None Include="packages.config" />
     <None Include="PollyTTSEngine.def" />
     <None Include="ttsengobj.rgs" />
@@ -315,6 +316,7 @@
     <Import Project="..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets" Condition="Exists('..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets')" />
     <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" />
     <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets')" />
+    <Import Project="..\packages\OctoPack.3.6.3\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.3.6.3\build\OctoPack.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -326,5 +328,6 @@
     <Error Condition="!Exists('..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets'))" />
     <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets'))" />
     <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets'))" />
+    <Error Condition="!Exists('..\packages\OctoPack.3.6.3\build\OctoPack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OctoPack.3.6.3\build\OctoPack.targets'))" />
   </Target>
 </Project>
