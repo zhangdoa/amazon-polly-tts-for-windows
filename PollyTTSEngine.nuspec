@@ -9,4 +9,7 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Amazon Polly TTS for Windows Deployment Package</description>
   </metadata>
+  <files>
+  <file src="x64\Debug\*.*" target="install" />
+</files>
 </package>
