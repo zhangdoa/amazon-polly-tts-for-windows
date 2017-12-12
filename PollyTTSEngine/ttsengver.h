@@ -1,9 +1,14 @@
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright © Microsoft Corporation. All rights reserved
+/*  Copyright 2017 - 2018 Amazon.com, Inc. or its affiliates.All Rights Reserved.
+Licensed under the Amazon Software License(the "License").You may not use
+this file except in compliance with the License.A copy of the License is
+located at
+
+http://aws.amazon.com/asl/
+
+and in the "LICENSE" file accompanying this file.This file is distributed
+on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express
+or implied.See the License for the specific language governing
+permissions and limitations under the License. */
 
 /****************************************************************************
  *                                                                          *
@@ -78,7 +83,5 @@
 #define VER_FILEOS                  VOS_DOS_WINDOWS32
 #define VER_FILEFLAGS               (VER_PRIVATEBUILD|VER_PRERELEASE|VER_DEBUG)
 
-#define VER_COMPANYNAME_STR         "Microsoft Corporation\0"
-#define VER_PRODUCTNAME_STR         "Microsoft\256 Windows(TM) Operating System\0"
-#define VER_LEGALTRADEMARKS_STR     \
-"Microsoft\256 is a registered trademark of Microsoft Corporation. Windows(TM) is a trademark of Microsoft Corporation.\0"
+#define VER_COMPANYNAME_STR         "Amazon Web Serices\0"
+#define VER_PRODUCTNAME_STR         "Ammazon Polly for Windows\0"

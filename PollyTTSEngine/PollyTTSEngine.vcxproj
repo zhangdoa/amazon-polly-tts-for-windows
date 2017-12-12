@@ -258,7 +258,6 @@
     <ClCompile Include="PollySpeechMarksResponse.cpp" />
     <ClCompile Include="PollySpeechResponse.cpp" />
     <ClCompile Include="PollyTTSEngine.cpp" />
-    <ClCompile Include="SapiToPolly.cpp" />
     <ClCompile Include="SpeechMark.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -294,7 +293,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="resource1.h" />
     <ClInclude Include="resource2.h" />
-    <ClInclude Include="SapiToPolly.h" />
     <ClInclude Include="SpeechMark.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="tinyxml2.h" />

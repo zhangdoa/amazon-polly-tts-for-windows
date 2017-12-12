@@ -1,17 +1,14 @@
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright © Microsoft Corporation. All rights reserved
+/*  Copyright 2017 - 2018 Amazon.com, Inc. or its affiliates.All Rights Reserved.
+Licensed under the Amazon Software License(the "License").You may not use
+this file except in compliance with the License.A copy of the License is
+located at
 
-/*******************************************************************************
-* TtsEngObj.cpp *
-*---------------*
-*   Description:
-*       This module is the main implementation file for the CTTSEngObj class.
-*
-*******************************************************************************/
+http://aws.amazon.com/asl/
+
+and in the "LICENSE" file accompanying this file.This file is distributed
+on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express
+or implied.See the License for the specific language governing
+permissions and limitations under the License. */
 
 //--- Additional includes
 #include "stdafx.h"
@@ -23,7 +20,6 @@
 #include "PollyManager.h"
 #include "spdlog/spdlog.h"
 #include "tinyxml2/tinyxml2.h"
-#include "SapiToPolly.h"
 //--- Local
 using namespace Aws::Polly;
 using namespace Model;
