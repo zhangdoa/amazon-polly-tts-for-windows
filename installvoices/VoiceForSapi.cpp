@@ -1,3 +1,15 @@
+/*  Copyright 2016 - 2017 Amazon.com, Inc. or its affiliates.All Rights Reserved.
+Licensed under the Amazon Software License(the "License").You may not use
+this file except in compliance with the License.A copy of the License is
+located at
+
+http://aws.amazon.com/asl/
+
+and in the "LICENSE" file accompanying this file.This file is distributed
+on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express
+or implied.See the License for the specific language governing
+permissions and limitations under the License. */
+
 #include "stdafx.h"
 #include "VoiceForSapi.h"
 #include <aws/polly/model/VoiceId.h>
@@ -8,7 +20,7 @@
 
 using namespace Aws::Polly::Model;
 
-VoiceForSAPI::VoiceForSAPI(Aws::Polly::Model::Voice voice)
+VoiceForSAPI::VoiceForSAPI(Voice voice)
 {
 	age = L"Adult"; //Polly doesn't have age attribute for voices, setting Adult as default.
 	
@@ -61,7 +73,7 @@ VoiceForSAPI::VoiceForSAPI(Aws::Polly::Model::Voice voice)
 }
 
 
-std::pair<int, const wchar_t*> VoiceForSAPI::GetVoiceHexValue(Aws::Polly::Model::LanguageCode code) {
+std::pair<int, const wchar_t*> VoiceForSAPI::GetVoiceHexValue(LanguageCode code) {
 	wchar_t* langText;
 	int langHex;
 	
@@ -171,10 +183,10 @@ std::pair<int, const wchar_t*> VoiceForSAPI::GetVoiceHexValue(Aws::Polly::Model:
 	return std::make_pair(langHex, langText);
 }
 
-void VoiceForSAPI::PrintVoice()
+void VoiceForSAPI::PrintVoice() const
 {
 	std::wcout << L"_________Printing Voice Attributes_________" << std::endl;
-	std::wprintf(L"Token name: %ls\n", tokenKeyName);
+	wprintf(L"Token name: %ls\n", tokenKeyName);
 	//std::wprintf(L"%ls\n", gender);
 	std::wcout << L"Language Independent Name: " << langIndependentName << std::endl;
 	std::wcout << L"Language Dependent Name: " << langDependentName << std::endl;

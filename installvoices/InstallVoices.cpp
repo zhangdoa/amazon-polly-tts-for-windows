@@ -12,9 +12,8 @@
 
 
 /******************************************************************************
-* InstallVoices.cpp *
-*
-*   Install Amazon Polly Voices
+* InstallVoices.cpp:
+**   Install Amazon Polly Voices
 ******************************************************************************/
 #include "stdafx.h"
 #include <iostream>
@@ -30,8 +29,8 @@
 
 using namespace Aws::Polly;
 
-typedef std::map<Aws::Polly::Model::VoiceId, VoiceForSAPI> voice_map_t;
-typedef std::set<Aws::Polly::Model::VoiceId> argument_set_t;
+typedef std::map<VoiceId, VoiceForSAPI> voice_map_t;
+typedef std::set<VoiceId> argument_set_t;
 
 voice_map_t SelectedVoicesMap(std::wstring);
 void PrintHelp(WCHAR*);
@@ -51,7 +50,7 @@ int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
 		//return FAILED(hr);
 	} else if (argc > 1)
 	{
-		::CoInitialize(NULL);
+		CoInitialize(NULL);
 
 		std::wstring voiceList = L"";
 		if (argc == 3) {
@@ -86,7 +85,7 @@ int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
 			hr = E_INVALIDARG;
 		}
 
-		::CoUninitialize();
+		CoUninitialize();
 	}
 
 	return FAILED(hr);
@@ -104,8 +103,8 @@ void PrintHelp(WCHAR* exeName)
 voice_map_t SelectedVoicesMap(std::wstring voiceList)
 {
 	Aws::SDKOptions options;
-	Aws::InitAPI(options);
-	Aws::Polly::PollyClient pc;
+	InitAPI(options);
+	PollyClient pc;
 	voice_map_t pollyVoices;
 	boolean isSelected(false);
 	boolean isAllSelected(voiceList.size() < 1);
@@ -132,7 +131,7 @@ voice_map_t SelectedVoicesMap(std::wstring voiceList)
 	{
 		std::cout << "Error while getting voices" << std::endl;
 	}
-	Aws::ShutdownAPI(options);
+	ShutdownAPI(options);
 	return pollyVoices;
 }
 
@@ -203,8 +202,8 @@ argument_set_t ArgumentSet(std::wstring str)
 	while (wss.good())
 	{
 		std::wstring subStr;
-		std::getline(wss, subStr, L',');
-		Aws::Polly::Model::VoiceId voice = Aws::Polly::Model::VoiceIdMapper::GetVoiceIdForName(WStringToAwsString(subStr));
+		getline(wss, subStr, L',');
+		VoiceId voice = VoiceIdMapper::GetVoiceIdForName(WStringToAwsString(subStr));
 		argSet.insert(voice);
 	}
 	return argSet;
@@ -213,13 +212,13 @@ argument_set_t ArgumentSet(std::wstring str)
 Aws::String WStringToAwsString(const std::wstring& s)
 {
 	Aws::String temp(s.length(), ' ');
-	std::copy(s.begin(), s.end(), temp.begin());
+	copy(s.begin(), s.end(), temp.begin());
 	return temp;
 }
 
 std::wstring AwsStringToWString(const Aws::String& s)
 {
 	std::wstring temp(s.length(), L' ');
-	std::copy(s.begin(), s.end(), temp.begin());
+	copy(s.begin(), s.end(), temp.begin());
 	return temp;
 }

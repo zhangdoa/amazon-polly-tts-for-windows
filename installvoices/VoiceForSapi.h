@@ -20,5 +20,5 @@ public:
 	const WCHAR * vendor = L"Amazon";
 
 	VoiceForSAPI(Aws::Polly::Model::Voice);
-	void PrintVoice();
+	void PrintVoice() const;
 };
