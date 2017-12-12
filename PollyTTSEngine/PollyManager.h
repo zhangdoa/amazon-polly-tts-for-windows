@@ -23,6 +23,7 @@ private:
 	std::shared_ptr<spd::logger> m_logger;
 	VoiceId m_vVoiceId;
 	std::unordered_map<std::wstring, VoiceId> vm = {
+		{ L"Aditi",		   VoiceId::Aditi },
 		{ L"Amy",		   VoiceId::Amy },
 		{ L"Astrid",       VoiceId::Astrid },
 		{ L"Brian",		   VoiceId::Brian },
@@ -57,6 +58,7 @@ private:
 		{ L"Maja",	       VoiceId::Maja },
 		{ L"Marlene",	   VoiceId::Marlene },
 		{ L"Mathieu",	   VoiceId::Mathieu },
+		{ L"Matthew",	   VoiceId::Matthew },
 		{ L"Maxim",	       VoiceId::Maxim },
 		{ L"Miguel",	   VoiceId::Miguel },
 		{ L"Mizuki",	   VoiceId::Mizuki },
@@ -68,6 +70,8 @@ private:
 		{ L"Ruben",	       VoiceId::Ruben },
 		{ L"Russell",	   VoiceId::Russell },
 		{ L"Salli",	       VoiceId::Salli },
+		{ L"Seoyeon",	   VoiceId::Seoyeon},
+		{ L"Takumi",	   VoiceId::Takumi },
 		{ L"Tatyana",	   VoiceId::Tatyana },
 		{ L"Vicki",	       VoiceId::Vicki },
 		{ L"Vitoria",	   VoiceId::Vitoria }
