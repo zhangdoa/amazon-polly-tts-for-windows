@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "PollyManager.h"
-#include "LogUtils.h"
 #include <aws/polly/PollyClient.h>
 #include <aws/polly/model/OutputFormat.h>
 #include <aws/polly/model/TextType.h>
@@ -44,7 +43,6 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 {
 	PollySpeechResponse response;
 	Aws::Polly::PollyClient p;
-	LogUtils log;
 	SynthesizeSpeechRequest speech_request;
 	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());

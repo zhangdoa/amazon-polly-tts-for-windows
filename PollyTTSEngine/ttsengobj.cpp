@@ -17,7 +17,6 @@
 #include "stdafx.h"
 #include "TtsEngObj.h"
 #include "tchar.h"
-#include "LogUtils.h"
 #include <aws/core/Aws.h>
 #include <aws/polly/PollyClient.h>
 #include <aws/polly/model/DescribeVoicesRequest.h>
@@ -396,8 +395,6 @@ STDMETHODIMP CTTSEngObj::GetOutputFormat( const GUID * pTargetFormatId, const WA
 HRESULT CTTSEngObj::GetNextSentence( CItemList& ItemList )
 {
     HRESULT hr = S_OK;
-	LogUtils log;
-
 	m_logger->debug(__FUNCTION__);
 	m_logger->debug("Clearing the item list\n");
 	//--- Clear all items in the list
