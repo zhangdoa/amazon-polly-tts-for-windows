@@ -25,6 +25,7 @@
 #include <aws/polly/model/DescribeVoicesRequest.h>
 #include <aws/polly/PollyClient.h>
 #include "VoiceForSapi.h"
+#include <aws/core/auth/AWSCredentialsProvider.h>
 
 
 using namespace Aws::Polly;
@@ -104,7 +105,7 @@ voice_map_t SelectedVoicesMap(std::wstring voiceList)
 {
 	Aws::SDKOptions options;
 	InitAPI(options);
-	PollyClient pc;
+	Aws::Polly::PollyClient pc = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>("InstallVoices", "polly-windows");
 	voice_map_t pollyVoices;
 	boolean isSelected(false);
 	boolean isAllSelected(voiceList.size() < 1);
