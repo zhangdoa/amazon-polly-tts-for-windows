@@ -131,6 +131,7 @@ voice_map_t SelectedVoicesMap(std::wstring voiceList)
 	else
 	{
 		std::cout << "Error while getting voices" << std::endl;
+		std::cout << voicesOutcome.GetError().GetMessageW();
 	}
 	ShutdownAPI(options);
 	return pollyVoices;
