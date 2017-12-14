@@ -24,6 +24,7 @@ permissions and limitations under the License. */
 #include <unordered_map>
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/msvc_sink.h"
+#include <aws/core/auth/AWSCredentialsProvider.h>
 namespace spd = spdlog;
 
 #define NOMINMAX
@@ -32,6 +33,7 @@ namespace spd = spdlog;
 #endif
 #define MAX_SIZE 6000000
 using namespace Aws::Polly::Model;
+static const char* ALLOCATION_TAG = "PollyTTSEngine::Main";
 
 void PollyManager::SetVoice (LPWSTR voiceName)
 {
@@ -54,7 +56,8 @@ PollyManager::PollyManager(LPWSTR voiceName)
 PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 {
 	PollySpeechResponse response;
-	Aws::Polly::PollyClient p;
+	
+	Aws::Polly::PollyClient p = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>(ALLOCATION_TAG, "polly-windows");
 	SynthesizeSpeechRequest speech_request;
 	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
@@ -124,7 +127,7 @@ PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std:
 {
 	SynthesizeSpeechRequest speechMarksRequest;
 	PollySpeechMarksResponse response;
-	Aws::Polly::PollyClient p;
+	Aws::Polly::PollyClient p = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>(ALLOCATION_TAG, "polly-windows");
 	auto text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, text.c_str());
 	speechMarksRequest.SetOutputFormat(OutputFormat::json);

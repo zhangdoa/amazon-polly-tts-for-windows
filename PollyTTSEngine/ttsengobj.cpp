@@ -20,6 +20,9 @@ permissions and limitations under the License. */
 #include "PollyManager.h"
 #include "spdlog/spdlog.h"
 #include "tinyxml2/tinyxml2.h"
+#include <aws/core/platform/Environment.h>
+#include <aws/core/auth/AWSCredentialsProvider.h>
+
 //--- Local
 using namespace Aws::Polly;
 using namespace Model;
@@ -137,6 +140,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 {
 	Aws::SDKOptions options;
 	m_logger->debug("Starting Speak\n");
+	
 	CComPtr<ISpDataKey> attributesKey;
 	m_logger->debug("Reading attributes key to get the voice\n");
 	m_cpToken->OpenKey(L"Attributes", &attributesKey);
