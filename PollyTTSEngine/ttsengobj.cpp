@@ -252,7 +252,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 	if (!resp.IsSuccess)
 	{
 		std::stringstream message;
-		message << "Error generating speech with text:\n\n" << Aws::Utils::StringUtils::FromWString(Item.pItem) << "\n\nError: " << resp.ErrorMessage;
+		message << "Error generating speech:\n\n" << resp.ErrorMessage;
 		MessageBoxA(NULL, message.str().c_str(), "Error", MB_OK);
 		return FAILED(ERROR_SUCCESS);
 	}
