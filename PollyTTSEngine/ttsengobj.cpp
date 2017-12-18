@@ -22,6 +22,7 @@ permissions and limitations under the License. */
 #include "tinyxml2/tinyxml2.h"
 #include <aws/core/platform/Environment.h>
 #include <aws/core/auth/AWSCredentialsProvider.h>
+#include <boost/algorithm/string.hpp>
 
 //--- Local
 using namespace Aws::Polly;
@@ -140,11 +141,14 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 {
 	Aws::SDKOptions options;
 	m_logger->debug("Starting Speak\n");
-	
-	CComPtr<ISpDataKey> attributesKey;
-	m_logger->debug("Reading attributes key to get the voice\n");
-	m_cpToken->OpenKey(L"Attributes", &attributesKey);
-	attributesKey->GetStringValue(L"VoiceId", &m_pPollyVoice);
+
+	if (m_pPollyVoice == nullptr)
+	{
+		CComPtr<ISpDataKey> attributesKey;
+		m_logger->debug("Reading attributes key to get the voice\n");
+		m_cpToken->OpenKey(L"Attributes", &attributesKey);
+		attributesKey->GetStringValue(L"VoiceId", &m_pPollyVoice);
+	}
 	m_logger->debug("Initializing AWS\n");
 	InitAPI(options);
 	HRESULT hr = S_OK;
@@ -245,6 +249,25 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
     SPLISTPOS ListPos = ItemList.GetHeadPosition();
 	CSentItem& Item = ItemList.GetNext(ListPos);
 	DescribeVoicesRequest request;
+	auto speech = StringUtils::FromWString(Item.pItem);
+
+	boost::trim(speech);
+
+	if (speech.find("<voice name=") != std::string::npos)
+	{
+		tinyxml2::XMLDocument doc;
+		doc.Parse(speech.c_str());
+		auto voice_node = doc.RootElement()->FirstChildElement();
+		auto voice_name = voice_node->Attribute("name");
+		mbstowcs(m_voiceOveride, voice_name, strlen(voice_name) + 1);
+		m_pPollyVoice = m_voiceOveride;
+	}
+
+	if (speech.find("<voice name=") != std::string::npos ||
+		!speech.compare("</speak>"))
+	{
+		return S_OK;
+	}
 
 	ListPos = ItemList.GetHeadPosition();
 	PollyManager pm = PollyManager(m_pPollyVoice);
