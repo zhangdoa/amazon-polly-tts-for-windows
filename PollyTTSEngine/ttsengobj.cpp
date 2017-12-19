@@ -59,6 +59,8 @@ HRESULT CTTSEngObj::FinalConstruct()
 	spdlog::set_level(spdlog::level::debug); //Set global log level to info
 #endif
 	HRESULT hr = S_OK;
+	wcscpy(m_voiceOveride, L"");
+
     return hr;
 } /* CTTSEngObj::FinalConstruct */
 
@@ -142,7 +144,7 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 	Aws::SDKOptions options;
 	m_logger->debug("Starting Speak\n");
 
-	if (m_pPollyVoice == nullptr)
+	if (wcslen(m_voiceOveride) == 0)
 	{
 		CComPtr<ISpDataKey> attributesKey;
 		m_logger->debug("Reading attributes key to get the voice\n");
