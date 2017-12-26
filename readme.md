@@ -48,3 +48,23 @@ Follow the instructions on [this page](http://docs.aws.amazon.com/cli/latest/use
 Download and run the [installer](https://s3.amazonaws.com/polly-tts-windows/setup.exe)
 
 Verify that the installer worked by opening `Control Panel` and go to `Change text to speech settings`. In the `Voice selection` drop-down, you should see all of the Amazon Polly voices. Picking a voice will automatically play a sample.
+
+## Adobe Captivate Support
+Even though there is a drop-down voice selection in the `Audio / Speech Management` window, apparently Adobe Captivate only uses the default voice you choose in Windows Control Panel. The voice selection in Captivate is completely ignored.
+
+To get around this, you can manually specify the voice name that you want to use by using the `voice` tag. 
+ 
+### Instructions for Manually Specifying a Voice in Adobe Captivate ###
+
+1.	Set the default Windows voice in Control Panel to **any** of the Amazon Polly voices.
+2.	Start Adobe Captivate and open any of your previous documents.
+3.	Choose `Speech Management` from the `Audio` menu
+4.	(See the screenshot below): Where you enter the text to speak, put the highlighted yellow tags around the text, replacing the name with the voice name you want to use. For example, `<speak><voice name="Matthew">Hi, this is Matthew</voice></speak>` will automatically speak the phrase *Hi, this is Matthew* in the **Matthew** voice and  `<speak><voice name="Ivy">Hi, this is Ivy</voice></speak>` will say *Hi, this is Ivy* in the **Ivy** voice.
+ 
+Click [here](http://docs.aws.amazon.com/polly/latest/dg/voicelist.html) for the complete list of Polly voice names.
+ 
+> **IMPORTANT:** It doesn’t matter which voice you select at the top or the left side menu, as long as it’s a Polly voice. The <voice> tag will override those selections. However, if you choose a non-Polly voice as the Windows default voice, then the <voice> tag will NOT work with the Polly voices.
+ 
+Also, you can only use one `<speak>` tag per block of text, and you can only use one `<voice>` tag per `<speak>` tag (e.g., you can’t do `<speak><voice name="ivy">I’m Ivy.</voice><voice name="Matthew">I’m Matthew</voice></speak>`).
+
+![](https://i.imgur.com/LMlNszU.png)
