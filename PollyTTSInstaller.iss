@@ -27,6 +27,7 @@ Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
 LicenseFile=license.txt
+
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
