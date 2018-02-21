@@ -306,26 +306,24 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-Polly.redist.1.3.20160610.8\build\native\AWSSDKCPP-Polly.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Polly.redist.1.3.20160610.8\build\native\AWSSDKCPP-Polly.redist.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets" Condition="Exists('..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" />
-    <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets')" />
     <Import Project="..\packages\OctoPack.3.6.3\build\OctoPack.targets" Condition="Exists('..\packages\OctoPack.3.6.3\build\OctoPack.targets')" />
-    <Import Project="..\packages\boost.1.65.1.0\build\native\boost.targets" Condition="Exists('..\packages\boost.1.65.1.0\build\native\boost.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Core.redist.1.4.2\build\native\AWSSDKCPP-Core.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.redist.1.4.2\build\native\AWSSDKCPP-Core.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Core.1.4.2\build\native\AWSSDKCPP-Core.targets" Condition="Exists('..\packages\AWSSDKCPP-Core.1.4.2\build\native\AWSSDKCPP-Core.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Polly.redist.1.4.20160610.2\build\native\AWSSDKCPP-Polly.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Polly.redist.1.4.20160610.2\build\native\AWSSDKCPP-Polly.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Polly.1.4.20160610.2\build\native\AWSSDKCPP-Polly.targets" Condition="Exists('..\packages\AWSSDKCPP-Polly.1.4.20160610.2\build\native\AWSSDKCPP-Polly.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.redist.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" />
+    <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.redist.1.3.8\build\native\AWSSDKCPP-Core.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.1.3.8\build\native\AWSSDKCPP-Core.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-Polly.redist.1.3.20160610.8\build\native\AWSSDKCPP-Polly.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Polly.redist.1.3.20160610.8\build\native\AWSSDKCPP-Polly.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Polly.1.3.20160610.8\build\native\AWSSDKCPP-Polly.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.redist.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.redist.targets'))" />
-    <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.1.3.8\build\native\AWSSDKCPP-Text-To-Speech.targets'))" />
     <Error Condition="!Exists('..\packages\OctoPack.3.6.3\build\OctoPack.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OctoPack.3.6.3\build\OctoPack.targets'))" />
-    <Error Condition="!Exists('..\packages\boost.1.65.1.0\build\native\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.65.1.0\build\native\boost.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.redist.1.4.2\build\native\AWSSDKCPP-Core.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.redist.1.4.2\build\native\AWSSDKCPP-Core.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Core.1.4.2\build\native\AWSSDKCPP-Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Core.1.4.2\build\native\AWSSDKCPP-Core.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Polly.redist.1.4.20160610.2\build\native\AWSSDKCPP-Polly.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Polly.redist.1.4.20160610.2\build\native\AWSSDKCPP-Polly.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Polly.1.4.20160610.2\build\native\AWSSDKCPP-Polly.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Polly.1.4.20160610.2\build\native\AWSSDKCPP-Polly.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.redist.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.targets'))" />
   </Target>
 </Project>
