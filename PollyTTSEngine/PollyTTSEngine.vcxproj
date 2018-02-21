@@ -313,6 +313,7 @@
     <Import Project="..\packages\AWSSDKCPP-Polly.1.4.20160610.2\build\native\AWSSDKCPP-Polly.targets" Condition="Exists('..\packages\AWSSDKCPP-Polly.1.4.20160610.2\build\native\AWSSDKCPP-Polly.targets')" />
     <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.redist.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.redist.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" />
     <Import Project="..\packages\AWSSDKCPP-Text-To-Speech.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.targets" Condition="Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.targets')" />
+    <Import Project="..\packages\boost.1.66.0.0\build\native\boost.targets" Condition="Exists('..\packages\boost.1.66.0.0\build\native\boost.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -325,5 +326,6 @@
     <Error Condition="!Exists('..\packages\AWSSDKCPP-Polly.1.4.20160610.2\build\native\AWSSDKCPP-Polly.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Polly.1.4.20160610.2\build\native\AWSSDKCPP-Polly.targets'))" />
     <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.redist.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.redist.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.redist.targets'))" />
     <Error Condition="!Exists('..\packages\AWSSDKCPP-Text-To-Speech.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\AWSSDKCPP-Text-To-Speech.1.4.2\build\native\AWSSDKCPP-Text-To-Speech.targets'))" />
+    <Error Condition="!Exists('..\packages\boost.1.66.0.0\build\native\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.66.0.0\build\native\boost.targets'))" />
   </Target>
 </Project>
