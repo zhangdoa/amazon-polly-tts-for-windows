@@ -49,10 +49,8 @@ HRESULT CTTSEngObj::FinalConstruct()
 	auto temp_folder = GetPath();
 	char logPath[MAX_PATH];
 	sprintf_s(logPath, MAX_PATH, "%lspolly-tts.log", temp_folder);
-#ifdef DEBUG
 	m_logger = std::make_shared<spdlog::logger>("msvc_logger", std::make_shared<spdlog::sinks::msvc_sink_mt>());
 	m_logger->set_level(spdlog::level::debug);
-#endif
 
 	spdlog::set_pattern("[%H:%M:%S %z] %v");
 #ifdef DEBUG

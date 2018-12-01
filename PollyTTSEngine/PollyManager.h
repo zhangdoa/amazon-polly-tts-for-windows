@@ -38,6 +38,7 @@ private:
 		{ L"Aditi",		   VoiceId::Aditi },
 		{ L"Amy",		   VoiceId::Amy },
 		{ L"Astrid",       VoiceId::Astrid },
+		{ L"Bianca",       VoiceId::Bianca },
 		{ L"Brian",		   VoiceId::Brian },
 		{ L"Carla",        VoiceId::Carla },
 		{ L"Carmen",	   VoiceId::Carmen },
@@ -66,12 +67,14 @@ private:
 		{ L"Kimberly",	   VoiceId::Kimberly },
 		{ L"Liv",	       VoiceId::Liv },
 		{ L"Lotte",	       VoiceId::Lotte },
+		{ L"Lucia",	       VoiceId::Lucia },
 		{ L"Mads",	       VoiceId::Mads },
 		{ L"Maja",	       VoiceId::Maja },
 		{ L"Marlene",	   VoiceId::Marlene },
 		{ L"Mathieu",	   VoiceId::Mathieu },
 		{ L"Matthew",	   VoiceId::Matthew },
 		{ L"Maxim",	       VoiceId::Maxim },
+		{ L"Mia",		   VoiceId::Mia },
 		{ L"Miguel",	   VoiceId::Miguel },
 		{ L"Mizuki",	   VoiceId::Mizuki },
 		{ L"Naja",	       VoiceId::Naja },
@@ -86,7 +89,8 @@ private:
 		{ L"Takumi",	   VoiceId::Takumi },
 		{ L"Tatyana",	   VoiceId::Tatyana },
 		{ L"Vicki",	       VoiceId::Vicki },
-		{ L"Vitoria",	   VoiceId::Vitoria }
+		{ L"Vitoria",	   VoiceId::Vitoria },
+		{L"Zhiyu",		   VoiceId::Zhiyu}
 	};
 
 };

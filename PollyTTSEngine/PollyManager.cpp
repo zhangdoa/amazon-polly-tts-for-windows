@@ -45,9 +45,11 @@ void PollyManager::SetVoice (LPWSTR voiceName)
 
 PollyManager::PollyManager(LPWSTR voiceName)
 {
-#ifdef DEBUG
 	m_logger = std::make_shared<spd::logger>("msvc_logger", std::make_shared<spd::sinks::msvc_sink_mt>());
+#ifdef DEBUG
 	m_logger->set_level(spd::level::debug);
+#else
+	m_logger->set_level(spd::level::info);
 #endif
 
 	SetVoice(voiceName);
@@ -57,7 +59,8 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 {
 	PollySpeechResponse response;
 	
-	Aws::Polly::PollyClient p = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>(ALLOCATION_TAG, "polly-windows");
+	Aws::Polly::PollyClient p = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>(
+		ALLOCATION_TAG, "polly-windows");
 	SynthesizeSpeechRequest speech_request;
 	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	if (Aws::Utils::StringUtils::ToLower(speech_text.c_str()).find("</voice>") != std::string::npos)
