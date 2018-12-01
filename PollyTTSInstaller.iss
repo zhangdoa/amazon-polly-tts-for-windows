@@ -32,8 +32,8 @@ LicenseFile=license.txt
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: ".\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
+Source: ".\x64\Release\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\x64\Release\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
 
 [Run]
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser; Parameters: "install"; StatusMsg: "Installing Voices..."
