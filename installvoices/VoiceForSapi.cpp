@@ -11,14 +11,8 @@ or implied.See the License for the specific language governing
 permissions and limitations under the License. */
 
 #include "stdafx.h"
+#include "aws/polly/PollyClient.h"
 #include "VoiceForSapi.h"
-#include <aws/polly/model/VoiceId.h>
-#include <aws/polly/model/DescribeVoicesRequest.h>
-#include <aws/polly/PollyClient.h>
-#include <aws/polly/model/Gender.h>
-#include <aws/polly/model/LanguageCode.h>
-
-using namespace Aws::Polly::Model;
 
 VoiceForSAPI::VoiceForSAPI(Voice voice)
 {
@@ -29,8 +23,8 @@ VoiceForSAPI::VoiceForSAPI(Voice voice)
 	std::pair<int, const wchar_t*> languagePair = GetVoiceHexValue(voice.GetLanguageCode());
 	langid = languagePair.first;
 	languageText = languagePair.second;
-
-	Aws::String a_voiceName = VoiceIdMapper::GetNameForVoiceId(voice.GetId()); // "Joanna"
+	VoiceId id = voice.GetId();
+	Aws::String a_voiceName = VoiceIdMapper::GetNameForVoiceId(id); // "Joanna"
 	Aws::String a_voiceNameUpper = Aws::Utils::StringUtils::ToUpper(a_voiceName.c_str()); // "JOANNA"
 	const wchar_t* voiceName = AWSStringToWchar(a_voiceName); //L"Joanna"
 	const wchar_t* voiceNameUpper = AWSStringToWchar(a_voiceNameUpper); //L"JOANNA"

@@ -13,7 +13,7 @@ permissions and limitations under the License. */
 #pragma once
 #include "PollySpeechResponse.h"
 #include "PollySpeechMarksResponse.h"
-#include <aws/polly/model/VoiceId.h>
+#include "aws/polly/model/VoiceId.h"
 #include <unordered_map>
 #include "spdlog/spdlog.h"
 namespace spd = spdlog;

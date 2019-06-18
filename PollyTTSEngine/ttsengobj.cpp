@@ -9,6 +9,7 @@ and in the "LICENSE" file accompanying this file.This file is distributed
 on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express
 or implied.See the License for the specific language governing
 permissions and limitations under the License. */
+#define SPDLOG_WCHAR_TO_UTF8_SUPPORT
 
 //--- Additional includes
 #include "stdafx.h"
@@ -19,9 +20,9 @@ permissions and limitations under the License. */
 #include <aws/polly/model/DescribeVoicesRequest.h>
 #include "PollyManager.h"
 #include "spdlog/spdlog.h"
-#include "tinyxml2/tinyxml2.h"
+#include "tinyxml2.h"
 #include <aws/core/platform/Environment.h>
-#include <aws/core/auth/AWSCredentialsProvider.h>
+#include <aws/core/auth/AWSCredentialsProvider.h>tiny
 #include <boost/algorithm/string.hpp>
 
 //--- Local

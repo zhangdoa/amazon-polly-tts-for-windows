@@ -9,7 +9,6 @@ and in the "LICENSE" file accompanying this file.This file is distributed
 on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express
 or implied.See the License for the specific language governing
 permissions and limitations under the License. */
-
 #include "stdafx.h"
 #include "PollyManager.h"
 #include <aws/polly/PollyClient.h>
@@ -22,6 +21,7 @@ permissions and limitations under the License. */
 #include "PollySpeechMarksResponse.h"
 #include "rapidjson/document.h"
 #include <unordered_map>
+#include "spdlog/fmt/ostr.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/msvc_sink.h"
 #include <aws/core/auth/AWSCredentialsProvider.h>
