@@ -4,17 +4,20 @@ cmake_minimum_required(VERSION 3.0.0 FATAL_ERROR)
 # Change if you want modify path or other values. #
 ###################################################
 
-set(PROJECT_NAME PollyTTSWindows)
+set(PROJECT_NAME MakeVoice)
 # Output Variables
 set(OUTPUT_DEBUG \$(SolutionDir)\$(Platform)/)
 set(OUTPUT_REL \$(SolutionDir)\$(Platform)/)
 # Folders files
-set(CPP_DIR ./)
+set(CPP_DIR_1 ./)
+set(CPP_DIR_2 ./)
+set(CPP_DIR_3 ./)
 set(HEADER_DIR_1 )
+
 ############## CMake Project ################
 #        The main options of project        #
 #############################################
-OPTION(BUILD_STATIC_LIBS ON)
+
 project(${PROJECT_NAME} CXX)
 
 # Define Release by default.
@@ -25,11 +28,8 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 # Definition of Macros
 add_definitions(
-   -DUSE_IMPORT_EXPORT 
    -D_DEBUG 
-   -D_WINDOWS 
-   -D_USRDLL 
-   -DTTSENG_EXPORTS 
+   -D_CONSOLE 
    -DUNICODE
    -D_UNICODE
 )
@@ -68,23 +68,16 @@ endif(NOT MSVC)
 #######################################
 
 file(GLOB SRC_FILES
-    *.cpp
-    PollyTTSEngine.def
-    PollyTTSEngine.idl
-    *.h
+    ${CPP_DIR_1}/*.cpp
+    ${CPP_DIR_2}/*.cpp
+    ${CPP_DIR_3}/*.cpp
+    ${HEADER_DIR_1}/*.h
 )
+find_package(aws-cpp-sdk-core CONFIG REQUIRED)
 
-ADD_CUSTOM_COMMAND(
-	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c
-	DEPENDS PollyTTSEngine.idl
-	COMMAND ${CMAKE_COMMAND} -E remove  "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h" "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c" "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_p.c"
-	COMMAND midl /D "_DEBUG" /W1 /nologo /char signed /env win32 /Oicf /h "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h" /iid "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c" /proxy "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_p.c" /tlb "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine.tlb" /robust ${CMAKE_CURRENT_SOURCE_DIR}/PollyTTSEngine.idl
-	)
-
-# Add library to build.
-add_library(${PROJECT_NAME} SHARED
+# Add executable to build.
+add_executable(${PROJECT_NAME} 
    ${SRC_FILES}
-   ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c PollyTTSEngine.rc ttsengobj.rgs
 )
 
 if(MSVC)
@@ -95,3 +88,4 @@ if(MSVC)
    find_package(tinyxml2 CONFIG REQUIRED)
    target_link_libraries(${PROJECT_NAME} spdlog::spdlog tinyxml2::tinyxml2 aws-cpp-sdk-text-to-speech aws-cpp-sdk-core aws-cpp-sdk-polly)
 endif(MSVC)
+

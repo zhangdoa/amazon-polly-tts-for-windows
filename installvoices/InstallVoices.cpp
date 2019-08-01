@@ -17,9 +17,9 @@
 ******************************************************************************/
 #include "stdafx.h"
 #include <iostream>
-#include <PollyTTSEngine_i.c>
+#include "../PollyTTSEngine/PollyTTSEngine_i.c"
 #include <direct.h>
-#include "PollyTTSEngine.h"
+#include "../PollyTTSEngine/PollyTTSEngine.h"
 #include <aws/core/Aws.h>
 #include <aws/core/utils/Outcome.h>
 #include <aws/polly/model/DescribeVoicesRequest.h>
