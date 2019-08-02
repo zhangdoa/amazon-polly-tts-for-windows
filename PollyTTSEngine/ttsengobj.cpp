@@ -145,10 +145,15 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
 
 	if (wcslen(m_voiceOveride) == 0)
 	{
+		LPWSTR data;
 		CComPtr<ISpDataKey> attributesKey;
 		m_logger->debug("Reading attributes key to get the voice\n");
 		m_cpToken->OpenKey(L"Attributes", &attributesKey);
 		attributesKey->GetStringValue(L"VoiceId", &m_pPollyVoice);
+		attributesKey->GetStringValue(L"IsNeural", &data);
+		m_isNeural = wcscmp(L"1", data) == 0;
+		attributesKey->GetStringValue(L"IsNews", &data);
+		m_isNews = wcscmp(L"1", data) == 0;
 	}
 	m_logger->debug("Initializing AWS\n");
 	InitAPI(options);
@@ -271,7 +276,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 	}
 
 	ListPos = ItemList.GetHeadPosition();
-	PollyManager pm = PollyManager(m_pPollyVoice);
+	PollyManager pm = PollyManager(m_pPollyVoice, m_isNeural, m_isNews);
 	auto resp = pm.GenerateSpeech(Item);
 	if (!resp.IsSuccess)
 	{

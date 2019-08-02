@@ -30,7 +30,9 @@ public:
 	const WCHAR * languageText;
 	const WCHAR * age;
 	const WCHAR * vendor = L"Amazon";
+	bool hasNeural = false;
+	bool hasNewscasterStyle = false;
 
-	VoiceForSAPI(Aws::Polly::Model::Voice);
+	VoiceForSAPI(Aws::Polly::Model::Voice, bool hasNeural, bool hasNewscasterStyle);
 	void PrintVoice() const;
 };

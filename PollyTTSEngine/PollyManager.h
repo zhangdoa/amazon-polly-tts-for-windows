@@ -25,6 +25,7 @@ class PollyManager
 {
 public:
 	PollyManager(LPWSTR voiceName);
+	PollyManager(LPWSTR voiceName, bool isNeural, bool isNews);
 	PollySpeechResponse GenerateSpeech(CSentItem& item);
 	std::string ParseXMLOutput(std::string& xmlBuffer);
 	PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std::streamsize streamSize);
@@ -34,11 +35,15 @@ private:
 	std::wstring m_sVoiceName;
 	std::shared_ptr<spd::logger> m_logger;
 	VoiceId m_vVoiceId;
+	bool m_isNeural = false;
+	bool m_isNews = false;
 	std::unordered_map<std::wstring, VoiceId> vm = {
 		{ L"Aditi",		   VoiceId::Aditi },
 		{ L"Amy",		   VoiceId::Amy },
+		{ L"Amy (Neural)", VoiceId::Amy },
 		{ L"Astrid",       VoiceId::Astrid },
 		{ L"Brian",		   VoiceId::Brian },
+		{ L"Brian, (Neural)", VoiceId::Brian },
 		{ L"Carla",        VoiceId::Carla },
 		{ L"Carmen",	   VoiceId::Carmen },
 		{ L"Celine",       VoiceId::Celine },
@@ -47,6 +52,7 @@ private:
 		{ L"Cristiano",    VoiceId::Cristiano },
 		{ L"Dora",         VoiceId::Dora },
 		{ L"Emma",         VoiceId::Emma },
+		{ L"Emma (Neural)",VoiceId::Emma },
 		{ L"Enrique",      VoiceId::Enrique },
 		{ L"Ewa",          VoiceId::Ewa },
 		{ L"Filiz",        VoiceId::Filiz },
@@ -87,6 +93,7 @@ private:
 		{ L"Tatyana",	   VoiceId::Tatyana },
 		{ L"Vicki",	       VoiceId::Vicki },
 		{ L"Vitoria",	   VoiceId::Vitoria },
+		{ L"Zeina",		   VoiceId::Zeina },
 		{L"Zhiyu",		   VoiceId::Zhiyu}
 	};
 

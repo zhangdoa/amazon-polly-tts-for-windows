@@ -30,7 +30,7 @@
 
 using namespace Aws::Polly;
 
-typedef std::map<VoiceId, VoiceForSAPI> voice_map_t;
+typedef std::map<Aws::String, VoiceForSAPI> voice_map_t;
 typedef std::set<VoiceId> argument_set_t;
 
 voice_map_t SelectedVoicesMap(std::wstring);
@@ -122,9 +122,22 @@ voice_map_t SelectedVoicesMap(std::wstring voiceList)
 			}
 			if (isSelected || isAllSelected)
 			{
-				VoiceForSAPI v4sp(voice);
-				pollyVoices.insert(std::make_pair(voice.GetId(), v4sp));
-				isSelected = false;
+				VoiceForSAPI v4sp(voice, false, false);
+				Aws::String name = VoiceIdMapper::GetNameForVoiceId(voice.GetId());
+				pollyVoices.insert(std::make_pair(name, v4sp));
+				auto e = voice.GetSupportedEngines();
+				if (std::find(e.begin(), e.end(), Engine::neural) != e.end())
+				{
+					name.append("_neural");
+					VoiceForSAPI v4sp_neural(voice, true, false);
+					pollyVoices.insert(std::make_pair(name, v4sp_neural));
+				}
+				if (name == "Matthew" || name == "Joanna")
+				{
+					VoiceForSAPI v4sp_newscaster(voice, true, true);
+					name.append("_newscaster");
+					pollyVoices.insert(std::make_pair(name, v4sp_newscaster));
+				}
 			}
 		}
 	}
@@ -177,6 +190,14 @@ int AddVoice(VoiceForSAPI voiceForSapi)
 		if (SUCCEEDED(hr))
 		{
 			hr = cpDataKeyAttribs->SetStringValue(L"Vendor", voiceForSapi.vendor);
+		}
+		if (SUCCEEDED(hr))
+		{
+			hr = cpDataKeyAttribs->SetStringValue(L"IsNeural", voiceForSapi.hasNeural ? L"1" : L"0");
+		}
+		if (SUCCEEDED(hr))
+		{
+			hr = cpDataKeyAttribs->SetStringValue(L"IsNews", voiceForSapi.hasNewscasterStyle ? L"1" : L"0");
 		}
 	}
 	return SUCCEEDED(hr);

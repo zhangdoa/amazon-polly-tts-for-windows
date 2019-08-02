@@ -122,6 +122,8 @@ class ATL_NO_VTABLE CTTSEngObj :
     HANDLE                  m_hVoiceData;
     void*                   m_pVoiceData;
 	LPWSTR      			m_pPollyVoice;
+	bool                    m_isNeural;
+	bool                    m_isNews;
 	wchar_t                 m_voiceOveride[100];
 	std::shared_ptr<spdlog::logger> m_logger;
 

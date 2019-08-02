@@ -14,16 +14,20 @@ permissions and limitations under the License. */
 #include "aws/polly/PollyClient.h"
 #include "VoiceForSapi.h"
 
-VoiceForSAPI::VoiceForSAPI(Voice voice)
+VoiceForSAPI::VoiceForSAPI(Voice voice, bool _isNeural, bool _isNews)
 {
 	age = L"Adult"; //Polly doesn't have age attribute for voices, setting Adult as default.
-	
+
 	gender = AWSStringToWchar(GenderMapper::GetNameForGender(voice.GetGender()));
 
 	std::pair<int, const wchar_t*> languagePair = GetVoiceHexValue(voice.GetLanguageCode());
 	langid = languagePair.first;
 	languageText = languagePair.second;
 	VoiceId id = voice.GetId();
+	hasNeural = _isNeural;
+	hasNewscasterStyle = _isNews;
+	
+
 	Aws::String a_voiceName = VoiceIdMapper::GetNameForVoiceId(id); // "Joanna"
 	Aws::String a_voiceNameUpper = Aws::Utils::StringUtils::ToUpper(a_voiceName.c_str()); // "JOANNA"
 	const wchar_t* voiceName = AWSStringToWchar(a_voiceName); //L"Joanna"
@@ -38,11 +42,21 @@ VoiceForSAPI::VoiceForSAPI(Voice voice)
 	const wchar_t* languageName = AWSStringToWchar(a_languageName); // L"US English"
 
 	this->voiceId = voiceName;
-	wchar_t* prefix = L"TTS_AMZN_";
-
+	
+	wchar_t* prefix;
+	if (_isNews) {
+		prefix = L"TTS_AMZN_NEWS";
+	}
+	else if (_isNeural) {
+		prefix = L"TTS_AMZN_NEURAL";
+	}
+	else
+	{
+		prefix = L"TTS_AMZN";
+	}
 	// constructing TTS_AMZN_EN-US_JOANNA
-	wchar_t* voiceToken = new wchar_t[wcslen(voiceNameUpper) + 
-		wcslen(langCodeUpper) + 
+	wchar_t* voiceToken = new wchar_t[wcslen(voiceNameUpper) +
+		wcslen(langCodeUpper) +
 		wcslen(L"_") +
 		wcslen(prefix)];
 	wcscpy(voiceToken, prefix);
@@ -50,19 +64,29 @@ VoiceForSAPI::VoiceForSAPI(Voice voice)
 	wcscat(voiceToken, L"_");
 	wcscat(voiceToken, voiceNameUpper);
 	tokenKeyName = voiceToken;
-	
+
 	// constructing L"Amazon Polly Joanna"
 	wchar_t* nameForSAPI = new wchar_t[100];
 	wcscpy(nameForSAPI, L"Amazon Polly ");
 	wcscat(nameForSAPI, voiceName);
 	name = nameForSAPI;
-	
+
 	// constructing L"Amazon Polly Joanna - British English"
 	wchar_t* langName = new wchar_t[100];
-	wcscpy(langName, L"Amazon Polly ");
-	wcscat(langName, voiceName);	
-	wcscat(langName, L" - ");
+	wcscpy(langName, L"Amazon Polly - ");
 	wcscat(langName, AWSStringToWchar(voice.GetLanguageName()));
+	wcscat(langName, L" - ");
+	wcscat(langName, voiceName);
+	if (_isNews) {
+		wcscat(langName, L" (Newscaster)");
+	}
+	else if (_isNeural) {
+		wcscat(langName, L" (Neural)");
+	}
+	else
+	{
+		wcscat(langName, L" (Standard)");
+	}
 	langDependentName = langIndependentName = langName;
 }
 

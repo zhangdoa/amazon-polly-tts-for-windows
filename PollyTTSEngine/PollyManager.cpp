@@ -43,7 +43,7 @@ void PollyManager::SetVoice (LPWSTR voiceName)
 	m_vVoiceId = voiceId->second ;
 }
 
-PollyManager::PollyManager(LPWSTR voiceName)
+PollyManager::PollyManager(LPWSTR voiceName, bool isNeural, bool isNews)
 {
 	m_logger = std::make_shared<spd::logger>("msvc_logger", std::make_shared<spd::sinks::msvc_sink_mt>());
 #ifdef DEBUG
@@ -51,7 +51,8 @@ PollyManager::PollyManager(LPWSTR voiceName)
 #else
 	m_logger->set_level(spd::level::info);
 #endif
-
+	m_isNeural = isNeural;
+	m_isNews = isNews;
 	SetVoice(voiceName);
 }
 
@@ -67,9 +68,14 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	{
 		speech_text = "<speak>" + speech_text.replace(speech_text.find("</voice>"), sizeof("</voice>") - 1, "");
 	}
+	else if (m_isNews)
+	{
+		speech_text = "<speak><amazon:domain name=\"news\">" + speech_text + "</amazon:domain></speak>";
+	}
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(OutputFormat::pcm);
 	speech_request.SetVoiceId(m_vVoiceId);
+	
 	char polly_text[10000];
 
 	m_logger->debug("Generating speech: {}", speech_text);
@@ -86,6 +92,10 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	}
 
 	speech_request.SetSampleRate("16000");
+	if (m_isNeural) {
+		m_logger->debug("Neural voice? Yes");
+		speech_request.SetEngine(Engine::neural);
+	}
 	auto speech = p.SynthesizeSpeech(speech_request);
 	response.IsSuccess = speech.IsSuccess();
 	if (!speech.IsSuccess())
