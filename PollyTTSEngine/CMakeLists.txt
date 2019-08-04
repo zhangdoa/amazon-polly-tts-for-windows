@@ -77,7 +77,7 @@ ADD_CUSTOM_COMMAND(
 	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c
 	DEPENDS PollyTTSEngine.idl
 	COMMAND ${CMAKE_COMMAND} -E remove  "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h" "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c" "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_p.c"
-	COMMAND midl /W1 /nologo /char signed /env win32 /Oicf /h "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h" /iid "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c" /proxy "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_p.c" /tlb "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine.tlb" /robust ${CMAKE_CURRENT_SOURCE_DIR}/PollyTTSEngine.idl
+	COMMAND midl /W1 /nologo /char signed /env win64 /Oicf /h "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h" /iid "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c" /proxy "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_p.c" /tlb "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine.tlb" /robust ${CMAKE_CURRENT_SOURCE_DIR}/PollyTTSEngine.idl
 	)
 
 # Add library to build.
@@ -87,6 +87,7 @@ add_library(${PROJECT_NAME} SHARED
 )
 
 if(MSVC)
+
    find_package(spdlog CONFIG REQUIRED)
    find_package(aws-cpp-sdk-text-to-speech CONFIG REQUIRED)
    find_package(aws-cpp-sdk-polly CONFIG REQUIRED)
