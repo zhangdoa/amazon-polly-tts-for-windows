@@ -28,7 +28,6 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 # Definition of Macros
 add_definitions(
-   -D_DEBUG 
    -D_CONSOLE 
    -DUNICODE
    -D_UNICODE
@@ -69,8 +68,6 @@ endif(NOT MSVC)
 
 file(GLOB SRC_FILES
     ${CPP_DIR_1}/*.cpp
-    ${CPP_DIR_2}/*.cpp
-    ${CPP_DIR_3}/*.cpp
     ${HEADER_DIR_1}/*.h
 )
 find_package(aws-cpp-sdk-core CONFIG REQUIRED)
@@ -86,6 +83,7 @@ if(MSVC)
    find_package(aws-cpp-sdk-polly CONFIG REQUIRED)
    find_package(aws-cpp-sdk-core CONFIG REQUIRED)
    find_package(tinyxml2 CONFIG REQUIRED)
-   target_link_libraries(${PROJECT_NAME} spdlog::spdlog tinyxml2::tinyxml2 aws-cpp-sdk-text-to-speech aws-cpp-sdk-core aws-cpp-sdk-polly)
+   find_package(SDL2 CONFIG REQUIRED)
+   target_link_libraries(${PROJECT_NAME} spdlog::spdlog tinyxml2::tinyxml2 aws-cpp-sdk-text-to-speech aws-cpp-sdk-core aws-cpp-sdk-polly SDL2::SDL2 SDL2::SDL2main)
 endif(MSVC)
 

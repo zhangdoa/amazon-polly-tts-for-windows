@@ -26,7 +26,6 @@ endif(NOT CMAKE_BUILD_TYPE)
 # Definition of Macros
 add_definitions(
    -DUSE_IMPORT_EXPORT 
-   -D_DEBUG 
    -D_WINDOWS 
    -D_USRDLL 
    -DTTSENG_EXPORTS 
@@ -78,7 +77,7 @@ ADD_CUSTOM_COMMAND(
 	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c
 	DEPENDS PollyTTSEngine.idl
 	COMMAND ${CMAKE_COMMAND} -E remove  "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h" "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c" "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_p.c"
-	COMMAND midl /D "_DEBUG" /W1 /nologo /char signed /env win32 /Oicf /h "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h" /iid "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c" /proxy "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_p.c" /tlb "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine.tlb" /robust ${CMAKE_CURRENT_SOURCE_DIR}/PollyTTSEngine.idl
+	COMMAND midl /W1 /nologo /char signed /env win32 /Oicf /h "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h" /iid "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c" /proxy "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_p.c" /tlb "${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine.tlb" /robust ${CMAKE_CURRENT_SOURCE_DIR}/PollyTTSEngine.idl
 	)
 
 # Add library to build.
@@ -93,5 +92,6 @@ if(MSVC)
    find_package(aws-cpp-sdk-polly CONFIG REQUIRED)
    find_package(aws-cpp-sdk-core CONFIG REQUIRED)
    find_package(tinyxml2 CONFIG REQUIRED)
-   target_link_libraries(${PROJECT_NAME} spdlog::spdlog tinyxml2::tinyxml2 aws-cpp-sdk-text-to-speech aws-cpp-sdk-core aws-cpp-sdk-polly)
+   find_package(SDL2 CONFIG REQUIRED)
+   target_link_libraries(${PROJECT_NAME} spdlog::spdlog tinyxml2::tinyxml2 aws-cpp-sdk-text-to-speech aws-cpp-sdk-core aws-cpp-sdk-polly SDL2::SDL2 SDL2::SDL2main)
 endif(MSVC)
