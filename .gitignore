@@ -299,5 +299,6 @@ __pycache__/
 
 out/
 RC*
+CMakeFiles/
 
 # End of https://www.gitignore.io/api/visualstudio
