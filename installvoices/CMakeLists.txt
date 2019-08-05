@@ -53,7 +53,7 @@ endif()
 
 if(MSVC)
    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W3 /MDd /Od /Zi /EHsc")
-   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /W3 /GL /Zi /EHsc")
+   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /W3 /GL /Zi /MT /EHsc")
 endif(MSVC)
 if(NOT MSVC)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -70,10 +70,8 @@ file(GLOB SRC_FILES
     ${CPP_DIR_1}/*.cpp
     ${HEADER_DIR_1}/*.h
 )
-find_package(aws-cpp-sdk-core CONFIG REQUIRED)
-
 # Add executable to build.
-add_executable(${PROJECT_NAME} 
+add_executable(${PROJECT_NAME}
    ${SRC_FILES}
 )
 
