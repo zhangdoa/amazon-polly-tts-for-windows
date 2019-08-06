@@ -5,7 +5,7 @@
 #define MyAppVersion ".1"
 #define MyAppPublisher "Amazon Web Services"
 #define MyAppURL "https://aws.amazon.com/polly"
-#define DebugOrRelease "Debug"
+#define DebugOrRelease "Release"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
