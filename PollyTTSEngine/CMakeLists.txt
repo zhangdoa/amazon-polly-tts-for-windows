@@ -53,7 +53,7 @@ endif()
 
 if(MSVC)
    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W3 /MDd /Od /Zi /EHsc")
-   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /W3 /GL /Zi /MT /EHsc")
+   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /W3 /GL /Zi /EHsc")
 endif(MSVC)
 if(NOT MSVC)
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -81,7 +81,7 @@ ADD_CUSTOM_COMMAND(
 	)
 
 # Add library to build.
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} SHARED
    ${SRC_FILES}
    ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.h ${CMAKE_CURRENT_BINARY_DIR}/PollyTTSEngine_i.c PollyTTSEngine.rc ttsengobj.rgs
 )
