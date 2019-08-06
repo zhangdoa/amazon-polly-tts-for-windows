@@ -5,7 +5,7 @@
 #define MyAppVersion ".1"
 #define MyAppPublisher "Amazon Web Services"
 #define MyAppURL "https://aws.amazon.com/polly"
-#define ReleaseOrDebug "Debug"
+#define DebugOrRelease "Debug"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -27,16 +27,51 @@ Compression=lzma
 SolidCompression=yes
 PrivilegesRequired=admin
 LicenseFile=license.txt
+WizardStyle=modern   
+DisableWelcomePage=no
+
+
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: ".\x64\{#DebugOrRelease}\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\x64\{#DebugOrRelease}\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
+Source: ".\InstallVoices\{#DebugOrRelease}\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\InstallVoices\{#DebugOrRelease}\aws-c-common.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\InstallVoices\{#DebugOrRelease}\aws-c-event-stream.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\InstallVoices\{#DebugOrRelease}\aws-checksums.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-core.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-polly.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\{#DebugOrRelease}\PollyWindowsTTS.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
 
 [Run]
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser; Parameters: "install"; StatusMsg: "Installing Voices..."
 
 [UninstallRun]
 Filename: "{app}\InstallVoices.exe"; Parameters: "uninstall"
+
+[Code]  
+var
+  PricingPage: TInputOptionWizardPage;
+  PricingLinkLabel: TLabel;
+procedure OpenBrowser(Url: string);
+var
+  ErrorCode: Integer;
+begin
+  ShellExec('open', Url, '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
+end;
+procedure LinkLabelClick(Sender: TObject);
+begin
+  OpenBrowser('https://www.amazon.com/');
+end;
+procedure InitializeWizard;
+begin
+  PricingPage := CreateInputOptionPage(wpWelcome,
+    'Pricing Information', 'Review Amazon Polly pricing',
+    'Before continuing, please review the Amazon Polly pricing at https://aws.amazon.com/polly/pricing',
+    True, False);
+  PricingPage.Add('I have NOT read and understand the Amazon Polly pricing terms');
+  PricingPage.Add('I have read and understand the Amazon Polly pricing terms');
+end;
