@@ -43,8 +43,8 @@ Source: ".\InstallVoices\{#DebugOrRelease}\aws-checksums.dll"; DestDir: "{app}";
 Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-core.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-polly.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyTTSEngine\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
-Source: ".\PollyTTSEngine\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
-Source: ".\PollyTTSEngine\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 
 [Run]
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser; Parameters: "install"; StatusMsg: "Installing Voices..."
