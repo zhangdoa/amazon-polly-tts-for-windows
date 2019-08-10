@@ -36,15 +36,6 @@ DisableWelcomePage=no
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
-Source: ".\InstallVoices\{#DebugOrRelease}\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\InstallVoices\{#DebugOrRelease}\aws-c-common.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\InstallVoices\{#DebugOrRelease}\aws-c-event-stream.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\InstallVoices\{#DebugOrRelease}\aws-checksums.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-core.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-polly.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\PollyTTSEngine\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
-Source: ".\PollyTTSEngine\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\PollyTTSEngine\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 
 [Run]
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser; Parameters: "install"; StatusMsg: "Installing Voices..."
@@ -62,10 +53,27 @@ var
 begin
   ShellExec('open', Url, '', '', SW_SHOWNORMAL, ewNoWait, ErrorCode);
 end;
+
+procedure ValidatePage;
+begin
+  WizardForm.NextButton.Enabled := PricingPage.SelectedValueIndex;
+end;  
+
+procedure EditChange(Sender: TObject);
+begin
+  ValidatePage;
+end;
+
+procedure PageActivate(Sender: TWizardPage);
+begin
+  ValidatePage;
+end;
+
 procedure LinkLabelClick(Sender: TObject);
 begin
   OpenBrowser('https://www.amazon.com/');
 end;
+
 procedure InitializeWizard;
 begin
   PricingPage := CreateInputOptionPage(wpWelcome,
@@ -74,4 +82,5 @@ begin
     True, False);
   PricingPage.Add('I have NOT read and understand the Amazon Polly pricing terms');
   PricingPage.Add('I have read and understand the Amazon Polly pricing terms');
+  PricingPage.SelectedValueIndex.OnChange := @EditChange;
 end;

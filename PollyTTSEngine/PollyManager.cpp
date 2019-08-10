@@ -25,6 +25,7 @@ permissions and limitations under the License. */
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/msvc_sink.h"
 #include <aws/core/auth/AWSCredentialsProvider.h>
+#include <tinyxml2.h>
 namespace spd = spdlog;
 
 #define NOMINMAX
@@ -68,9 +69,33 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	{
 		speech_text = "<speak>" + speech_text.replace(speech_text.find("</voice>"), sizeof("</voice>") - 1, "");
 	}
-	else if (m_isNews)
+	tinyxml2::XMLDocument doc;
+	tinyxml2::XMLError res = doc.Parse(speech_text.c_str());
+	if (res == tinyxml2::XML_SUCCESS && strcmp(doc.RootElement()->Name(), "speak") == 0) {
+	
+		m_logger->debug("Text type = ssml");
+		speech_request.SetTextType(TextType::ssml);
+		if (m_isNews)
+		{
+			speech_text = speech_text.replace(speech_text.find("<speak>"), sizeof("<speak>") - 1, "");
+			speech_text = speech_text.replace(speech_text.find("</speak>"), sizeof("</speak>") - 1, "");
+		}
+
+	}
+	else if (m_isNeural || m_isNews)
 	{
-		speech_text = "<speak><amazon:domain name=\"news\">" + speech_text + "</amazon:domain></speak>";
+		speech_request.SetTextType(TextType::ssml);
+		if (m_isNews)
+		{
+			speech_text = "<speak><amazon:domain name=\"news\">" + speech_text + "</amazon:domain></speak>";
+		}
+		else
+		{
+			speech_text = "<speak>" + speech_text + "</speak>";
+		}
+	}
+	else {
+		speech_request.SetTextType(TextType::text);
 	}
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(OutputFormat::pcm);
@@ -80,16 +105,6 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 
 	m_logger->debug("Generating speech: {}", speech_text);
 	speech_request.SetText(speech_text);
-	if (Aws::Utils::StringUtils::ToLower(speech_text.c_str()).find("<speak") == 0)
-	{
-		m_logger->debug("Text type = ssml");
-		speech_request.SetTextType(TextType::ssml);
-	}
-	else
-	{
-		m_logger->debug("Text type = text");
-		speech_request.SetTextType(TextType::text);
-	}
 
 	speech_request.SetSampleRate("16000");
 	if (m_isNeural) {
@@ -101,7 +116,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	if (!speech.IsSuccess())
 	{
 		std::stringstream error;
-		error << "Error generating speech: " << speech.GetError().GetMessageW();
+		error <<  speech.GetError().GetMessageW();
 		response.ErrorMessage = error.str();
 		return response;
 	}

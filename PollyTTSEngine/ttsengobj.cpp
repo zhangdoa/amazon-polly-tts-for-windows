@@ -262,7 +262,7 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
 	if (speech.find("<voice name=") != std::string::npos)
 	{
 		tinyxml2::XMLDocument doc;
-		doc.Parse(speech.c_str());
+		tinyxml2::XMLError res = doc.Parse(speech.c_str());
 		auto voice_node = doc.RootElement()->FirstChildElement();
 		auto voice_name = voice_node->Attribute("name");
 		mbstowcs(m_voiceOveride, voice_name, strlen(voice_name) + 1);
