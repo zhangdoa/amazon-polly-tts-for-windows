@@ -24,7 +24,7 @@ DefaultGroupName={#MyAppName}
 OutputBaseFilename=setup
 OutputDir=installer
 Compression=lzma
-SolidCompression=yes
+SolidCompression=yes            
 PrivilegesRequired=admin
 LicenseFile=license.txt
 WizardStyle=modern   
@@ -46,7 +46,6 @@ Filename: "{app}\InstallVoices.exe"; Parameters: "uninstall"
 [Code]  
 var
   PricingPage: TInputOptionWizardPage;
-  PricingLinkLabel: TLabel;
 procedure OpenBrowser(Url: string);
 var
   ErrorCode: Integer;
@@ -56,7 +55,7 @@ end;
 
 procedure ValidatePage;
 begin
-  WizardForm.NextButton.Enabled := PricingPage.SelectedValueIndex;
+  WizardForm.NextButton.Enabled := (PricingPage.SelectedValueIndex=1);
 end;  
 
 procedure EditChange(Sender: TObject);
@@ -64,23 +63,44 @@ begin
   ValidatePage;
 end;
 
+procedure LinkLabelClick(Sender: TObject);
+begin
+  OpenBrowser('https://aws.amazon.com/polly/pricing');
+end;
+
+procedure ActivatePricingPage(Page: TWizardPage);
+var
+  LinkLabel: TLabel;
+begin
+  WizardForm.NextButton.Enabled := False;
+  LinkLabel := TLabel.Create(WizardForm);
+  LinkLabel.Parent := WizardForm;
+  LinkLabel.Left := ScaleX(16);
+  LinkLabel.Top :=
+  WizardForm.NextButton.Top + (WizardForm.NextButton.Height div 2) -
+    (LinkLabel.Height div 2);
+  LinkLabel.Caption := 'Amazon Polly pricing page';
+  LinkLabel.ParentFont := True;
+  LinkLabel.Font.Style := LinkLabel.Font.Style + [fsUnderline];
+  LinkLabel.Font.Color := clBlue;
+  LinkLabel.Cursor := crHand;
+  LinkLabel.OnClick := @LinkLabelClick;
+end;
+
 procedure PageActivate(Sender: TWizardPage);
 begin
   ValidatePage;
-end;
-
-procedure LinkLabelClick(Sender: TObject);
-begin
-  OpenBrowser('https://www.amazon.com/');
 end;
 
 procedure InitializeWizard;
 begin
   PricingPage := CreateInputOptionPage(wpWelcome,
     'Pricing Information', 'Review Amazon Polly pricing',
-    'Before continuing, please review the Amazon Polly pricing at https://aws.amazon.com/polly/pricing',
+    'Before continuing, please review the Amazon Polly pricing at the link below.',
     True, False);
   PricingPage.Add('I have NOT read and understand the Amazon Polly pricing terms');
   PricingPage.Add('I have read and understand the Amazon Polly pricing terms');
-  PricingPage.SelectedValueIndex.OnChange := @EditChange;
+  PricingPage.CheckListBox.OnClickCheck := @EditChange;
+  PricingPage.OnActivate := @ActivatePricingPage
+  
 end;
