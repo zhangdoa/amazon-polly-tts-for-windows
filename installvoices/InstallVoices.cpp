@@ -173,7 +173,7 @@ int AddVoice(VoiceForSAPI voiceForSapi)
 		hr = cpDataKeyAttribs->SetStringValue(L"Gender", voiceForSapi.gender);
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Name", voiceForSapi.name);
+			hr = cpDataKeyAttribs->SetStringValue(L"Name", voiceForSapi.langIndependentName);
 		}
 		if (SUCCEEDED(hr))
 		{
