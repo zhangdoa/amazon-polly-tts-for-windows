@@ -71,11 +71,12 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	}
 	tinyxml2::XMLDocument doc;
 	tinyxml2::XMLError res = doc.Parse(speech_text.c_str());
+	speech_request.SetTextType(TextType::text);
 	if (res == tinyxml2::XML_SUCCESS && strcmp(doc.RootElement()->Name(), "speak") == 0) {
 	
 		m_logger->debug("Text type = ssml");
 		speech_request.SetTextType(TextType::ssml);
-		if (m_isNeural) {
+		if (m_isNeural || m_isNews) {
 			speech_text = speech_text.replace(speech_text.find("<speak>"), sizeof("<speak>") - 1, "");
 			speech_text = speech_text.replace(speech_text.find("</speak>"), sizeof("</speak>") - 1, "");
 		}
@@ -91,9 +92,6 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 		{
 			speech_text = "<speak>" + speech_text + "</speak>";
 		}
-	}
-	else {
-		speech_request.SetTextType(TextType::text);
 	}
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(OutputFormat::pcm);
