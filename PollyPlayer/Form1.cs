@@ -14,9 +14,9 @@ using System.Windows.Forms;
 
 namespace PollyPlayer
 {
-    public partial class mainForm : Form
+    public partial class MainForm : Form
     {
-        public mainForm()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -24,14 +24,18 @@ namespace PollyPlayer
         private void LoadVoices()
         {
             voicesListBox.DisplayMember = "Description";
-            using (SpeechSynthesizer synth = new SpeechSynthesizer())
+            voicesListBox.Sorted = true;
+            using (var synth = new SpeechSynthesizer())
             {
                 if (synth.GetInstalledVoices().Count == 0)
                     return;
                 // Output information about all of the installed voices.   
-                foreach (InstalledVoice voice in synth.GetInstalledVoices())
+                foreach (var voice in synth.GetInstalledVoices())
                 {
-                    voicesListBox.Items.Add(voice.VoiceInfo);
+                    if (voice.VoiceInfo.Name.StartsWith("Amazon Polly"))
+                    {
+                        voicesListBox.Items.Add(voice.VoiceInfo);
+                    }
                 }
             }
         }
@@ -43,10 +47,9 @@ namespace PollyPlayer
 
         private void SayItButton_Click(object sender, EventArgs e)
         {
-            using (SpeechSynthesizer synth = new SpeechSynthesizer())
+            using (var synth = new SpeechSynthesizer())
             {
                 var voice = (VoiceInfo) voicesListBox.SelectedItem;
-                Debug.WriteLine($"Selected Voice: {0}", voice.Description);
                 synth.SelectVoice(voice.Name);
                 synth.Speak(speechTextBox.Text);
             }
