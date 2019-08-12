@@ -82,7 +82,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 		}
 
 	}
-	else if (m_isNeural || m_isNews)
+	if (m_isNeural || m_isNews)
 	{
 		speech_request.SetTextType(TextType::ssml);
 		if (m_isNews)
