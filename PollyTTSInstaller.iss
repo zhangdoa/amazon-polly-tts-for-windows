@@ -19,7 +19,7 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={pf}\{#MyAppName}
+DefaultDirName={commonpf}\{#MyAppName}
 DefaultGroupName={#MyAppName}                  
 OutputBaseFilename=setup
 OutputDir=installer
@@ -43,8 +43,6 @@ Source: ".\PollyTTSEngine\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: i
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
-
-[Files]
 
 [Run]
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser; Parameters: "install"; StatusMsg: "Installing Voices..."
