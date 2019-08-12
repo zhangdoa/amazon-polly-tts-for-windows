@@ -75,12 +75,10 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	
 		m_logger->debug("Text type = ssml");
 		speech_request.SetTextType(TextType::ssml);
-		if (m_isNews)
-		{
+		if (m_isNeural) {
 			speech_text = speech_text.replace(speech_text.find("<speak>"), sizeof("<speak>") - 1, "");
 			speech_text = speech_text.replace(speech_text.find("</speak>"), sizeof("</speak>") - 1, "");
 		}
-
 	}
 	if (m_isNeural || m_isNews)
 	{
