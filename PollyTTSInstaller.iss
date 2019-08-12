@@ -29,6 +29,7 @@ PrivilegesRequired=admin
 LicenseFile=license.txt
 WizardStyle=modern   
 DisableWelcomePage=no
+ArchitecturesInstallIn64BitMode=x64
 
 [Files]
 Source: ".\InstallVoices\{#DebugOrRelease}\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
