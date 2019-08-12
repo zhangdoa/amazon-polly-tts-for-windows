@@ -44,7 +44,7 @@ Source: ".\PollyTTSEngine\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: i
 Source: ".\PollyPlayer\{#DebugOrRelease}\PollyPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 
 [Icons]
-Name: "{group}\Amazon Polly for Windows"; Filename: "{app}\PollyPlayer.exe"; WorkingDir: "{app}"
+Name: "{group}\Polly Player"; Filename: "{app}\PollyPlayer.exe"; WorkingDir: "{app}"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
