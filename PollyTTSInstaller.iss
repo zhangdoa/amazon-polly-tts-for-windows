@@ -41,6 +41,10 @@ Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-polly.dll"; DestDir: "{ap
 Source: ".\PollyTTSEngine\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
 Source: ".\PollyTTSEngine\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyTTSEngine\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\PollyPlayer\{#DebugOrRelease}\PollyPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+
+[Icons]
+Name: "{group}\Amazon Polly for Windows"; Filename: "{app}\PollyPlayer.exe"; WorkingDir: "{app}"
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
