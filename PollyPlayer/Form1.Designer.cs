@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.voicesListBox = new System.Windows.Forms.ListBox();
             this.speechTextBox = new System.Windows.Forms.TextBox();
             this.sayItButton = new System.Windows.Forms.Button();
@@ -97,7 +98,7 @@
             this.panel1.Size = new System.Drawing.Size(860, 544);
             this.panel1.TabIndex = 5;
             // 
-            // mainForm
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -105,6 +106,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "PollyPlayer";
             this.Load += new System.EventHandler(this.Form1_Load);
