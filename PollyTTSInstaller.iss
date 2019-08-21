@@ -6,6 +6,11 @@
 #define MyAppPublisher "Amazon Web Services"
 #define MyAppURL "https://aws.amazon.com/polly"
 #define DebugOrRelease "Release"
+#IFDEF UNICODE
+  #DEFINE AW "W"
+#ELSE
+  #DEFINE AW "A"
+#ENDIF
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -38,10 +43,11 @@ Source: ".\InstallVoices\{#DebugOrRelease}\aws-c-event-stream.dll"; DestDir: "{a
 Source: ".\InstallVoices\{#DebugOrRelease}\aws-checksums.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-core.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-polly.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\PollyTTSEngine\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyTTSEngine\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyTTSEngine\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyPlayer\{#DebugOrRelease}\PollyPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
+Source: ".\redist\vc_redist.x64.exe"; DestDir: {tmp}; Flags: deleteafterinstall
 
 [Icons]
 Name: "{group}\Polly Player"; Filename: "{app}\PollyPlayer.exe"; WorkingDir: "{app}"
@@ -50,10 +56,13 @@ Name: "{group}\Polly Player"; Filename: "{app}\PollyPlayer.exe"; WorkingDir: "{a
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Run]
+Filename: "{tmp}\vc_redist.x64.exe"; Parameters: "/install /passive /norestart"; Check: VCRedistNeedsInstall; StatusMsg: Installing Visual Studio Runtime Libraries...
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser; Parameters: "install"; StatusMsg: "Installing Voices..."
+Filename: "{sys}\Regsvr32.exe"; Parameters: "/s pollyttswindows.dll"; WorkingDir: "{app}"; StatusMsg: "Registering Polly TTS Engine ... "; Flags: runhidden;
 
 [UninstallRun]
 Filename: "{app}\InstallVoices.exe"; Parameters: "uninstall"
+Filename: "{sys}\Regsvr32.exe"; Parameters: "/s /u pollyttswindows.dll"; WorkingDir: "{app}"; StatusMsg: "Unregistering Polly TTS Engine ... "; Flags: runhidden;
 
 [Code]  
 var
@@ -115,4 +124,34 @@ begin
   PricingPage.CheckListBox.OnClickCheck := @EditChange;
   PricingPage.OnActivate := @ActivatePricingPage
   
+end;
+
+type
+  INSTALLSTATE = Longint;
+
+  const
+  INSTALLSTATE_INVALIDARG = -2;  { An invalid parameter was passed to the function. }
+  INSTALLSTATE_UNKNOWN = -1;     { The product is neither advertised or installed. }
+  INSTALLSTATE_ADVERTISED = 1;   { The product is advertised but not installed. }
+  INSTALLSTATE_ABSENT = 2;       { The product is installed for a different user. }
+  INSTALLSTATE_DEFAULT = 5;      { The product is installed for the current user. }
+
+  { Visual C++ 2017 Redistributable 14.16.27024 }
+  VC_2017_REDIST_X84_ADD = '{7258184A-EC44-4B1A-A7D3-68D85A35BFD0}';
+  VC_2017_REDIST_X84_MIN = '{5EEFCEFB-E5F7-4C82-99A5-813F04AA4FBD}';
+
+  VC_2017_REDIST_X64_ADD = '{9D29FC96-9EEE-4253-943F-96B3BBFDD0B6}';
+  VC_2017_REDIST_X64_MIN = '{F1B0FB3A-E0EA-47A6-9383-3650655403B0}';
+
+function MsiQueryProductState(szProduct: string): INSTALLSTATE; 
+  external 'MsiQueryProductState{#AW}@msi.dll stdcall';
+
+function VCVersionInstalled(const ProductID: string): Boolean;
+begin
+  Result := MsiQueryProductState(ProductID) = INSTALLSTATE_DEFAULT;
+end;
+
+function VCRedistNeedsInstall: Boolean;
+begin
+  Result := not VCVersionInstalled(VC_2017_REDIST_X64_MIN);
 end;

@@ -26,11 +26,13 @@
 #include <aws/polly/PollyClient.h>
 #include "VoiceForSapi.h"
 #include <aws/core/auth/AWSCredentialsProvider.h>
+#include <locale>
+#include <codecvt>
 
 
 using namespace Aws::Polly;
 
-typedef std::map<Aws::String, VoiceForSAPI> voice_map_t;
+typedef std::map<std::wstring, VoiceForSAPI> voice_map_t;
 typedef std::set<VoiceId> argument_set_t;
 
 voice_map_t SelectedVoicesMap(std::wstring);
@@ -78,7 +80,7 @@ int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
 				std::wcout << L"Removing " << voice.second.tokenKeyName << " - ";
 				std::wcout << voice.second.langIndependentName << std::endl;
 
-				RemoveVoice(voice.second.tokenKeyName);
+				RemoveVoice((WCHAR *)voice.second.tokenKeyName.c_str());
 			}
 		}
 		else {
@@ -110,8 +112,10 @@ voice_map_t SelectedVoicesMap(std::wstring voiceList)
 	boolean isSelected(false);
 	boolean isAllSelected(voiceList.size() < 1);
 	DescribeVoicesRequest describeVoices;
-	
+	std::wstring name;
 	auto voicesOutcome = pc.DescribeVoices(describeVoices);
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
 	if (voicesOutcome.IsSuccess())
 	{
 		auto voiceSet = ArgumentSet(voiceList);
@@ -123,19 +127,19 @@ voice_map_t SelectedVoicesMap(std::wstring voiceList)
 			if (isSelected || isAllSelected)
 			{
 				VoiceForSAPI v4sp(voice, false, false);
-				Aws::String name = VoiceIdMapper::GetNameForVoiceId(voice.GetId());
-				pollyVoices.insert(std::make_pair(name, v4sp));
+				name = converter.from_bytes(VoiceIdMapper::GetNameForVoiceId(voice.GetId()).c_str());
+				pollyVoices.insert(std::make_pair(name.c_str(), v4sp));
 				auto e = voice.GetSupportedEngines();
 				if (std::find(e.begin(), e.end(), Engine::neural) != e.end())
 				{
-					name.append("_neural");
+					name.append(L"_neural");
 					VoiceForSAPI v4sp_neural(voice, true, false);
 					pollyVoices.insert(std::make_pair(name, v4sp_neural));
 				}
-				if (name == "Matthew" || name == "Joanna")
+				if (name == L"Matthew" || name == L"Joanna")
 				{
 					VoiceForSAPI v4sp_newscaster(voice, true, true);
-					name.append("_newscaster");
+					name.append(L"_newscaster");
 					pollyVoices.insert(std::make_pair(name, v4sp_newscaster));
 				}
 			}
@@ -158,11 +162,11 @@ int AddVoice(VoiceForSAPI voiceForSapi)
 
 	hr = SpCreateNewTokenEx(
 		SPCAT_VOICES,
-		voiceForSapi.tokenKeyName,
+		(WCHAR *)voiceForSapi.tokenKeyName.c_str(),
 		&CLSID_PollyTTSEngine,
-		voiceForSapi.langDependentName,
+		(WCHAR*)voiceForSapi.langDependentName.c_str(),
 		voiceForSapi.langid,
-		voiceForSapi.langIndependentName,
+		(WCHAR*)voiceForSapi.langIndependentName.c_str(),
 		&cpToken,
 		&cpDataKeyAttribs);
 
@@ -170,26 +174,26 @@ int AddVoice(VoiceForSAPI voiceForSapi)
 	//    voice data file we just created.
 	if (SUCCEEDED(hr))
 	{
-		hr = cpDataKeyAttribs->SetStringValue(L"Gender", voiceForSapi.gender);
+		hr = cpDataKeyAttribs->SetStringValue(L"Gender", voiceForSapi.gender.c_str());
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Name", voiceForSapi.langIndependentName);
+			hr = cpDataKeyAttribs->SetStringValue(L"Name", voiceForSapi.langIndependentName.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"VoiceId", voiceForSapi.voiceId);
+			hr = cpDataKeyAttribs->SetStringValue(L"VoiceId", voiceForSapi.voiceId.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Language", voiceForSapi.languageText);
+			hr = cpDataKeyAttribs->SetStringValue(L"Language", voiceForSapi.languageText.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Age", voiceForSapi.age);
+			hr = cpDataKeyAttribs->SetStringValue(L"Age", voiceForSapi.age.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Vendor", voiceForSapi.vendor);
+			hr = cpDataKeyAttribs->SetStringValue(L"Vendor", voiceForSapi.vendor.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{

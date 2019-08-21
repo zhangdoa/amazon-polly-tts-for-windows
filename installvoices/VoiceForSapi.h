@@ -20,16 +20,16 @@ class VoiceForSAPI
 	std::pair<int, const wchar_t*> GetVoiceHexValue(LanguageCode code);
 	static wchar_t* AWSStringToWchar(Aws::String);
 public:
-	WCHAR * tokenKeyName;
-	const WCHAR * langIndependentName;
-	const WCHAR * langDependentName;
+	std::wstring tokenKeyName;
+	std::wstring langIndependentName;
+	std::wstring langDependentName;
 	WORD langid; 
-	const WCHAR * gender = L"NOT_SET";
-	const WCHAR * name;
-	const WCHAR * voiceId;
-	const WCHAR * languageText;
-	const WCHAR * age;
-	const WCHAR * vendor = L"Amazon";
+	std::wstring gender = L"NOT_SET";
+	std::wstring name;
+	std::wstring voiceId;
+	std::wstring languageText;
+	std::wstring age;
+	std::wstring vendor = L"Amazon";
 	bool hasNeural = false;
 	bool hasNewscasterStyle = false;
 

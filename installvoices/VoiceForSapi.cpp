@@ -13,12 +13,13 @@ permissions and limitations under the License. */
 #include "stdafx.h"
 #include "aws/polly/PollyClient.h"
 #include "VoiceForSapi.h"
+#include <codecvt>
 
 VoiceForSAPI::VoiceForSAPI(Voice voice, bool _isNeural, bool _isNews)
 {
 	age = L"Adult"; //Polly doesn't have age attribute for voices, setting Adult as default.
 
-	gender = AWSStringToWchar(GenderMapper::GetNameForGender(voice.GetGender()));
+	gender = Aws::Utils::StringUtils::ToWString(GenderMapper::GetNameForGender(voice.GetGender()).c_str()).c_str();
 
 	std::pair<int, const wchar_t*> languagePair = GetVoiceHexValue(voice.GetLanguageCode());
 	langid = languagePair.first;
@@ -26,22 +27,17 @@ VoiceForSAPI::VoiceForSAPI(Voice voice, bool _isNeural, bool _isNews)
 	VoiceId id = voice.GetId();
 	hasNeural = _isNeural;
 	hasNewscasterStyle = _isNews;
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+	std::wstring voiceName = converter.from_bytes(VoiceIdMapper::GetNameForVoiceId(id).c_str()); // "Joanna"
+	std::wstring voiceNameUpper = converter.from_bytes(Aws::Utils::StringUtils::ToUpper(VoiceIdMapper::GetNameForVoiceId(id).c_str()).c_str()); // "JOANNA"
 	
-
-	Aws::String a_voiceName = VoiceIdMapper::GetNameForVoiceId(id); // "Joanna"
-	Aws::String a_voiceNameUpper = Aws::Utils::StringUtils::ToUpper(a_voiceName.c_str()); // "JOANNA"
-	const wchar_t* voiceName = AWSStringToWchar(a_voiceName); //L"Joanna"
-	const wchar_t* voiceNameUpper = AWSStringToWchar(a_voiceNameUpper); //L"JOANNA"
-
-	Aws::String a_langCode = LanguageCodeMapper::GetNameForLanguageCode(voice.GetLanguageCode()); // "en-us"
-	Aws::String a_langCodeUpper = Aws::Utils::StringUtils::ToUpper(a_langCode.c_str()); // "EN-US"
-	const wchar_t* langCode = AWSStringToWchar(a_langCode); // L"en-us"
-	const wchar_t* langCodeUpper = AWSStringToWchar(a_langCodeUpper); // L"EN-US"
-
-	Aws::String a_languageName = voice.GetLanguageName(); // "US English"
-	const wchar_t* languageName = AWSStringToWchar(a_languageName); // L"US English"
-
-	this->voiceId = voiceName;
+	std::wstring langCode = converter.from_bytes(LanguageCodeMapper::GetNameForLanguageCode(voice.GetLanguageCode()).c_str()); // "en-us"
+	std::wstring langCodeUpper = converter.from_bytes(Aws::Utils::StringUtils::ToUpper(LanguageCodeMapper::GetNameForLanguageCode(voice.GetLanguageCode()).c_str()).c_str()); // "EN-US"
+	
+	std::wstring languageName = converter.from_bytes(voice.GetLanguageName().c_str()); // "US English"
+	
+	this->voiceId = voiceName.c_str();
 	
 	wchar_t* prefix;
 	if (_isNews) {
@@ -55,39 +51,35 @@ VoiceForSAPI::VoiceForSAPI(Voice voice, bool _isNeural, bool _isNews)
 		prefix = L"TTS_AMZN";
 	}
 	// constructing TTS_AMZN_EN-US_JOANNA
-	wchar_t* voiceToken = new wchar_t[wcslen(voiceNameUpper) +
-		wcslen(langCodeUpper) +
-		wcslen(L"_") +
-		wcslen(prefix)];
-	wcscpy(voiceToken, prefix);
-	wcscat(voiceToken, langCodeUpper);
-	wcscat(voiceToken, L"_");
-	wcscat(voiceToken, voiceNameUpper);
+	std::wstring voiceToken = prefix;
+	voiceToken.append(langCodeUpper);
+	voiceToken.append(L"_");
+	voiceToken.append(voiceNameUpper);
 	tokenKeyName = voiceToken;
 
 	// constructing L"Amazon Polly Joanna"
-	wchar_t* nameForSAPI = new wchar_t[100];
+	wchar_t* nameForSAPI = new wchar_t[200];
 	wcscpy(nameForSAPI, L"Amazon Polly ");
-	wcscat(nameForSAPI, voiceName);
+	wcscat(nameForSAPI, voiceName.c_str());
 	name = nameForSAPI;
 
 	// constructing L"Amazon Polly Joanna - British English"
-	wchar_t* langName = new wchar_t[100];
-	wcscpy(langName, L"Amazon Polly - ");
-	wcscat(langName, AWSStringToWchar(voice.GetLanguageName()));
-	wcscat(langName, L" - ");
-	wcscat(langName, voiceName);
+	std::wstring langName;
+	langName = L"Amazon Polly - ";
+	langName.append(converter.from_bytes(voice.GetLanguageName().c_str()).c_str());
+	langName.append(L" - ");
+	langName.append(voiceName.c_str());
 	if (_isNews) {
-		wcscat(langName, L" (Newscaster)");
+		langName.append(L" (Newscaster)");
 	}
 	else if (_isNeural) {
-		wcscat(langName, L" (Neural)");
+		langName.append(L" (Neural)");
 	}
 	else
 	{
-		wcscat(langName, L" (Standard)");
+		langName.append(L" (Standard)");
 	}
-	langDependentName = langIndependentName = langName;
+	langDependentName = langIndependentName = langName.c_str();
 }
 
 
