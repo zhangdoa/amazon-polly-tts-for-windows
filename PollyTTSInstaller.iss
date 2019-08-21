@@ -43,7 +43,7 @@ Source: ".\InstallVoices\{#DebugOrRelease}\aws-c-event-stream.dll"; DestDir: "{a
 Source: ".\InstallVoices\{#DebugOrRelease}\aws-checksums.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-core.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\InstallVoices\{#DebugOrRelease}\aws-cpp-sdk-polly.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\PollyTTSEngine\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion regserver 64bit; Check: IsWin64
+Source: ".\PollyTTSEngine\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyTTSEngine\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyTTSEngine\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyPlayer\{#DebugOrRelease}\PollyPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
@@ -58,9 +58,11 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 [Run]
 Filename: "{tmp}\vc_redist.x64.exe"; Check: VCRedistNeedsInstall; StatusMsg: Installing Visual Studio Runtime Libraries...
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser; Parameters: "install"; StatusMsg: "Installing Voices..."
+Filename: "{sys}\Regsvr32.exe"; Parameters: "/s pollyttswindows.dll"; WorkingDir: "{app}"; StatusMsg: "Registering Polly TTS Engine ... "; Flags: runhidden;
 
 [UninstallRun]
 Filename: "{app}\InstallVoices.exe"; Parameters: "uninstall"
+Filename: "{sys}\Regsvr32.exe"; Parameters: "/s /u pollyttswindows.dll"; WorkingDir: "{app}"; StatusMsg: "Unregistering Polly TTS Engine ... "; Flags: runhidden;
 
 [Code]  
 var
