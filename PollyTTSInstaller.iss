@@ -6,6 +6,11 @@
 #define MyAppPublisher "Amazon Web Services"
 #define MyAppURL "https://aws.amazon.com/polly"
 #define DebugOrRelease "Release"
+#IFDEF UNICODE
+  #DEFINE AW "W"
+#ELSE
+  #DEFINE AW "A"
+#ENDIF
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
