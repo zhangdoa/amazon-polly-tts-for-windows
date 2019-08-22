@@ -105,6 +105,8 @@ void PrintHelp(WCHAR* exeName)
 
 voice_map_t SelectedVoicesMap(std::wstring voiceList)
 {
+	Aws::SDKOptions options;
+	InitAPI(options);
 	Aws::Polly::PollyClient pc = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>("InstallVoices", "polly-windows");
 	voice_map_t pollyVoices;
 	boolean isSelected(false);
