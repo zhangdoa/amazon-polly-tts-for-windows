@@ -21,8 +21,8 @@ class VoiceForSAPI
 	static wchar_t* AWSStringToWchar(Aws::String);
 public:
 	std::wstring tokenKeyName;
-	const WCHAR * langIndependentName;
-	const WCHAR * langDependentName;
+	std::wstring langIndependentName;
+	std::wstring langDependentName;
 	WORD langid; 
 	const WCHAR * gender = L"NOT_SET";
 	const WCHAR * name;

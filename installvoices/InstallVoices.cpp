@@ -164,9 +164,9 @@ int AddVoice(VoiceForSAPI voiceForSapi)
 		SPCAT_VOICES,
 		(WCHAR *)voiceForSapi.tokenKeyName.c_str(),
 		&CLSID_PollyTTSEngine,
-		voiceForSapi.langDependentName,
+		(WCHAR*)voiceForSapi.langDependentName.c_str(),
 		voiceForSapi.langid,
-		voiceForSapi.langIndependentName,
+		(WCHAR*)voiceForSapi.langIndependentName.c_str(),
 		&cpToken,
 		&cpDataKeyAttribs);
 
@@ -177,7 +177,7 @@ int AddVoice(VoiceForSAPI voiceForSapi)
 		hr = cpDataKeyAttribs->SetStringValue(L"Gender", voiceForSapi.gender);
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Name", voiceForSapi.langIndependentName);
+			hr = cpDataKeyAttribs->SetStringValue(L"Name", voiceForSapi.langIndependentName.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
