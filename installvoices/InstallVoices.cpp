@@ -174,26 +174,26 @@ int AddVoice(VoiceForSAPI voiceForSapi)
 	//    voice data file we just created.
 	if (SUCCEEDED(hr))
 	{
-		hr = cpDataKeyAttribs->SetStringValue(L"Gender", voiceForSapi.gender);
+		hr = cpDataKeyAttribs->SetStringValue(L"Gender", voiceForSapi.gender.c_str());
 		if (SUCCEEDED(hr))
 		{
 			hr = cpDataKeyAttribs->SetStringValue(L"Name", voiceForSapi.langIndependentName.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"VoiceId", voiceForSapi.voiceId);
+			hr = cpDataKeyAttribs->SetStringValue(L"VoiceId", voiceForSapi.voiceId.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Language", voiceForSapi.languageText);
+			hr = cpDataKeyAttribs->SetStringValue(L"Language", voiceForSapi.languageText.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Age", voiceForSapi.age);
+			hr = cpDataKeyAttribs->SetStringValue(L"Age", voiceForSapi.age.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
-			hr = cpDataKeyAttribs->SetStringValue(L"Vendor", voiceForSapi.vendor);
+			hr = cpDataKeyAttribs->SetStringValue(L"Vendor", voiceForSapi.vendor.c_str());
 		}
 		if (SUCCEEDED(hr))
 		{
