@@ -208,13 +208,3 @@ void VoiceForSAPI::PrintVoice() const
 	std::wcout << L"Vendor: " << vendor << std::endl;
 
 }
-
-wchar_t * VoiceForSAPI::AWSStringToWchar(Aws::String awsString)
-{
-	const char* sourcestring = awsString.c_str();
-	size_t newsize = strlen(sourcestring) + 1;
-	wchar_t * wcstring = new wchar_t[newsize];
-	size_t convertedChars = 0;
-	mbstowcs_s(&convertedChars, wcstring, newsize, sourcestring, _TRUNCATE);
-	return wcstring;
-}
