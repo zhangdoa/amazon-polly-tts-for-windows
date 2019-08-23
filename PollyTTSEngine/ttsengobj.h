@@ -124,6 +124,7 @@ class ATL_NO_VTABLE CTTSEngObj :
 	LPWSTR      			m_pPollyVoice;
 	bool                    m_isNeural;
 	bool                    m_isNews;
+	bool                    m_isConversational;
 	wchar_t                 m_voiceOveride[100];
 	std::shared_ptr<spdlog::logger> m_logger;
 

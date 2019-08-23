@@ -17,8 +17,7 @@ using namespace Aws::Polly::Model;
 
 class VoiceForSAPI
 {
-	std::pair<int, const wchar_t*> GetVoiceHexValue(LanguageCode code);
-	static wchar_t* AWSStringToWchar(Aws::String);
+	static std::pair<int, const wchar_t*> GetVoiceHexValue(LanguageCode code);
 public:
 	std::wstring tokenKeyName;
 	std::wstring langIndependentName;
@@ -32,7 +31,8 @@ public:
 	std::wstring vendor = L"Amazon";
 	bool hasNeural = false;
 	bool hasNewscasterStyle = false;
+	bool hasConversationalStyle = false;
 
-	VoiceForSAPI(Aws::Polly::Model::Voice, bool hasNeural, bool hasNewscasterStyle);
+	VoiceForSAPI(const Aws::Polly::Model::Voice&, bool _isNeural, bool _isNews, bool _isConversational);
 	void PrintVoice() const;
 };
