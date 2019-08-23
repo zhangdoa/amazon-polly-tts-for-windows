@@ -39,7 +39,7 @@ VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews)
 	
 	this->voiceId = voiceName;
 	
-	wchar_t* prefix;
+	std::wstring prefix;
 	if (_isNews) {
 		prefix = L"TTS_AMZN_NEWS";
 	}
@@ -83,7 +83,7 @@ VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews)
 
 
 std::pair<int, const wchar_t*> VoiceForSAPI::GetVoiceHexValue(LanguageCode code) {
-	wchar_t* langText;
+	std::wstring langText;
 	int langHex;
 	
 	switch (code)
