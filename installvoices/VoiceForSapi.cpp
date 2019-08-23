@@ -189,7 +189,7 @@ std::pair<int, const wchar_t*> VoiceForSAPI::GetVoiceHexValue(LanguageCode code)
 		langHex = 0x0409;
 		langText = L"409";
 	}
-	return std::make_pair(langHex, langText);
+	return std::make_pair(langHex, langText.c_str());
 }
 
 void VoiceForSAPI::PrintVoice() const
