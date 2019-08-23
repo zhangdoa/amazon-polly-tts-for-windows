@@ -17,7 +17,7 @@ using namespace Aws::Polly::Model;
 
 class VoiceForSAPI
 {
-	std::pair<int, const wchar_t*> GetVoiceHexValue(LanguageCode code);
+	static std::pair<int, const wchar_t*> GetVoiceHexValue(LanguageCode code);
 public:
 	std::wstring tokenKeyName;
 	std::wstring langIndependentName;

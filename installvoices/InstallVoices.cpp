@@ -210,7 +210,7 @@ int RemoveVoice(WCHAR* tokenKeyName)
 {
 	std::wstring subKey = L"SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens\\";
 	subKey += tokenKeyName;
-	HRESULT result = SHDeleteKeyW(HKEY_LOCAL_MACHINE, subKey.c_str());
+	const HRESULT result = SHDeleteKeyW(HKEY_LOCAL_MACHINE, subKey.c_str());
 	if (result == ERROR_SUCCESS) {
 		return SUCCEEDED(S_OK);
 	}
