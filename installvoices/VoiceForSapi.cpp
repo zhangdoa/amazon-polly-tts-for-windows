@@ -15,11 +15,9 @@ permissions and limitations under the License. */
 #include "VoiceForSapi.h"
 #include <codecvt>
 
-VoiceForSAPI::VoiceForSAPI(Voice voice, bool _isNeural, bool _isNews)
+VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews)
 {
 	age = L"Adult"; //Polly doesn't have age attribute for voices, setting Adult as default.
-
-	gender = Aws::Utils::StringUtils::ToWString(GenderMapper::GetNameForGender(voice.GetGender()).c_str()).c_str();
 
 	std::pair<int, const wchar_t*> languagePair = GetVoiceHexValue(voice.GetLanguageCode());
 	langid = languagePair.first;
@@ -29,6 +27,8 @@ VoiceForSAPI::VoiceForSAPI(Voice voice, bool _isNeural, bool _isNews)
 	hasNewscasterStyle = _isNews;
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
+	gender = converter.from_bytes(GenderMapper::GetNameForGender(voice.GetGender()).c_str());
+
 	std::wstring voiceName = converter.from_bytes(VoiceIdMapper::GetNameForVoiceId(id).c_str()); // "Joanna"
 	std::wstring voiceNameUpper = converter.from_bytes(Aws::Utils::StringUtils::ToUpper(VoiceIdMapper::GetNameForVoiceId(id).c_str()).c_str()); // "JOANNA"
 	
@@ -37,7 +37,7 @@ VoiceForSAPI::VoiceForSAPI(Voice voice, bool _isNeural, bool _isNews)
 	
 	std::wstring languageName = converter.from_bytes(voice.GetLanguageName().c_str()); // "US English"
 	
-	this->voiceId = voiceName.c_str();
+	this->voiceId = voiceName;
 	
 	wchar_t* prefix;
 	if (_isNews) {
@@ -58,17 +58,16 @@ VoiceForSAPI::VoiceForSAPI(Voice voice, bool _isNeural, bool _isNews)
 	tokenKeyName = voiceToken;
 
 	// constructing L"Amazon Polly Joanna"
-	wchar_t* nameForSAPI = new wchar_t[200];
-	wcscpy(nameForSAPI, L"Amazon Polly ");
-	wcscat(nameForSAPI, voiceName.c_str());
+	std::wstring nameForSAPI = L"Amazon Polly ";
+	nameForSAPI.append(voiceName);
 	name = nameForSAPI;
 
 	// constructing L"Amazon Polly Joanna - British English"
 	std::wstring langName;
 	langName = L"Amazon Polly - ";
-	langName.append(converter.from_bytes(voice.GetLanguageName().c_str()).c_str());
+	langName.append(converter.from_bytes(voice.GetLanguageName().c_str()));
 	langName.append(L" - ");
-	langName.append(voiceName.c_str());
+	langName.append(voiceName);
 	if (_isNews) {
 		langName.append(L" (Newscaster)");
 	}
@@ -79,7 +78,7 @@ VoiceForSAPI::VoiceForSAPI(Voice voice, bool _isNeural, bool _isNews)
 	{
 		langName.append(L" (Standard)");
 	}
-	langDependentName = langIndependentName = langName.c_str();
+	langDependentName = langIndependentName = langName;
 }
 
 
@@ -196,7 +195,7 @@ std::pair<int, const wchar_t*> VoiceForSAPI::GetVoiceHexValue(LanguageCode code)
 void VoiceForSAPI::PrintVoice() const
 {
 	std::wcout << L"_________Printing Voice Attributes_________" << std::endl;
-	wprintf(L"Token name: %ls\n", tokenKeyName);
+	wprintf(L"Token name: %ls\n", tokenKeyName.c_str());
 	//std::wprintf(L"%ls\n", gender);
 	std::wcout << L"Language Independent Name: " << langIndependentName << std::endl;
 	std::wcout << L"Language Dependent Name: " << langDependentName << std::endl;

@@ -35,11 +35,11 @@ using namespace Aws::Polly;
 typedef std::map<std::wstring, VoiceForSAPI> voice_map_t;
 typedef std::set<VoiceId> argument_set_t;
 
-voice_map_t SelectedVoicesMap(std::wstring);
+voice_map_t SelectedVoicesMap(const std::wstring&);
 void PrintHelp(WCHAR*);
-int AddVoice(VoiceForSAPI);
+int AddVoice(const VoiceForSAPI&);
 int RemoveVoice(WCHAR*);
-argument_set_t ArgumentSet(std::wstring);
+argument_set_t ArgumentSet(const std::wstring&);
 Aws::String WStringToAwsString(const std::wstring& s);
 std::wstring AwsStringToWString(const Aws::String& s);
 
@@ -53,9 +53,9 @@ int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
 		//return FAILED(hr);
 	} else if (argc > 1)
 	{
-		CoInitialize(NULL);
+		CoInitialize(nullptr);
 
-		std::wstring voiceList = L"";
+		std::wstring voiceList;
 		if (argc == 3) {
 			voiceList = argv[2];
 		}
@@ -80,7 +80,7 @@ int wmain(int argc, __in_ecount(argc) WCHAR* argv[])
 				std::wcout << L"Removing " << voice.second.tokenKeyName << " - ";
 				std::wcout << voice.second.langIndependentName << std::endl;
 
-				RemoveVoice((WCHAR *)voice.second.tokenKeyName.c_str());
+				RemoveVoice(const_cast<WCHAR *>(voice.second.tokenKeyName.c_str()));
 			}
 		}
 		else {
@@ -103,14 +103,14 @@ void PrintHelp(WCHAR* exeName)
 }
 
 
-voice_map_t SelectedVoicesMap(std::wstring voiceList)
+voice_map_t SelectedVoicesMap(const std::wstring& voiceList)
 {
 	Aws::SDKOptions options;
 	InitAPI(options);
-	Aws::Polly::PollyClient pc = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>("InstallVoices", "polly-windows");
+	PollyClient pc = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>("InstallVoices", "polly-windows");
 	voice_map_t pollyVoices;
 	boolean isSelected(false);
-	boolean isAllSelected(voiceList.size() < 1);
+	boolean isAllSelected(voiceList.empty());
 	DescribeVoicesRequest describeVoices;
 	std::wstring name;
 	auto voicesOutcome = pc.DescribeVoices(describeVoices);
@@ -148,25 +148,24 @@ voice_map_t SelectedVoicesMap(std::wstring voiceList)
 	else
 	{
 		std::cout << "Error while getting voices" << std::endl;
-		std::cout << voicesOutcome.GetError().GetMessageW();
+		std::cout << voicesOutcome.GetError();
 	}
 	ShutdownAPI(options);
 	return pollyVoices;
 }
 
-int AddVoice(VoiceForSAPI voiceForSapi)
+int AddVoice(const VoiceForSAPI& voiceForSapi)
 {
-	HRESULT hr = S_OK;
 	CComPtr<ISpObjectToken> cpToken;
 	CComPtr<ISpDataKey> cpDataKeyAttribs;
 
-	hr = SpCreateNewTokenEx(
+	auto hr = SpCreateNewTokenEx(
 		SPCAT_VOICES,
-		(WCHAR *)voiceForSapi.tokenKeyName.c_str(),
+		const_cast<WCHAR *>(voiceForSapi.tokenKeyName.c_str()),
 		&CLSID_PollyTTSEngine,
-		(WCHAR*)voiceForSapi.langDependentName.c_str(),
+		const_cast<WCHAR*>(voiceForSapi.langDependentName.c_str()),
 		voiceForSapi.langid,
-		(WCHAR*)voiceForSapi.langIndependentName.c_str(),
+		const_cast<WCHAR*>(voiceForSapi.langIndependentName.c_str()),
 		&cpToken,
 		&cpDataKeyAttribs);
 
@@ -209,22 +208,21 @@ int AddVoice(VoiceForSAPI voiceForSapi)
 
 int RemoveVoice(WCHAR* tokenKeyName)
 {
-	std::wstring subKey;
-	subKey = L"SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens\\";
+	std::wstring subKey = L"SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens\\";
 	subKey += tokenKeyName;
-	long result = SHDeleteKey(HKEY_LOCAL_MACHINE, subKey.c_str());
+	HRESULT result = SHDeleteKeyW(HKEY_LOCAL_MACHINE, subKey.c_str());
 	if (result == ERROR_SUCCESS) {
 		return SUCCEEDED(S_OK);
 	}
 	return FAILED(result);
 }
 
-argument_set_t ArgumentSet(std::wstring str)
+argument_set_t ArgumentSet(const std::wstring& str)
 {
 	argument_set_t argSet;
 	std::wstringstream wss(str);
 
-	if (str.compare(L"") == 0) return argSet;
+	if (str.empty()) return argSet;
 
 	while (wss.good())
 	{
