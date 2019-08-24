@@ -30,7 +30,6 @@ namespace spd = spdlog;
 
 #define NOMINMAX
 #ifdef _WIN32
-#include <Windows.h>
 #endif
 #define MAX_SIZE 6000000
 using namespace Aws::Polly::Model;
@@ -96,8 +95,6 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(OutputFormat::pcm);
 	speech_request.SetVoiceId(m_vVoiceId);
-	
-	char polly_text[10000];
 
 	m_logger->debug("Generating speech: {}", speech_text);
 	speech_request.SetText(speech_text);
@@ -127,15 +124,15 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 std::string PollyManager::ParseXMLOutput(std::string &xmlBuffer)
 {
 	bool copy = true;
-	std::string plainString = "";
+	std::string plainString;
 	std::stringstream convertStream;
 
 	// remove all xml tags
-	for (int i = 0; i < xmlBuffer.length(); i++)
+	for (char i : xmlBuffer)
 	{
-		convertStream << xmlBuffer[i];
+		convertStream << i;
 
-		if (convertStream.str().compare("<") == 0) copy = false;
+		if (convertStream.str() == "<") copy = false;
 		else if (convertStream.str().compare(">") == 0)
 		{
 			copy = true;

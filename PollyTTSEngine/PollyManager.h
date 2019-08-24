@@ -24,7 +24,6 @@ using namespace Aws::Polly::Model;
 class PollyManager
 {
 public:
-	PollyManager(LPWSTR voiceName);
 	PollyManager(LPWSTR voiceName, bool isNeural, bool isNews);
 	PollySpeechResponse GenerateSpeech(CSentItem& item);
 	std::string ParseXMLOutput(std::string& xmlBuffer);
