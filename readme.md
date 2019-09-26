@@ -1,9 +1,6 @@
 # Amazon Polly TTS Engine for Windows
 > Use Amazon Polly voices in native Windows TTS applications
 
-A brief description of your project, what it is used for and how does life get
-awesome when someone starts to use it.
-
 ## QuickStart
 
 ## Step 1: Install the AWS Client (*if it's not already installed on your machine*) ##
