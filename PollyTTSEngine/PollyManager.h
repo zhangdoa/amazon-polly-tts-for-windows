@@ -24,7 +24,7 @@ using namespace Aws::Polly::Model;
 class PollyManager
 {
 public:
-	PollyManager(LPWSTR voiceName, bool isNeural, bool isNews);
+	PollyManager(LPWSTR voiceName, bool isNeural, bool isNews, bool isConversational);
 	PollySpeechResponse GenerateSpeech(CSentItem& item);
 	std::string ParseXMLOutput(std::string& xmlBuffer);
 	PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std::streamsize streamSize);
@@ -36,6 +36,7 @@ private:
 	VoiceId m_vVoiceId;
 	bool m_isNeural = false;
 	bool m_isNews = false;
+	bool m_isConversational = false;
 	std::unordered_map<std::wstring, VoiceId> vm = {
 		{ L"Aditi",		   VoiceId::Aditi },
 		{ L"Amy",		   VoiceId::Amy },
@@ -64,6 +65,7 @@ private:
 		{ L"Jacek",        VoiceId::Jacek },
 		{ L"Jan",		   VoiceId::Jan },
 		{ L"Joanna",	   VoiceId::Joanna },
+		{ L"Joanna (Conversational)",	   VoiceId::Joanna },
 		{ L"Joey",		   VoiceId::Joey },
 		{ L"Justin",	   VoiceId::Justin },
 		{ L"Karl",		   VoiceId::Karl },
@@ -77,6 +79,8 @@ private:
 		{ L"Mathieu",	   VoiceId::Mathieu },
 		{ L"Matthew",	   VoiceId::Matthew },
 		{ L"Maxim",	       VoiceId::Maxim },
+		{ L"Matthew",	   VoiceId::Matthew },
+		{ L"Matthew (Conversational)",	   VoiceId::Matthew },
 		{ L"Miguel",	   VoiceId::Miguel },
 		{ L"Mizuki",	   VoiceId::Mizuki },
 		{ L"Naja",	       VoiceId::Naja },

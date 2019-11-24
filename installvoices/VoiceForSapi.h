@@ -32,6 +32,6 @@ public:
 	bool hasNeural = false;
 	bool hasNewscasterStyle = false;
 
-	VoiceForSAPI(const Aws::Polly::Model::Voice&, bool _isNeural, bool _isNews);
+	VoiceForSAPI(const Aws::Polly::Model::Voice&, bool _isNeural, bool _isNews, bool _isConversational);
 	void PrintVoice() const;
 };

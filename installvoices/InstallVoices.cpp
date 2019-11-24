@@ -126,21 +126,24 @@ voice_map_t SelectedVoicesMap(const std::wstring& voiceList)
 			}
 			if (isSelected || isAllSelected)
 			{
-				VoiceForSAPI v4sp(voice, false, false);
+				VoiceForSAPI v4sp(voice, false, false, false);
 				name = converter.from_bytes(VoiceIdMapper::GetNameForVoiceId(voice.GetId()).c_str());
 				pollyVoices.insert(std::make_pair(name.c_str(), v4sp));
 				auto e = voice.GetSupportedEngines();
 				if (std::find(e.begin(), e.end(), Engine::neural) != e.end())
 				{
 					name.append(L"_neural");
-					VoiceForSAPI v4sp_neural(voice, true, false);
+					VoiceForSAPI v4sp_neural(voice, true, false, false);
 					pollyVoices.insert(std::make_pair(name, v4sp_neural));
 				}
 				if (name == L"Matthew" || name == L"Joanna")
 				{
-					VoiceForSAPI v4sp_newscaster(voice, true, true);
+					VoiceForSAPI v4sp_newscaster(voice, true, true, false);
 					name.append(L"_newscaster");
 					pollyVoices.insert(std::make_pair(name, v4sp_newscaster));
+					VoiceForSAPI v4sp_conversational(voice, true, true, true);
+					name.append(L"_conversational");
+					pollyVoices.insert(std::make_pair(name, v4sp_conversational));
 				}
 			}
 		}
