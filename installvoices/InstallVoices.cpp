@@ -205,6 +205,10 @@ int AddVoice(const VoiceForSAPI& voiceForSapi)
 		{
 			hr = cpDataKeyAttribs->SetStringValue(L"IsNews", voiceForSapi.hasNewscasterStyle ? L"1" : L"0");
 		}
+		if (SUCCEEDED(hr))
+		{
+			hr = cpDataKeyAttribs->SetStringValue(L"IsConversational", voiceForSapi.hasConversationalStyle ? L"1" : L"0");
+		}
 	}
 	return SUCCEEDED(hr);
 }

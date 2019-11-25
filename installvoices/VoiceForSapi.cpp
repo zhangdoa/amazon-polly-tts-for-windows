@@ -15,7 +15,7 @@ permissions and limitations under the License. */
 #include "VoiceForSapi.h"
 #include <codecvt>
 
-VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews)
+VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews, bool _isConversational)
 {
 	age = L"Adult"; //Polly doesn't have age attribute for voices, setting Adult as default.
 
@@ -25,6 +25,7 @@ VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews)
 	VoiceId id = voice.GetId();
 	hasNeural = _isNeural;
 	hasNewscasterStyle = _isNews;
+	hasConversationalStyle = _isConversational;
 	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
 	gender = converter.from_bytes(GenderMapper::GetNameForGender(voice.GetGender()).c_str());
@@ -40,7 +41,10 @@ VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews)
 	this->voiceId = voiceName;
 	
 	std::wstring prefix;
-	if (_isNews) {
+	if (_isConversational) {
+		prefix = L"TTS_AMZN_CONVERSATIONAL";
+	}
+	else if (_isNews) {
 		prefix = L"TTS_AMZN_NEWS";
 	}
 	else if (_isNeural) {
@@ -68,7 +72,10 @@ VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews)
 	langName.append(converter.from_bytes(voice.GetLanguageName().c_str()));
 	langName.append(L" - ");
 	langName.append(voiceName);
-	if (_isNews) {
+	if (_isConversational) {
+		langName.append(L" (Conversational)");
+	}
+	else if (_isNews) {
 		langName.append(L" (Newscaster)");
 	}
 	else if (_isNeural) {

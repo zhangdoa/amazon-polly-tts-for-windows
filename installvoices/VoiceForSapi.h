@@ -31,6 +31,7 @@ public:
 	std::wstring vendor = L"Amazon";
 	bool hasNeural = false;
 	bool hasNewscasterStyle = false;
+	bool hasConversationaStyle = false;
 
 	VoiceForSAPI(const Aws::Polly::Model::Voice&, bool _isNeural, bool _isNews, bool _isConversational);
 	void PrintVoice() const;
