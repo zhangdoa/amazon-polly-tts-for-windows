@@ -141,7 +141,8 @@ voice_map_t SelectedVoicesMap(const std::wstring& voiceList)
 					VoiceForSAPI v4sp_newscaster(voice, true, true, false);
 					name.append(L"_newscaster");
 					pollyVoices.insert(std::make_pair(name, v4sp_newscaster));
-					VoiceForSAPI v4sp_conversational(voice, true, true, true);
+					VoiceForSAPI v4sp_conversational(voice, true, false, true);
+					name = converter.from_bytes(VoiceIdMapper::GetNameForVoiceId(voice.GetId()).c_str());
 					name.append(L"_conversational");
 					pollyVoices.insert(std::make_pair(name, v4sp_conversational));
 				}
