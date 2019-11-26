@@ -30,7 +30,6 @@ namespace spd = spdlog;
 
 #define NOMINMAX
 #ifdef _WIN32
-#include <Windows.h>
 #endif
 #define MAX_SIZE 6000000
 using namespace Aws::Polly::Model;
@@ -44,7 +43,7 @@ void PollyManager::SetVoice (LPWSTR voiceName)
 	m_vVoiceId = voiceId->second ;
 }
 
-PollyManager::PollyManager(LPWSTR voiceName, bool isNeural, bool isNews)
+PollyManager::PollyManager(LPWSTR voiceName, bool isNeural, bool isNews, bool isConversational)
 {
 	m_logger = std::make_shared<spd::logger>("msvc_logger", std::make_shared<spd::sinks::msvc_sink_mt>());
 #ifdef DEBUG
@@ -54,6 +53,7 @@ PollyManager::PollyManager(LPWSTR voiceName, bool isNeural, bool isNews)
 #endif
 	m_isNeural = isNeural;
 	m_isNews = isNews;
+	m_isConversational = isConversational;
 	SetVoice(voiceName);
 }
 
@@ -73,20 +73,23 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	tinyxml2::XMLError res = doc.Parse(speech_text.c_str());
 	speech_request.SetTextType(TextType::text);
 	if (res == tinyxml2::XML_SUCCESS && strcmp(doc.RootElement()->Name(), "speak") == 0) {
-	
 		m_logger->debug("Text type = ssml");
 		speech_request.SetTextType(TextType::ssml);
-		if (m_isNeural || m_isNews) {
+		if (m_isNeural || m_isNews || m_isConversational) {
 			speech_text = speech_text.replace(speech_text.find("<speak>"), sizeof("<speak>") - 1, "");
 			speech_text = speech_text.replace(speech_text.find("</speak>"), sizeof("</speak>") - 1, "");
 		}
 	}
-	if (m_isNeural || m_isNews)
+	if (m_isNeural || m_isNews || m_isConversational)
 	{
 		speech_request.SetTextType(TextType::ssml);
 		if (m_isNews)
 		{
 			speech_text = "<speak><amazon:domain name=\"news\">" + speech_text + "</amazon:domain></speak>";
+		}
+		else if (m_isConversational)
+		{
+			speech_text = "<speak><amazon:domain name=\"conversational\">" + speech_text + "</amazon:domain></speak>";
 		}
 		else
 		{
@@ -96,8 +99,6 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(OutputFormat::pcm);
 	speech_request.SetVoiceId(m_vVoiceId);
-	
-	char polly_text[10000];
 
 	m_logger->debug("Generating speech: {}", speech_text);
 	speech_request.SetText(speech_text);
@@ -127,15 +128,15 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 std::string PollyManager::ParseXMLOutput(std::string &xmlBuffer)
 {
 	bool copy = true;
-	std::string plainString = "";
+	std::string plainString;
 	std::stringstream convertStream;
 
 	// remove all xml tags
-	for (int i = 0; i < xmlBuffer.length(); i++)
+	for (char i : xmlBuffer)
 	{
-		convertStream << xmlBuffer[i];
+		convertStream << i;
 
-		if (convertStream.str().compare("<") == 0) copy = false;
+		if (convertStream.str() == "<") copy = false;
 		else if (convertStream.str().compare(">") == 0)
 		{
 			copy = true;
