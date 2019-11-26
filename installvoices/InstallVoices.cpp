@@ -136,8 +136,10 @@ voice_map_t SelectedVoicesMap(const std::wstring& voiceList)
 					VoiceForSAPI v4sp_neural(voice, true, false, false);
 					pollyVoices.insert(std::make_pair(name, v4sp_neural));
 				}
+				std::wcout << L"Name=*" << name << "*" << std::endl;
 				if (name == L"Matthew" || name == L"Joanna")
 				{
+					std::wcout << L"Adding newscaster and conversational" << std::endl;
 					VoiceForSAPI v4sp_newscaster(voice, true, true, false);
 					name.append(L"_newscaster");
 					pollyVoices.insert(std::make_pair(name, v4sp_newscaster));
