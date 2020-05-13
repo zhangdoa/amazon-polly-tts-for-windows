@@ -137,8 +137,15 @@ voice_map_t SelectedVoicesMap(const std::wstring& voiceList)
 					pollyVoices.insert(std::make_pair(name, v4sp_neural));
 				}
 				name = converter.from_bytes(VoiceIdMapper::GetNameForVoiceId(voice.GetId()).c_str());
+
+				if (name == L"Lupe") {
+					VoiceForSAPI v4sp_newscaster(voice, true, true, false);
+					name.append(L"_newscaster");
+					pollyVoices.insert(std::make_pair(name, v4sp_newscaster));
+				}
 				if (name == L"Matthew" || name == L"Joanna")
 				{
+					std::wcout << "Adding newscaster and conversational\n";
 					VoiceForSAPI v4sp_newscaster(voice, true, true, false);
 					name.append(L"_newscaster");
 					pollyVoices.insert(std::make_pair(name, v4sp_newscaster));
