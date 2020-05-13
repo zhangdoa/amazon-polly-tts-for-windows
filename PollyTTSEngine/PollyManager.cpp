@@ -61,8 +61,10 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 {
 	PollySpeechResponse response;
 	
-	Aws::Polly::PollyClient p = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>(
-		ALLOCATION_TAG, "polly-windows");
+	auto creds = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>(ALLOCATION_TAG, "polly-windows");
+	Aws::Client::ClientConfiguration config = Aws::Client::ClientConfiguration("polly-windows");
+	config.userAgent = config.userAgent + " request-source/polly-windows";
+	Aws::Polly::PollyClient p = Aws::Polly::PollyClient(creds, config);
 	SynthesizeSpeechRequest speech_request;
 	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	if (Aws::Utils::StringUtils::ToLower(speech_text.c_str()).find("</voice>") != std::string::npos)
@@ -99,7 +101,6 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(OutputFormat::pcm);
 	speech_request.SetVoiceId(m_vVoiceId);
-
 	m_logger->debug("Generating speech: {}", speech_text);
 	speech_request.SetText(speech_text);
 
