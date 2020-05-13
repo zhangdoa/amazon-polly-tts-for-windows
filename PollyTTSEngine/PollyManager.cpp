@@ -63,7 +63,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	
 	auto creds = Aws::MakeShared<Aws::Auth::ProfileConfigFileAWSCredentialsProvider>(ALLOCATION_TAG, "polly-windows");
 	Aws::Client::ClientConfiguration config = Aws::Client::ClientConfiguration("polly-windows");
-	config.userAgent = config.userAgent + " request-source/polly-windows/POLLY_TTS_VERSION";
+	config.userAgent = config.userAgent + " request-source/polly-windows/PRODUCTVERSION";
 	Aws::Polly::PollyClient p = Aws::Polly::PollyClient(creds, config);
 	SynthesizeSpeechRequest speech_request;
 	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
