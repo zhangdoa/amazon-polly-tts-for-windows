@@ -224,7 +224,12 @@ int AddVoice(const VoiceForSAPI& voiceForSapi)
 
 int RemoveVoice(WCHAR* tokenKeyName)
 {
-	std::wstring subKey = L"SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens\\";
+	std::wstring subKey;
+#if _WIN64	
+	subKey = L"SOFTWARE\\Microsoft\\Speech\\Voices\\Tokens\\";
+#else
+	subKey = L"SOFTWARE\\WOW6432Node\\Microsoft\\Speech\\Voices\\Tokens\\";
+#endif
 	subKey += tokenKeyName;
 	const HRESULT result = SHDeleteKeyW(HKEY_LOCAL_MACHINE, subKey.c_str());
 	if (result == ERROR_SUCCESS) {

@@ -22,7 +22,7 @@ permissions and limitations under the License. */
 #include "spdlog/spdlog.h"
 #include "tinyxml2.h"
 #include <aws/core/platform/Environment.h>
-#include <aws/core/auth/AWSCredentialsProvider.h>tiny
+#include <aws/core/auth/AWSCredentialsProvider.h>
 #include <boost/algorithm/string.hpp>
 
 //--- Local

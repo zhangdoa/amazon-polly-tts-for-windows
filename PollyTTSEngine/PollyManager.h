@@ -65,10 +65,11 @@ private:
 		{ L"Jacek",        VoiceId::Jacek },
 		{ L"Jan",		   VoiceId::Jan },
 		{ L"Joanna",	   VoiceId::Joanna },
-		{ L"Joanna (Conversational)",	   VoiceId::Joanna },
+		{ L"Joanna (Conversatiosnal)",	   VoiceId::Joanna },
 		{ L"Joey",		   VoiceId::Joey },
 		{ L"Justin",	   VoiceId::Justin },
 		{ L"Karl",		   VoiceId::Karl },
+		{ L"Kevin",        VoiceId::Kevin }
 		{ L"Kendra",	   VoiceId::Kendra },
 		{ L"Kimberly",	   VoiceId::Kimberly },
 		{ L"Liv",	       VoiceId::Liv },
