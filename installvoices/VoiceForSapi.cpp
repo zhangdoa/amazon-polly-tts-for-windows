@@ -19,7 +19,7 @@ VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews, boo
 {
 	age = L"Adult"; //Polly doesn't have age attribute for voices, setting Adult as default.
 
-	std::pair<int, const wchar_t*> languagePair = GetVoiceHexValue(voice.GetLanguageCode());
+	std::pair<int, std::wstring> languagePair = GetVoiceHexValue(voice.GetLanguageCode());
 	langid = languagePair.first;
 	languageText = languagePair.second;
 	VoiceId id = voice.GetId();
@@ -89,7 +89,7 @@ VoiceForSAPI::VoiceForSAPI(const Voice& voice, bool _isNeural, bool _isNews, boo
 }
 
 
-std::pair<int, const wchar_t*> VoiceForSAPI::GetVoiceHexValue(LanguageCode code) {
+std::pair<int, std::wstring> VoiceForSAPI::GetVoiceHexValue(LanguageCode code) {
 	std::wstring langText;
 	int langHex;
 	
@@ -121,7 +121,7 @@ std::pair<int, const wchar_t*> VoiceForSAPI::GetVoiceHexValue(LanguageCode code)
 		break;
 	case LanguageCode::en_IN:
 		langHex = 0x4009;
-		langText = L"40009";
+		langText = L"4009";
 		break;
 	case LanguageCode::en_US:
 		langHex = 0x0409;
@@ -191,12 +191,28 @@ std::pair<int, const wchar_t*> VoiceForSAPI::GetVoiceHexValue(LanguageCode code)
 		langHex = 0x041F;
 		langText = L"41F";
 		break;
+	case LanguageCode::arb:
+		langHex = 0x3001;
+		langText = L"3001";
+		break;
+	case LanguageCode::cmn_CN:
+		langHex = 0x804;
+		langText = L"804";
+		break;
+	case LanguageCode::es_MX:
+		langHex = 0x080A;
+		langText = L"080A";
+		break;
+	case LanguageCode::ko_KR:
+		langHex = 0x0412;
+		langText = L"0412";
+		break;
 	default:
 		std::cout << "No Language value matched,returning English" << "\n";
 		langHex = 0x0409;
 		langText = L"409";
 	}
-	return std::make_pair(langHex, langText.c_str());
+	return std::make_pair(langHex, langText);
 }
 
 void VoiceForSAPI::PrintVoice() const
