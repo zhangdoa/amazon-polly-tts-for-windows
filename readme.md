@@ -1,7 +1,18 @@
 # Amazon Polly TTS Engine for Windows
 > Use Amazon Polly voices in native Windows TTS applications
 
-## QuickStart
+## Setting Up Your Development Environment
+
+1. Install [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/)
+2. Install vcpkg
+````
+> git clone https://github.com/Microsoft/vcpkg.git
+> cd vcpkg
+
+PS> .\bootstrap-vcpkg.bat
+````
+
+## Installation QuickStart
 
 ## Step 1: Install the AWS Client (*if it's not already installed on your machine*) ##
 
