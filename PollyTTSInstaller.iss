@@ -47,7 +47,7 @@ Source: ".\PollyTTSEngine-x64\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "
 Source: ".\PollyTTSEngine-x64\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyTTSEngine-x64\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
 Source: ".\PollyPlayer-x64\{#DebugOrRelease}\PollyPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion 64bit; Check: IsWin64
-Source: ".\redist\x64\vc_redist.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: IsWin64
+Source: ".\redist\vc_redist.x64.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall; Check: IsWin64
 
 Source: ".\InstallVoices-Win32\{#DebugOrRelease}\InstallVoices.exe"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\InstallVoices-Win32\{#DebugOrRelease}\aws-c-common.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
@@ -59,7 +59,7 @@ Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir:
 Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\PollyPlayer-x86\{#DebugOrRelease}\PollyPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion 32bit;
-Source: ".\redist\x86\vc_redist.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall;
+Source: ".\redist\vc_redist.x86.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall;
 [Icons]
 Name: "{group}\Polly Player"; Filename: "{app}\PollyPlayer.exe"; WorkingDir: "{app}"
 
