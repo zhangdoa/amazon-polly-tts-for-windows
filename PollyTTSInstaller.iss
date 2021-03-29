@@ -55,7 +55,7 @@ Source: ".\InstallVoices-Win32\{#DebugOrRelease}\aws-c-event-stream.dll"; DestDi
 Source: ".\InstallVoices-Win32\{#DebugOrRelease}\aws-checksums.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\InstallVoices-Win32\{#DebugOrRelease}\aws-cpp-sdk-core.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\InstallVoices-Win32\{#DebugOrRelease}\aws-cpp-sdk-polly.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
-Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;                                 s
+Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;                                 
 Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\PollyPlayer-x86\{#DebugOrRelease}\PollyPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion 32bit;
