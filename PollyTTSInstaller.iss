@@ -67,8 +67,8 @@ Name: "{group}\Polly Player"; Filename: "{app}\PollyPlayer.exe"; WorkingDir: "{a
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Run]
-Filename: "{tmp}\vc_redist.exe"; Parameters: "/install /passive /norestart"; StatusMsg: Installing Visual Studio Runtime Libraries...; Flags: 32bit
-Filename: "{tmp}\vc_redist.exe"; Parameters: "/install /passive /norestart"; StatusMsg: Installing Visual Studio Runtime Libraries...; Flags: 64bit; Check: IsWin64
+Filename: "{tmp}\vc_redist.x64.exe"; Parameters: "/install /passive /norestart"; StatusMsg: Installing Visual Studio Runtime Libraries...; Flags: 32bit
+Filename: "{tmp}\vc_redist.x86.exe"; Parameters: "/install /passive /norestart"; StatusMsg: Installing Visual Studio Runtime Libraries...; Flags: 64bit; Check: IsWin64
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser 64bit; Parameters: "install"; StatusMsg: "Installing Voices..."; Check: IsWin64
 Filename: "{app}\InstallVoices.exe"; Flags: runascurrentuser 32bit; Parameters: "install"; StatusMsg: "Installing Voices..."
 Filename: "{sys}\Regsvr32.exe"; Parameters: "/s pollyttswindows.dll"; WorkingDir: "{app}"; StatusMsg: "Registering Polly TTS Engine ... "; Flags: runhidden 64bit; Check: IsWin64;
