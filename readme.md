@@ -53,7 +53,7 @@ Follow the instructions on [this page](http://docs.aws.amazon.com/cli/latest/use
          aws --profile polly-windows polly describe-voices
 
 ## Step 4: Install Amazon Polly TTS Engine for Windows
-Download and run the [installer](https://s3.amazonaws.com/polly-tts-windows/setup.exe)
+Download and run the installer: [32-bit](https://amazon-polly-for-windows.s3.amazonaws.com/installer-x86.exe) or [64-bit](https://amazon-polly-for-windows.s3.amazonaws.com/installer-x64.exe)
 
 Verify that the installer worked by opening `Control Panel` and go to `Change text to speech settings`. In the `Voice selection` drop-down, you should see all of the Amazon Polly voices. Picking a voice will automatically play a sample.
 
