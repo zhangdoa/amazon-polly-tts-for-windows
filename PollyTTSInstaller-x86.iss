@@ -45,7 +45,7 @@ Source: ".\InstallVoices-Win32\{#DebugOrRelease}\aws-cpp-sdk-polly.dll"; DestDir
 Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\PollyTTSWindows.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\tinyxml2.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\PollyTTSEngine-Win32\{#DebugOrRelease}\fmt.dll"; DestDir: "{app}"; Flags: ignoreversion 32bit;
-Source: ".\PollyPlayer-Win32\{#DebugOrRelease}\PollyPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion 32bit;
+Source: ".\PollyPlayer-x86\{#DebugOrRelease}\PollyPlayer.exe"; DestDir: "{app}"; Flags: ignoreversion 32bit;
 Source: ".\redist\vc_redist.x86.exe"; DestDir: "{tmp}"; Flags: deleteafterinstall;
 
 [Icons]
