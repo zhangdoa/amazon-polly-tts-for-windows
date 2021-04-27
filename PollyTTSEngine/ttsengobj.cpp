@@ -15,6 +15,7 @@ permissions and limitations under the License. */
 #include "stdafx.h"
 #include "TtsEngObj.h"
 #include "tchar.h"
+#include "atlstr.h"
 #include <aws/core/Aws.h>
 #include <aws/polly/PollyClient.h>
 #include <aws/polly/model/DescribeVoicesRequest.h>
@@ -257,8 +258,25 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
     SPLISTPOS ListPos = ItemList.GetHeadPosition();
 	CSentItem& Item = ItemList.GetNext(ListPos);
 	DescribeVoicesRequest request;
-	auto speech = StringUtils::FromWString(Item.pItem);
+	std::string speech = CW2A(Item.pItem);
+    std::map<char, std::string> transformations;
+    transformations['&'] = std::string("&amp;");
+    transformations['\''] = std::string("&apos;");
+    transformations['"'] = std::string("&quot;");
+    transformations['>'] = std::string("&gt;");
+    transformations['<'] = std::string("&lt;");
+    std::string reserved_chars;
+    for (auto ti = transformations.begin(); ti != transformations.end(); ti++)
+    {
+        reserved_chars += ti->first;
+    }
 
+    size_t pos = 0;
+    while (std::string::npos != (pos = speech.find_first_of(reserved_chars, pos)))
+    {
+        speech.replace(pos, 1, transformations[speech[pos]]);
+        pos++;
+    };
 	boost::trim(speech);
 
 	if (speech.find("<voice name=") != std::string::npos)
