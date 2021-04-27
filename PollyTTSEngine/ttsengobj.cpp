@@ -16,6 +16,8 @@ permissions and limitations under the License. */
 #include "TtsEngObj.h"
 #include "tchar.h"
 #include "atlstr.h"
+#include "atlbase.h"
+#include "atlconv.h"
 #include <aws/core/Aws.h>
 #include <aws/polly/PollyClient.h>
 #include <aws/polly/model/DescribeVoicesRequest.h>
@@ -278,8 +280,9 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
         pos++;
     };
 	boost::trim(speech);
-
-	if (speech.find("<voice name=") != std::string::npos)
+    std::wstring stemp = std::wstring(speech.begin(), speech.end());
+    Item.pItem = stemp.c_str();
+    if (speech.find("<voice name=") != std::string::npos)
 	{
 		tinyxml2::XMLDocument doc;
 		tinyxml2::XMLError res = doc.Parse(speech.c_str());
