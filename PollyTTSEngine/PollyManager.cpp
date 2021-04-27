@@ -82,21 +82,18 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 			speech_text = speech_text.replace(speech_text.find("</speak>"), sizeof("</speak>") - 1, "");
 		}
 	}
-	if (m_isNeural || m_isNews || m_isConversational)
+	speech_request.SetTextType(TextType::ssml);
+	if (m_isNews)
 	{
-		speech_request.SetTextType(TextType::ssml);
-		if (m_isNews)
-		{
-			speech_text = "<speak><amazon:domain name=\"news\">" + speech_text + "</amazon:domain></speak>";
-		}
-		else if (m_isConversational)
-		{
-			speech_text = "<speak><amazon:domain name=\"conversational\">" + speech_text + "</amazon:domain></speak>";
-		}
-		else
-		{
-			speech_text = "<speak>" + speech_text + "</speak>";
-		}
+		speech_text = "<speak><amazon:domain name=\"news\">" + speech_text + "</amazon:domain></speak>";
+	}
+	else if (m_isConversational)
+	{
+		speech_text = "<speak><amazon:domain name=\"conversational\">" + speech_text + "</amazon:domain></speak>";
+	}
+	else
+	{
+		speech_text = "<speak>" + speech_text + "</speak>";
 	}
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(OutputFormat::pcm);
