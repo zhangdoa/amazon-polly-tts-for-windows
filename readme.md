@@ -87,7 +87,29 @@ Also, you can only use one `<speak>` tag per block of text, and you can only use
 
 ## Setting Up Your Development Environment
 
-1. Install [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/)
+### Overview
+
+There are four components to the SAPI plugin:
+
+#### TTSEngine
+
+This is the main source code for the actual driver itself.
+
+#### InstallVoices
+
+Command-line tool that registers the voices.
+
+#### Polly Player
+
+Simple tool to test out the voices
+
+#### Installer
+
+Installation tool that installs TTSEngine, InstallVoices and Polly Player
+
+### Setting up TTSEngine/InstallVoices
+
+1. Install [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) with C++ desktop support
 
 2. Clone this repo:
    
@@ -107,3 +129,21 @@ Also, you can only use one `<speak>` tag per block of text, and you can only use
 4. Start Visual Studio.
 
 5. Click **File/Open Folder** and select the `amazon-polly-tts-for-windows` folder.
+
+### Setting up Polly Player
+
+1. Install [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/) with C# support
+
+2. Start Visual Studio.
+
+3. Open `PollyPlayer\PollyPlayer.csproj`
+
+### Setting up the Installer
+
+> * NOTE: x86 and x64 builds have separate installer files.
+
+1. Install [innosetup](https://jrsoftware.org/isdl.php)
+
+2. Start Innosetup.
+
+3. Open `PollyTTSInstaller-x64.iss` or `PollyTTSInstaller-x86.iss`
