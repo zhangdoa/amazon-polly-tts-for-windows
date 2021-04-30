@@ -77,10 +77,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	if (res == tinyxml2::XML_SUCCESS && strcmp(doc.RootElement()->Name(), "speak") == 0) {
 		m_logger->debug("Text type = ssml");
 		speech_request.SetTextType(TextType::ssml);
-		if (m_isNeural || m_isNews || m_isConversational) {
-			speech_text = speech_text.replace(speech_text.find("<speak>"), sizeof("<speak>") - 1, "");
-			speech_text = speech_text.replace(speech_text.find("</speak>"), sizeof("</speak>") - 1, "");
-		}
+		speech_text = speech_text.replace(speech_text.find("<speak>"), sizeof("<speak>") - 1, "");
 	}
 	speech_request.SetTextType(TextType::ssml);
 	if (m_isNews)
@@ -101,7 +98,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	m_logger->debug("Generating speech: {}", speech_text);
 	speech_request.SetText(speech_text);
 
-	speech_request.SetSampleRate("16000");
+	speech_request.SetSampleRate("24000");
 	if (m_isNeural) {
 		m_logger->debug("Neural voice? Yes");
 		speech_request.SetEngine(Engine::neural);
