@@ -43,6 +43,21 @@ void PollyManager::SetVoice (LPWSTR voiceName)
 	m_vVoiceId = voiceId->second ;
 }
 
+std::wstring PollyManager::ReplaceText(const std::wstring& orig, const std::wstring& fnd, const std::wstring& repl)
+{
+	std::wstring ret = orig;
+	size_t pos = 0;
+	while (true)
+	{
+		pos = ret.find(fnd, pos);
+		if (pos == std::wstring::npos)  // no more instances found
+			break;
+		ret.replace(pos, pos + fnd.size(), repl);  // replace old string with new string
+		pos += repl.size();
+	}
+	return ret;
+}
+
 PollyManager::PollyManager(LPWSTR voiceName, bool isNeural, bool isNews, bool isConversational)
 {
 	m_logger = std::make_shared<spd::logger>("msvc_logger", std::make_shared<spd::sinks::msvc_sink_mt>());
@@ -66,7 +81,12 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	config.userAgent = config.userAgent + " request-source/polly-windows/PRODUCTVERSION";
 	Aws::Polly::PollyClient p = Aws::Polly::PollyClient(creds, config);
 	SynthesizeSpeechRequest speech_request;
-	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
+	std::wstring text_w(item.pItem);
+	text_w = ReplaceText(text_w, L"’", L"'");
+	text_w = ReplaceText(text_w, L"‘", L"'");
+	text_w = ReplaceText(text_w, L"“", L"\"");
+	text_w = ReplaceText(text_w, L"”", L"\"");
+	auto speech_text = Aws::Utils::StringUtils::FromWString(text_w.c_str());
 	if (Aws::Utils::StringUtils::ToLower(speech_text.c_str()).find("</voice>") != std::string::npos)
 	{
 		speech_text = "<speak>" + speech_text.replace(speech_text.find("</voice>"), sizeof("</voice>") - 1, "");
@@ -98,7 +118,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	m_logger->debug("Generating speech: {}", speech_text);
 	speech_request.SetText(speech_text);
 
-	speech_request.SetSampleRate("24000");
+	speech_request.SetSampleRate("16000");
 	if (m_isNeural) {
 		m_logger->debug("Neural voice? Yes");
 		speech_request.SetEngine(Engine::neural);

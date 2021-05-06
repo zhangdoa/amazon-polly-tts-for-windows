@@ -25,10 +25,11 @@ class PollyManager
 {
 public:
 	PollyManager(LPWSTR voiceName, bool isNeural, bool isNews, bool isConversational);
-	PollySpeechResponse GenerateSpeech(CSentItem& item);
+	PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item);
 	std::string ParseXMLOutput(std::string& xmlBuffer);
 	PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std::streamsize streamSize);
 	void SetVoice(LPWSTR voiceName);
+	std::wstring PollyManager::ReplaceText(const std::wstring& orig, const std::wstring& fnd, const std::wstring& repl);
 
 private:
 	std::wstring m_sVoiceName;
