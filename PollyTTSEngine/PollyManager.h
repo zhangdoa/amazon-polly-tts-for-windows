@@ -29,7 +29,6 @@ public:
 	std::string ParseXMLOutput(std::string& xmlBuffer);
 	PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std::streamsize streamSize);
 	void SetVoice(LPWSTR voiceName);
-	std::wstring PollyManager::ReplaceText(const std::wstring& orig, const std::wstring& fnd, const std::wstring& repl);
 
 private:
 	std::wstring m_sVoiceName;

@@ -43,21 +43,6 @@ void PollyManager::SetVoice (LPWSTR voiceName)
 	m_vVoiceId = voiceId->second ;
 }
 
-std::wstring PollyManager::ReplaceText(const std::wstring& orig, const std::wstring& fnd, const std::wstring& repl)
-{
-	std::wstring ret = orig;
-	size_t pos = 0;
-	while (true)
-	{
-		pos = ret.find(fnd, pos);
-		if (pos == std::wstring::npos)  // no more instances found
-			break;
-		ret.replace(pos, pos + fnd.size(), repl);  // replace old string with new string
-		pos += repl.size();
-	}
-	return ret;
-}
-
 PollyManager::PollyManager(LPWSTR voiceName, bool isNeural, bool isNews, bool isConversational)
 {
 	m_logger = std::make_shared<spd::logger>("msvc_logger", std::make_shared<spd::sinks::msvc_sink_mt>());
@@ -81,12 +66,8 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	config.userAgent = config.userAgent + " request-source/polly-windows/PRODUCTVERSION";
 	Aws::Polly::PollyClient p = Aws::Polly::PollyClient(creds, config);
 	SynthesizeSpeechRequest speech_request;
-	std::wstring text_w(item.pItem);
-	text_w = ReplaceText(text_w, L"’", L"'");
-	text_w = ReplaceText(text_w, L"‘", L"'");
-	text_w = ReplaceText(text_w, L"“", L"\"");
-	text_w = ReplaceText(text_w, L"”", L"\"");
-	auto speech_text = Aws::Utils::StringUtils::FromWString(text_w.c_str());
+	
+	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	if (Aws::Utils::StringUtils::ToLower(speech_text.c_str()).find("</voice>") != std::string::npos)
 	{
 		speech_text = "<speak>" + speech_text.replace(speech_text.find("</voice>"), sizeof("</voice>") - 1, "");
@@ -128,7 +109,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	if (!speech.IsSuccess())
 	{
 		std::stringstream error;
-		error <<  speech.GetError().GetMessageW();
+		//error << speech.GetError().GetMessageW();
 		response.ErrorMessage = error.str();
 		return response;
 	}
@@ -193,7 +174,7 @@ PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std:
 	if (!speech_marks.IsSuccess())
 	{
 		std::stringstream error;
-		error << "Unable to generate speech marks: " << speech_marks.GetError().GetMessageW();
+		//error << "Unable to generate speech marks: " << speech_marks.GetError().GetMessageW();
 		response.ErrorMessage = error.str();
 		return response;
 	}

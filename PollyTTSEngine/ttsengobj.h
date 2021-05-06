@@ -108,6 +108,8 @@ class ATL_NO_VTABLE CTTSEngObj :
                       const SPVTEXTFRAG* pTextFragList, ISpTTSEngineSite* pOutputSite );
     STDMETHOD(GetOutputFormat)( const GUID * pTargetFormatId, const WAVEFORMATEX * pTargetWaveFormatEx,
                                 GUID * pDesiredFormatId, WAVEFORMATEX ** ppCoMemDesiredWaveFormatEx );
+    std::wstring ReplaceText(const std::wstring orig, const std::wstring fnd, const std::wstring repl);
+
 
   private:
     /*--- Non interface methods ---*/
