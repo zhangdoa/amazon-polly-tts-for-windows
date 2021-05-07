@@ -66,6 +66,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	config.userAgent = config.userAgent + " request-source/polly-windows/PRODUCTVERSION";
 	Aws::Polly::PollyClient p = Aws::Polly::PollyClient(creds, config);
 	SynthesizeSpeechRequest speech_request;
+	
 	auto speech_text = Aws::Utils::StringUtils::FromWString(item.pItem);
 	if (Aws::Utils::StringUtils::ToLower(speech_text.c_str()).find("</voice>") != std::string::npos)
 	{
@@ -98,7 +99,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	m_logger->debug("Generating speech: {}", speech_text);
 	speech_request.SetText(speech_text);
 
-	speech_request.SetSampleRate("24000");
+	speech_request.SetSampleRate("16000");
 	if (m_isNeural) {
 		m_logger->debug("Neural voice? Yes");
 		speech_request.SetEngine(Engine::neural);
@@ -108,7 +109,7 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 	if (!speech.IsSuccess())
 	{
 		std::stringstream error;
-		error <<  speech.GetError().GetMessageW();
+		//error << speech.GetError().GetMessageW();
 		response.ErrorMessage = error.str();
 		return response;
 	}
@@ -173,7 +174,7 @@ PollySpeechMarksResponse PollyManager::GenerateSpeechMarks(CSentItem& item, std:
 	if (!speech_marks.IsSuccess())
 	{
 		std::stringstream error;
-		error << "Unable to generate speech marks: " << speech_marks.GetError().GetMessageW();
+		//error << "Unable to generate speech marks: " << speech_marks.GetError().GetMessageW();
 		response.ErrorMessage = error.str();
 		return response;
 	}

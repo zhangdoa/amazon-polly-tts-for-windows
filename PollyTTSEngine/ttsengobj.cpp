@@ -245,6 +245,14 @@ STDMETHODIMP CTTSEngObj::Speak( DWORD dwSpeakFlags,
     return hr;
 } /* CTTSEngObj::Speak */
 
+std::wstring CTTSEngObj::ReplaceText(const std::wstring orig, const std::wstring fnd, const std::wstring repl)
+{
+    std::wstring ret = orig;
+    for (int i = ret.find(fnd); i >= 0; i = ret.find(fnd))
+        ret.replace(i, fnd.size(), repl);
+    return ret;
+}
+
 /*****************************************************************************
 * CTTSEngObj::OutputSentence *
 *----------------------------*
@@ -260,7 +268,15 @@ HRESULT CTTSEngObj::OutputSentence( CItemList& ItemList, ISpTTSEngineSite* pOutp
     SPLISTPOS ListPos = ItemList.GetHeadPosition();
 	CSentItem& Item = ItemList.GetNext(ListPos);
 	DescribeVoicesRequest request;
-	std::string speech = CW2A(Item.pItem);
+
+    std::wstring text_w(Item.pItem);
+
+    text_w = ReplaceText(text_w, L"’", L"'");
+    text_w = ReplaceText(text_w, L"‘", L"'");
+    text_w = ReplaceText(text_w, L"“", L"\"");
+    text_w = ReplaceText(text_w, L"”", L"\"");
+
+    std::string speech = CW2A(text_w.c_str());
     std::map<char, std::string> transformations;
     transformations['&'] = std::string("&amp;");
     transformations['\''] = std::string("&apos;");
