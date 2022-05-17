@@ -228,5 +228,4 @@ void VoiceForSAPI::PrintVoice() const
 	std::wcout << L"Language in Text: " << languageText << std::endl;
 	std::wcout << L"Age: " << age << std::endl;
 	std::wcout << L"Vendor: " << vendor << std::endl;
-
 }
