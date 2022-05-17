@@ -46,7 +46,7 @@ END
 
 3 TEXTINCLUDE 
 BEGIN
-    "1 TYPELIB ""PollyTTSEngine.tlb""\0"
+    "1 TYPELIB ""PollyWindowsTTS.tlb""\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -119,7 +119,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-1 TYPELIB "PollyTTSEngine.tlb"
+1 TYPELIB "PollyWindowsTTS.tlb"
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

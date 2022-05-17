@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.14
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32428.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PollyWindowsTTS", "PollyTTSEngine.vcxproj", "{214761EA-9911-4031-AC43-92CC12536E17}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MakeVoice", "makevoice\MakeVoice.vcxproj", "{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,16 +21,11 @@ Global
 		{214761EA-9911-4031-AC43-92CC12536E17}.Release|x64.Build.0 = Release|x64
 		{214761EA-9911-4031-AC43-92CC12536E17}.Release|x86.ActiveCfg = Release|Win32
 		{214761EA-9911-4031-AC43-92CC12536E17}.Release|x86.Build.0 = Release|Win32
-		{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}.Debug|x64.ActiveCfg = Debug|x64
-		{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}.Debug|x64.Build.0 = Debug|x64
-		{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}.Debug|x86.ActiveCfg = Debug|Win32
-		{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}.Debug|x86.Build.0 = Debug|Win32
-		{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}.Release|x64.ActiveCfg = Release|x64
-		{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}.Release|x64.Build.0 = Release|x64
-		{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}.Release|x86.ActiveCfg = Release|Win32
-		{E2B7E58F-08D1-401B-85B8-E20E7BF5117E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C07D1EF-D5C1-41E5-A20E-8D1D95943BA9}
 	EndGlobalSection
 EndGlobal
