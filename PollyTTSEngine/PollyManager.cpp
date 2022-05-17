@@ -80,19 +80,31 @@ PollySpeechResponse PollyManager::GenerateSpeech(CSentItem& item)
 		speech_request.SetTextType(TextType::ssml);
 		speech_text = speech_text.replace(speech_text.find("<speak>"), sizeof("<speak>") - 1, "");
 	}
+
 	speech_request.SetTextType(TextType::ssml);
+	
 	if (m_isNews)
 	{
-		speech_text = "<speak><amazon:domain name=\"news\">" + speech_text + "</amazon:domain></speak>";
+		speech_text = "<amazon:domain name=\"news\">" + speech_text + "</amazon:domain>";
 	}
 	else if (m_isConversational)
 	{
-		speech_text = "<speak><amazon:domain name=\"conversational\">" + speech_text + "</amazon:domain></speak>";
+		speech_text = "<amazon:domain name=\"conversational\">" + speech_text + "</amazon:domain>";
 	}
-	else
+
+	// RateAdjust [in] Value specifying the speaking rate of the voice.Supported values range from - 10 to 10 - values outside this range may be truncated. https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ms719798(v=vs.85)
+	// n% of speech rate: any percentage of the speech rate, between 20% and 200% can be used. https://docs.aws.amazon.com/polly/latest/dg/voice-speed-vip.html
+	if (item.pXmlState->RateAdj != 0)
 	{
-		speech_text = "<speak>" + speech_text + "</speak>";
+		// (-10, 20), (0, 100), (10, 200) quadratic fit
+		// 0.1x^2 + 9x + 100
+		double x = (double)item.pXmlState->RateAdj;
+		double rate = x * x * 0.1 + 9.0 * x + 100.0;
+		speech_text = "<prosody rate=\"" + std::to_string((int)rate) +  "%\">" + speech_text + "</prosody>";
 	}
+
+	speech_text = "<speak>" + speech_text + "</speak>";
+
 	m_logger->debug("{}: Asking Polly for '{}'", __FUNCTION__, speech_text.c_str());
 	speech_request.SetOutputFormat(OutputFormat::pcm);
 	speech_request.SetVoiceId(m_vVoiceId);
